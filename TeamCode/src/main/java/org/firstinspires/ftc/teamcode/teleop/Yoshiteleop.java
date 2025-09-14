@@ -19,6 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
+import commands.PickupAndExtendCommandGroup;
+
 @TeleOp(name = "Yoshi")
 public class Yoshiteleop extends OpMode {
     DcMotor frontLeftMotor;
@@ -40,7 +42,8 @@ public class Yoshiteleop extends OpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftmotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        chassis = new GamepadEx(gamepad1);
+
+        chassis = new GamepadEx(gamepad1); /* how to add new subsystem*/
         Claw clawSubsystem = new Claw(hardwareMap.servo.get("clawServo"));
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
@@ -63,7 +66,8 @@ public class Yoshiteleop extends OpMode {
         chassis .getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> armSubsystem.goToPosition(Arm.ArmPosition.HIGH))));
 
-        
+        chassis .getGamepadButton(GamepadKeys.Button.DPAD_DOWN) /* how to add command group*/
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new PickupAndExtendCommandGroup(armSubsystem, clawSubsystem ))); /*add all subsystems used and don't use instant command)*/
     }
 
     @Override
