@@ -7,7 +7,7 @@ public class Claw extends SubsystemBase {
     private Servo srvClaw;
     private boolean bolClawOpen;
     private double dblOpenPos = 0;
-    private  double dblClosedPos = 0.35;
+    private  double dblClosedPos = 0.31;
 
     public Claw(Servo m_srvClaw) {
         srvClaw = m_srvClaw;
@@ -15,12 +15,12 @@ public class Claw extends SubsystemBase {
     }
 
      public void closeClaw(){
-        bolClawOpen = true;
-        srvClaw.setPosition(dblOpenPos);
-     }
-     public void openClaw(){
         bolClawOpen = false;
         srvClaw.setPosition(dblClosedPos);
+     }
+     public void openClaw(){
+        bolClawOpen = true;
+        srvClaw.setPosition(dblOpenPos);
      }
 
      public boolean isClawOpen(){
