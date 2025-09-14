@@ -13,13 +13,13 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 public class RobotBase {
 
     public ColorSensor colorSensorSubsystem;
-    public LidarSensor lidarSubsystem;
-    public Camera cameraSubsystem;
+    //public LidarSensor lidarSubsystem;
+    //public Camera cameraSubsystem;
 
     public RobotBase(HardwareMap hwMap){
         colorSensorSubsystem = new ColorSensor(hwMap.get(NormalizedColorSensor.class, "color_sensor"));
-        lidarSubsystem = new LidarSensor(hwMap.get(DistanceSensor.class,"lidar_sensor"));
-        cameraSubsystem = new Camera(hwMap.get(org.firstinspires.ftc.robotcore.external.hardware.camera.Camera.class, "Camera"));
+        //lidarSubsystem = new LidarSensor(hwMap.get(DistanceSensor.class,"lidar_sensor"));
+        //cameraSubsystem = new Camera(hwMap.get(org.firstinspires.ftc.robotcore.external.hardware.camera.Camera.class, "Camera"));
 
     }
 }
