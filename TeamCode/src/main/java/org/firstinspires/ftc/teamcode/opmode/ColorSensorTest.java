@@ -18,7 +18,7 @@ public class ColorSensorTest extends OpMode {
 
     RobotBase robotBase;
 
-    /*PredominantColorProcessor colorSensor = new PredominantColorProcessor.Builder()
+    PredominantColorProcessor colorSensor = new PredominantColorProcessor.Builder()
             .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0.1, 0.1, -0.1))
             .setSwatches(
                     PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
@@ -28,29 +28,29 @@ public class ColorSensorTest extends OpMode {
                     PredominantColorProcessor.Swatch.YELLOW,
                     PredominantColorProcessor.Swatch.BLACK,
                     PredominantColorProcessor.Swatch.WHITE)
-            .build();*/
+            .build();
 
     @Override
     public void init () {
         robotBase = new RobotBase(hardwareMap);
 
-        /*VisionPortal portal = new VisionPortal.Builder()
+        VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorSensor)
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .build();
 
         telemetry.setMsTransmissionInterval(100);
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);*/
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
 
     }
 
     public void loop() {
 
-        //PredominantColorProcessor.Result result = colorSensor.getAnalysis();
+        PredominantColorProcessor.Result result = colorSensor.getAnalysis();
 
         telemetry.addData("ColorHue", robotBase.colorSensorSubsystem.getHueValues());
         //telemetry.addData("Distance", robotBase.lidarSubsystem.getDistance());
-        //telemetry.addData("Color", result.closestSwatch);
+        telemetry.addData("Color", result.closestSwatch);
     }
 }
