@@ -17,8 +17,8 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    compileSdk 34
 
-    compileSdkVersion 30
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -28,3 +28,6 @@ android {
 }
 
 apply from: '../build.dependencies.gradle'
+ext {
+    compileSdkVersion = 34
+}
