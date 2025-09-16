@@ -23,7 +23,7 @@ import java.util.List;
 @TeleOp(name = "turn to artifact")
 public class TurnToArtifactTest extends OpMode {
 
-    PIDController headingControl = new PIDController(0.5, 0, 0.25);
+    PIDController headingControl = new PIDController(0.05, 0, 0);
 
     private Limelight3A limelight;
     GamepadEx chassis;
