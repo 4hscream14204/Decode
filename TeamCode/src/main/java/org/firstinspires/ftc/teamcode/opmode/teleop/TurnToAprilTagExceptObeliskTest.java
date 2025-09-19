@@ -62,10 +62,10 @@ public class TurnToAprilTagExceptObeliskTest extends OpMode {
 
     @Override
     public void init() {
-        frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
-        frontRightmotor = hardwareMap.dcMotor.get("frontRightMotor");
-        backLeftmotor = hardwareMap.dcMotor.get("backLeftMotor");
-        backRightmotor = hardwareMap.dcMotor.get("backRightMotor");
+        frontLeftMotor = hardwareMap.dcMotor.get("leftFront");
+        frontRightmotor = hardwareMap.dcMotor.get("rightFront");
+        backLeftmotor = hardwareMap.dcMotor.get("leftRear");
+        backRightmotor = hardwareMap.dcMotor.get("rightRear");
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
