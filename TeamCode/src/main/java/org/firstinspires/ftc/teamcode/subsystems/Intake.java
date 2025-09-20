@@ -1,0 +1,17 @@
+package org.firstinspires.ftc.teamcode.subsystems;
+
+import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+public class Intake extends SubsystemBase {
+
+    public DcMotor intakeMotor;
+
+    public Intake(DcMotor m_intakeMotor) {
+        intakeMotor = m_intakeMotor;
+    }
+
+    public void intake(double m_Power) {
+        intakeMotor.setPower(m_Power);
+    }
+}
