@@ -5,12 +5,12 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Schematicannon TeleOp")
-public class TeleOp extends OpMode{
+@TeleOp(name = "Intake TeleOp")
+public class IntakeTest extends OpMode{
 
     public RobotBase robotBase;
     public GamepadEx chassisController;
