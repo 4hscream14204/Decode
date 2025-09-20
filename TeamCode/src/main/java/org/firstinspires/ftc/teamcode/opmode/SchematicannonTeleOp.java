@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 import java.util.List;
 
@@ -69,7 +70,28 @@ public class SchematicannonTeleOp extends OpMode {
         chassis.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whileActiveContinuous(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.intakeSubsystem.intake(-1))
                         .whenFinished(()->CommandScheduler.getInstance().schedule( new InstantCommand(()-> robotBase.intakeSubsystem.intake(0))))
+
                 ));
+
+        chassis.getGamepadButton(GamepadKeys.Button.B)
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-1))
+                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
+                        ))));
+
+        chassis.getGamepadButton(GamepadKeys.Button.A)
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.75))
+                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
+                        ))));
+
+        chassis.getGamepadButton(GamepadKeys.Button.X)
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.5))
+                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
+                        ))));
+
+        chassis.getGamepadButton(GamepadKeys.Button.Y)
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.2))
+                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
+                        ))));
     }
 
     @Override
