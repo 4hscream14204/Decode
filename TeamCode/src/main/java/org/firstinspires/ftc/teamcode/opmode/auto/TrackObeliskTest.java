@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auto;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
@@ -29,6 +30,7 @@ public class TrackObeliskTest extends OpMode {
     PathChain PGP;
     PathChain PPG;
     PathChain notDetected;
+    PathChain toGoal;
     @Override
     public void init() {
         limelight3A = hardwareMap.get(Limelight3A.class, "limelight");
@@ -37,19 +39,24 @@ public class TrackObeliskTest extends OpMode {
         limelight3A.setPollRateHz(100);
         limelight3A.start();
 
+        toGoal = follower.pathBuilder()
+                .addPath(new BezierCurve(new Pose(56.000, 8.000), new Pose(60.737, 78.838), new Pose(39.620, 117.654)))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(145))
+                .build();
+
         GPP = follower.pathBuilder()
-                .addPath(new BezierCurve(new Pose(56.000, 8.000), new Pose(65.966, 56.112), new Pose(46.000, 84.000)))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(90))
+                .addPath(new BezierCurve(new Pose(39.62, 117.654), new Pose(46.000, 84.000)))
+                .setLinearHeadingInterpolation(Math.toRadians(145), Math.toRadians(90))
                 .build();
 
         PGP = follower.pathBuilder()
-                .addPath(new BezierCurve(new Pose(56.000, 8.000), new Pose(56.112, 43.844), new Pose(43.000, 60.000)))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(90))
+                .addPath(new BezierCurve(new Pose(39.62, 117.654), new Pose(43.000, 60.000)))
+                .setLinearHeadingInterpolation(Math.toRadians(145), Math.toRadians(90))
                 .build();
 
         PPG = follower.pathBuilder()
-                .addPath(new BezierCurve(new Pose(56.000, 8.000), new Pose(51.687, 25.140), new Pose(43.000, 33.000)))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(90))
+                .addPath(new BezierCurve(new Pose(39.62, 117.654), new Pose(43.000, 33.000)))
+                .setLinearHeadingInterpolation(Math.toRadians(145), Math.toRadians(90))
                 .build();
 
         notDetected = follower.pathBuilder()
@@ -68,14 +75,20 @@ public class TrackObeliskTest extends OpMode {
         }
         if(id == 21){
             obelisk = new SequentialCommandGroup(
+                    new FollowPath(follower, toGoal, true, 1),
+                    new WaitUntilCommand(()->!follower.isBusy()),
                     new FollowPath(follower, GPP, true, 1));
         }
         else if(id == 22){
             obelisk = new SequentialCommandGroup(
+                    new FollowPath(follower, toGoal, true, 1),
+                    new WaitUntilCommand(()->!follower.isBusy()),
                     new FollowPath(follower, PGP, true, 1));
         }
         else if(id == 23){
             obelisk = new SequentialCommandGroup(
+                    new FollowPath(follower, toGoal, true, 1),
+                    new WaitUntilCommand(()->!follower.isBusy()),
                     new FollowPath(follower, PPG, true, 1));
         }
         else{
