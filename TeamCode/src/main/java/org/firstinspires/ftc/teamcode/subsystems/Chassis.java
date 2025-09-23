@@ -47,6 +47,11 @@ public class Chassis extends SubsystemBase {
         backRightmotor = m_backRightMotor;
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftmotor.setDirection(DcMotor.Direction.REVERSE);
+        /*
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)); */
 
     }
 
