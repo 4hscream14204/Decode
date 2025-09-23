@@ -13,6 +13,15 @@ import java.util.List;
 
 public class Chassis extends SubsystemBase {
 
+    public enum limelightPiplines {
+        APRILTAG(2),
+        ARTIFACT(0);
+        public final int value;
+        limelightPiplines(int m_val){
+            this.value = m_val;
+        }
+    }
+
     public Limelight3A limelight;
     DcMotor frontLeftMotor;
     DcMotor frontRightmotor;
@@ -22,6 +31,8 @@ public class Chassis extends SubsystemBase {
     public double limelightTY;
     public String limelightPiplineType;
     public double limelightTa;
+
+    public limelightPiplines enmLimelightPiplines;
 
     PIDController headingControl = new PIDController(0.05, 0, 0);
 
@@ -65,6 +76,19 @@ public class Chassis extends SubsystemBase {
         limelightTY = result.getTy();
         limelightPiplineType = result.getPipelineType();
         limelightTa = result.getTa();
+    }
+
+    public void changePipline(limelightPiplines m_pipline){
+        enmLimelightPiplines = m_pipline;
+        limelight.pipelineSwitch(m_pipline.value);
+    }
+
+    public void cycePiplines(){
+        if(enmLimelightPiplines == limelightPiplines.ARTIFACT) {
+            changePipline(limelightPiplines.APRILTAG);
+        } else {
+            changePipline(limelightPiplines.ARTIFACT);
+        }
     }
 
     public double getTargetX(){

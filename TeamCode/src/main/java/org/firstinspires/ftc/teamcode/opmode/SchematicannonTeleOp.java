@@ -2,23 +2,14 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 
 @TeleOp(name = "Schematic Cannon")
 public class SchematicannonTeleOp extends OpMode {
@@ -75,14 +66,19 @@ public class SchematicannonTeleOp extends OpMode {
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.2))
                         .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
                         ))));
+
+        /*chassis.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.chassisSubsystem.cycePiplines())
+                )); */
     }
 
     @Override
     public void loop() {
         chassis.readButtons();
 
-        // telemetry.addData("id", id);
-       // telemetry.addData("tx", robotBase.chassisSubsystem.getTargetX());
+        //telemetry.addData("id", id);
+        //telemetry.addData("tx", robotBase.chassisSubsystem.getTargetX());
         //telemetry.addData("ty", robotBase.chassisSubsystem.getTargetY());
         //telemetry.addData("ta", robotBase.chassisSubsystem.getTargetArea());
         //telemetry.addData("Pipeline type", robotBase.chassisSubsystem.getPiplineType());
