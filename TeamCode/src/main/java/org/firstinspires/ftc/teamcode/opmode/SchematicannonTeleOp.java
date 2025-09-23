@@ -19,20 +19,12 @@ public class SchematicannonTeleOp extends OpMode {
     IMU imu;
 
     public boolean bolTurnToArtifact = false;
-    //public double dblXOffset;
-    public double botHeading;
-    //public double dblHeadingOutput;
 
     @Override
     public void init() {
 
         robotBase = new RobotBase(hardwareMap);
         //robotBase.chassisSubsystem.initLimelight();
-        /*
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)); */
 
         chassis = new GamepadEx(gamepad1);
 
