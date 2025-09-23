@@ -24,16 +24,8 @@ import java.util.List;
 public class SchematicannonTeleOp extends OpMode {
 
     RobotBase robotBase;
-
-    //PIDController headingControl = new PIDController(0.05, 0, 0);
-
-    //private Limelight3A limelight;
     GamepadEx chassis;
     IMU imu;
-    //DcMotor frontLeftMotor;
-    //DcMotor frontRightmotor;
-    //DcMotor backLeftmotor;
-    //DcMotor backRightmotor;
 
     public boolean bolTurnToArtifact = false;
     //public double dblXOffset;
@@ -45,22 +37,13 @@ public class SchematicannonTeleOp extends OpMode {
 
         robotBase = new RobotBase(hardwareMap);
         //robotBase.chassisSubsystem.initLimelight();
-        /*frontLeftMotor = hardwareMap.dcMotor.get("frontLeftMotor");
-        frontRightmotor = hardwareMap.dcMotor.get("frontRightMotor");
-        backLeftmotor = hardwareMap.dcMotor.get("backLeftMotor");
-        backRightmotor = hardwareMap.dcMotor.get("backRightMotor");
+        /*
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeftmotor.setDirection(DcMotorSimple.Direction.REVERSE);*/
-        chassis = new GamepadEx(gamepad1);
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)); */
 
-       /* limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        limelight.pipelineSwitch(0);
-        limelight.start(); // This tells Limelight to start looking!*/
+        chassis = new GamepadEx(gamepad1);
 
         chassis.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
@@ -97,37 +80,6 @@ public class SchematicannonTeleOp extends OpMode {
     @Override
     public void loop() {
         chassis.readButtons();
-
-       // robotBase.chassisSubsystem.updateLimelight();
-
-       /* robotBase.chassisSubsystem.drive(chassis.getLeftY(), chassis.getLeftX(), chassis.getRightX(), bolTurnToArtifact);*/
-
-        //LLResult result = limelight.getLatestResult();
-        /*List<LLResultTypes.ColorResult> fiducials = result.getColorResults();
-        int id = 0;
-        for (LLResultTypes.ColorResult fiducial : fiducials) {
-            double limelightx = fiducial.getTargetXDegrees(); // Where it is (left-right)
-            double limelighty = fiducial.getTargetYDegrees(); // Where it is (up-down)
-            double StrafeDistance_3D = fiducial.getRobotPoseTargetSpace().getPosition().y;
-
-            //telemetry.addData("Fiducial " + id, "is " + StrafeDistance_3D + " meters away");
-        }*/
-
-        //double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
-        //double x = gamepad1.left_stick_x * 1.1;
-        //double rx = 0;
-        /*if (bolTurnToArtifact) {
-            dblXOffset = 0 - result.getTx();
-            dblHeadingOutput = (headingControl.calculate(dblXOffset));
-            rx = dblHeadingOutput;
-        } else {
-            rx = gamepad1.right_stick_x;
-        }
-
-        frontLeftMotor.setPower(y + x + rx);
-        backLeftmotor.setPower(y - x + rx);
-        frontRightmotor.setPower(y - x - rx);
-        backRightmotor.setPower(y + x - rx); */
 
         // telemetry.addData("id", id);
        // telemetry.addData("tx", robotBase.chassisSubsystem.getTargetX());

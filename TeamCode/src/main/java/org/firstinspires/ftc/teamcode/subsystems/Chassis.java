@@ -34,6 +34,8 @@ public class Chassis extends SubsystemBase {
         frontRightmotor = m_frontRightMotor;
         backLeftmotor = m_backLeftMotor;
         backRightmotor = m_backRightMotor;
+        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftmotor.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
