@@ -2,20 +2,21 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 
 import java.util.List;
 
 public class Chassis extends SubsystemBase {
 
     public enum limelightPiplines {
-        APRILTAG(2),
-        ARTIFACT(0);
+        OBELISK(2),
+        GREENARTIFACT(1),
+        REDGOAL(4),
+        BLUEGOAL(3),
+        PURPLEARTIFACT(0);
         public final int value;
         limelightPiplines(int m_val){
             this.value = m_val;
@@ -31,6 +32,9 @@ public class Chassis extends SubsystemBase {
     public double limelightTY;
     public String limelightPiplineType;
     public double limelightTa;
+    public double mountingAngle = 0;
+    public double goalHeight = 38.75;
+    public double limelightHeight = 16;
 
     public limelightPiplines enmLimelightPiplines;
 
@@ -53,6 +57,14 @@ public class Chassis extends SubsystemBase {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)); */
 
+    }
+
+    public double angleToGoal(){
+        return mountingAngle + getTargetY();
+    }
+
+    public double getHorizontalDistance(){
+        return ((goalHeight - limelightHeight) / Math.tan(Math.toRadians(angleToGoal())));
     }
 
     public void initLimelight() {
@@ -89,10 +101,10 @@ public class Chassis extends SubsystemBase {
     }
 
     public void cycePiplines(){
-        if(enmLimelightPiplines == limelightPiplines.ARTIFACT) {
-            changePipline(limelightPiplines.APRILTAG);
+        if(enmLimelightPiplines == limelightPiplines.PURPLEARTIFACT) {
+            changePipline(limelightPiplines.OBELISK);
         } else {
-            changePipline(limelightPiplines.ARTIFACT);
+            changePipline(limelightPiplines.PURPLEARTIFACT);
         }
     }
 
