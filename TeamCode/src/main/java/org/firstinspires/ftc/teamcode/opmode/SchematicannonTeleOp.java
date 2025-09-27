@@ -68,8 +68,8 @@ public class SchematicannonTeleOp extends OpMode {
                         .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
                         ))));
         chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchCommandGroup(launcher1, launcher2,launcher3);
-                ));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchCommandGroup(launcher1, launcher2,launcher3)));
+
 
         /*chassis.getGamepadButton(GamepadKeys.Button.BACK)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
