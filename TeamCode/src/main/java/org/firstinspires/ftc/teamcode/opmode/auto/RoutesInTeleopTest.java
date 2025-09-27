@@ -37,18 +37,18 @@ public class RoutesInTeleopTest extends OpMode {
 
         pathChain = follower.pathBuilder() //Lazy Curve Generation
                 .addPath(new Path(new BezierCurve(follower::getPose, new Pose(42.1, 32.5, Math.toRadians(90)))))
-                .setLinearHeadingInterpolation(Math.toRadians(follower.getPose().getHeading()), Math.toRadians(90))
+                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(9), 1))
                 .build();
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(route));
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> follower.followPath(pathChain)), new InstantCommand(()->automatedDrive = true)));
 
         new Trigger(()->automatedDrive && (chassis.wasJustPressed(GamepadKeys.Button.B) || !follower.isBusy()))
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.startTeleopDrive(true)), new InstantCommand(()->automatedDrive = false)));
 
         route = new SequentialCommandGroup(
-                new InstantCommand(()->automatedDrive = true),
-                new InstantCommand(()->new FollowPath(follower, pathChain, true, 1))
+                new InstantCommand(()->new FollowPath(follower, pathChain, true, 1)),
+                new WaitUntilCommand(()->follower.isBusy())
         );
     }
 
