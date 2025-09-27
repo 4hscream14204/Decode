@@ -6,10 +6,13 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.teamcode.commandgroups.LaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
+import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 
 @TeleOp(name = "Schematic Cannon")
 public class SchematicannonTeleOp extends OpMode {
@@ -17,6 +20,9 @@ public class SchematicannonTeleOp extends OpMode {
     RobotBase robotBase;
     GamepadEx chassis;
     IMU imu;
+    DcMotorEx launcher1;
+    DcMotorEx launcher2;
+    DcMotorEx launcher3;
 
     public boolean bolTurnToArtifact = false;
 
@@ -25,6 +31,9 @@ public class SchematicannonTeleOp extends OpMode {
 
         robotBase = new RobotBase(hardwareMap);
         //robotBase.chassisSubsystem.initLimelight();
+        launcher1 = hardwareMap.get(DcMotorEx.class, "launcher1");
+        launcher2 = hardwareMap.get(DcMotorEx.class,"launcher2");
+        launcher3 = hardwareMap.get(DcMotorEx.class, "launcher3");
 
         chassis = new GamepadEx(gamepad1);
 
@@ -58,6 +67,9 @@ public class SchematicannonTeleOp extends OpMode {
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.2))
                         .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
                         ))));
+        chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchCommandGroup(launcher1, launcher2,launcher3);
+                ));
 
         /*chassis.getGamepadButton(GamepadKeys.Button.BACK)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
