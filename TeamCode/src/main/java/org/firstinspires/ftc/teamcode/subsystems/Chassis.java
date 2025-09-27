@@ -25,16 +25,21 @@ public class Chassis extends SubsystemBase {
 
     public Limelight3A limelight;
     DcMotor frontLeftMotor;
-    DcMotor frontRightmotor;
-    DcMotor backLeftmotor;
-    DcMotor backRightmotor;
+    DcMotor frontRightMotor;
+    DcMotor backLeftMotor;
+    DcMotor backRightMotor;
     public double limelightTX;
     public double limelightTY;
     public String limelightPiplineType;
     public double limelightTa;
     public double mountingAngle = 0;
+    public double goalAprilTagHeight = 29.5;
     public double goalHeight = 38.75;
     public double limelightHeight = 16;
+    public double goalHeightOffset = goalHeight - limelightHeight;
+    public final double gravity = 388.476;
+    public double shooterOffsetY = 7;
+    public double ShooterOffsetX = 0;
 
     public limelightPiplines enmLimelightPiplines;
 
@@ -46,11 +51,11 @@ public class Chassis extends SubsystemBase {
     public Chassis(Limelight3A m_limelight, DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor) {
         limelight = m_limelight;
         frontLeftMotor = m_frontLeftMotor;
-        frontRightmotor = m_frontRightMotor;
-        backLeftmotor = m_backLeftMotor;
-        backRightmotor = m_backRightMotor;
+        frontRightMotor = m_frontRightMotor;
+        backLeftMotor = m_backLeftMotor;
+        backRightMotor = m_backRightMotor;
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        backLeftmotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         /*
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -59,12 +64,36 @@ public class Chassis extends SubsystemBase {
 
     }
 
-    public double angleToGoal(){
+    public double getAngleToGoal(){
         return mountingAngle + getTargetY();
     }
 
-    public double getHorizontalDistance(){
-        return ((goalHeight - limelightHeight) / Math.tan(Math.toRadians(angleToGoal())));
+    public double getHorizontalDistance(double m_Offset){
+        return ((getVerticalDistance(0) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset);
+    }
+
+    public double getVerticalDistance(double m_Offset){
+        return (goalAprilTagHeight - limelightHeight) + m_Offset;
+    }
+
+    /*public double getHorizontalComp(){
+        return getHorizontalDistance(ShooterOffsetX) / getArcTime();
+    } */
+
+    public double getVerticalComp(){
+        return (getVerticalDistance(shooterOffsetY) * 2) / getArcTime();
+    }
+
+    public double getArcTime(){
+        return (getVerticalDistance(shooterOffsetY) / gravity) * (.5 * (getVerticalDistance(shooterOffsetY) / gravity));
+    }
+
+    public double getLaunchSpeed(){
+        return (((gravity * getHorizontalDistance(ShooterOffsetX)) * (gravity * getHorizontalDistance(ShooterOffsetX))) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity) * (.5 * (((gravity * getHorizontalDistance(ShooterOffsetX)) * (gravity * getHorizontalDistance(ShooterOffsetX))) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity));
+    }
+
+    public double getLaunchAngle() {
+        return Math.asin(getVerticalComp() / getLaunchSpeed());
     }
 
     public void initLimelight() {
@@ -100,13 +129,13 @@ public class Chassis extends SubsystemBase {
         limelight.pipelineSwitch(m_pipline.value);
     }
 
-    public void cycePiplines(){
+    /*public void cycePiplines(){
         if(enmLimelightPiplines == limelightPiplines.PURPLEARTIFACT) {
             changePipline(limelightPiplines.OBELISK);
         } else {
             changePipline(limelightPiplines.PURPLEARTIFACT);
         }
-    }
+    }*/
 
     public double getTargetX(){
         return limelightTX;
@@ -137,8 +166,8 @@ public class Chassis extends SubsystemBase {
         }
 
         frontLeftMotor.setPower(y + x + rx);
-        backLeftmotor.setPower(y - x + rx);
-        frontRightmotor.setPower(y - x - rx);
-        backRightmotor.setPower(y + x - rx);
+        backLeftMotor.setPower(y - x + rx);
+        frontRightMotor.setPower(y - x - rx);
+        backRightMotor.setPower(y + x - rx);
     }
 }
