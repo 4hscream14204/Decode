@@ -33,8 +33,13 @@ public class Chassis extends SubsystemBase {
     public String limelightPiplineType;
     public double limelightTa;
     public double mountingAngle = 0;
-    public double goalHeight = 29.5;
+    public double goalAprilTagHeight = 29.5;
+    public double goalHeight = 38.75;
     public double limelightHeight = 16;
+    public double goalHeightOffset = goalHeight - limelightHeight;
+    public final double gravity = 388.476;
+    public double shooterOffsetY = 7;
+    public double ShooterOffsetX = 0;
 
     public limelightPiplines enmLimelightPiplines;
 
@@ -63,8 +68,32 @@ public class Chassis extends SubsystemBase {
         return mountingAngle + getTargetY();
     }
 
-    public double getHorizontalDistance(){
-        return ((goalHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal())));
+    public double getHorizontalDistance(double m_Offset){
+        return ((getVerticalDistance(0) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset);
+    }
+
+    public double getVerticalDistance(double m_Offset){
+        return (goalAprilTagHeight - limelightHeight) + m_Offset;
+    }
+
+    /*public double getHorizontalComp(){
+        return getHorizontalDistance(ShooterOffsetX) / getArcTime();
+    } */
+
+    public double getVerticalComp(){
+        return (getVerticalDistance(shooterOffsetY) * 2) / getArcTime();
+    }
+
+    public double getArcTime(){
+        return (getVerticalDistance(shooterOffsetY) / gravity) * (.5 * (getVerticalDistance(shooterOffsetY) / gravity));
+    }
+
+    public double getLaunchSpeed(){
+        return (((gravity * getHorizontalDistance(ShooterOffsetX)) * (gravity * getHorizontalDistance(ShooterOffsetX))) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity) * (.5 * (((gravity * getHorizontalDistance(ShooterOffsetX)) * (gravity * getHorizontalDistance(ShooterOffsetX))) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity));
+    }
+
+    public double getLaunchAngle() {
+        return Math.asin(getVerticalComp() / getLaunchSpeed());
     }
 
     public void initLimelight() {
