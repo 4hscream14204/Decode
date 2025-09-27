@@ -73,7 +73,7 @@ public class Chassis extends SubsystemBase {
     }
 
     public double getVerticalDistance(double m_Offset){
-        return (goalAprilTagHeight - limelightHeight) + m_Offset;
+        return (goalHeightOffset) + m_Offset;
     }
 
     /*public double getHorizontalComp(){
