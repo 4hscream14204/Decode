@@ -18,13 +18,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 
+import java.util.function.Supplier;
+
 @TeleOp(name = "Route in TeleOp")
 public class RoutesInTeleopTest extends OpMode {
     GamepadEx chassis;
     Follower follower;
     Pose startPose = new Pose(56, 8, Math.toRadians(0));
     boolean automatedDrive;
-    PathChain pathChain;
+    Supplier<PathChain> pathChain;
     double x;
     double y;
     SequentialCommandGroup route;
@@ -35,21 +37,21 @@ public class RoutesInTeleopTest extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        pathChain = follower.pathBuilder() //Lazy Curve Generation
-                .addPath(new Path(new BezierCurve(follower::getPose, new Pose(42.1, 32.5, Math.toRadians(90)))))
+        pathChain =()-> follower.pathBuilder() //Lazy Curve Generation
+                .addPath(new Path(new BezierCurve(follower::getPose, new Pose(16.39, 74.21, Math.toRadians(0)))))
                 .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(9), 1))
                 .build();
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> follower.followPath(pathChain)), new InstantCommand(()->automatedDrive = true)));
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> follower.followPath(pathChain.get())), new InstantCommand(()->automatedDrive = true)));
 
         new Trigger(()->automatedDrive && (chassis.wasJustPressed(GamepadKeys.Button.B) || !follower.isBusy()))
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.startTeleopDrive(true)), new InstantCommand(()->automatedDrive = false)));
 
-        route = new SequentialCommandGroup(
+        /*route = new SequentialCommandGroup(
                 new InstantCommand(()->new FollowPath(follower, pathChain, true, 1)),
                 new WaitUntilCommand(()->follower.isBusy())
-        );
+        );*/
     }
 
     @Override
