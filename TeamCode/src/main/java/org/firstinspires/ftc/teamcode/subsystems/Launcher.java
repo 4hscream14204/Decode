@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class Launcher extends SubsystemBase {
     public DcMotorEx launcherMotor;
 
+    public final double dblLaunchWheelRadius = 1.375;
+
     public Launcher(DcMotorEx m_Launcher){
         launcherMotor = m_Launcher;
         launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -15,5 +17,13 @@ public class Launcher extends SubsystemBase {
 
     public void setPower(double power){
         launcherMotor.setPower(power);
+    }
+
+    public void setRPM(double m_RPM) {
+        launcherMotor.setVelocity(m_RPM);
+    }
+
+    public double getRPM() {
+        return launcherMotor.getVelocity() * (6.28 * dblLaunchWheelRadius);
     }
 }

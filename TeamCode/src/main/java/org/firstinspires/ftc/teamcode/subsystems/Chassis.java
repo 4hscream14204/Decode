@@ -96,6 +96,10 @@ public class Chassis extends SubsystemBase {
         return Math.asin(getVerticalComp() / getLaunchSpeed());
     }
 
+    /*public double getLaunchRPM() {
+        return ;
+    }*/
+
     public void initLimelight() {
 
         limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
