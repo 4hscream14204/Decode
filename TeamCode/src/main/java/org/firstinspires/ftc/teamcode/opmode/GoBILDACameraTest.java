@@ -4,12 +4,14 @@ import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
+import org.opencv.core.Rect;
 
 @TeleOp(name = "Concept: Vision Color-Sensor", group = "Concept")
 public class GoBILDACameraTest extends LinearOpMode
@@ -43,13 +45,17 @@ public class GoBILDACameraTest extends LinearOpMode
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0.1, 0.1, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
-                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
-                        PredominantColorProcessor.Swatch.RED,
-                        PredominantColorProcessor.Swatch.BLUE,
-                        PredominantColorProcessor.Swatch.YELLOW,
-                        PredominantColorProcessor.Swatch.BLACK,
-                        PredominantColorProcessor.Swatch.WHITE)
+                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
                 .build();
+
+        PredominantColorProcessor colorSensorLeft = new PredominantColorProcessor.Builder()
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.1, -1))
+                .setSwatches(
+                        PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
+                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                .build();
+
+        Rect rect = new Rect(0, 0, 10, 250);
 
         /*
          * Build a vision portal to run the Color Sensor process.
@@ -65,7 +71,8 @@ public class GoBILDACameraTest extends LinearOpMode
          */
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorSensor)
-                .setCameraResolution(new Size(320, 240))
+                .addProcessor(colorSensorLeft)
+                .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .build();
 
@@ -92,15 +99,17 @@ public class GoBILDACameraTest extends LinearOpMode
             //    if (result.RGB[0] > 128) {... some code  ...}
 
             PredominantColorProcessor.Result result = colorSensor.getAnalysis();
+            PredominantColorProcessor.Result resultLeft = colorSensorLeft.getAnalysis();
 
             // Display the Color Sensor result.
             telemetry.addData("Best Match", result.closestSwatch);
-            telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
+            telemetry.addData("Best Match Left", resultLeft.closestSwatch);
+            /*telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
                     result.RGB[0], result.RGB[1], result.RGB[2]));
             telemetry.addLine(String.format("HSV   (%3d, %3d, %3d)",
                     result.HSV[0], result.HSV[1], result.HSV[2]));
             telemetry.addLine(String.format("YCrCb (%3d, %3d, %3d)",
-                    result.YCrCb[0], result.YCrCb[1], result.YCrCb[2]));
+                    result.YCrCb[0], result.YCrCb[1], result.YCrCb[2]));*/
             telemetry.update();
 
             sleep(20);
