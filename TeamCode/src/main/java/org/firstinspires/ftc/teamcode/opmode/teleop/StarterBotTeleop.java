@@ -83,6 +83,7 @@ public class StarterBotTeleop extends OpMode {
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
     public DcMotorEx launcher = null;
+    public DcMotor intake;
     public CRServo leftFeeder = null;
     public CRServo rightFeeder = null;
     public GamepadEx chassisController;
@@ -122,6 +123,7 @@ public class StarterBotTeleop extends OpMode {
      */
     @Override
     public void init() {
+        CommandScheduler.getInstance().reset();
         launchState = LaunchState.IDLE;
 
         chassisController = new GamepadEx(gamepad1);
@@ -136,6 +138,7 @@ public class StarterBotTeleop extends OpMode {
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
         leftFeeder = hardwareMap.get(CRServo.class, "left_feeder");
         rightFeeder = hardwareMap.get(CRServo.class, "right_feeder");
+        intake = hardwareMap.get(DcMotor.class, "intake");
 
         /*
          * To drive forward, most robots need the motor on one side to be reversed,
@@ -183,6 +186,11 @@ public class StarterBotTeleop extends OpMode {
          * Tell the driver that initialization is complete.
          */
         telemetry.addData("Status", "Initialized");
+
+        chassisController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(
+                        new LaunchCommandGroup(launcher, leftFeeder, rightFeeder))
+                );
     }
 
     /*
@@ -204,6 +212,8 @@ public class StarterBotTeleop extends OpMode {
      */
     @Override
     public void loop() {
+
+        CommandScheduler.getInstance().run();
         /*
          * Here we call a function called arcadeDrive. The arcadeDrive function takes the input from
          * the joysticks, and applies power to the left and right drive motor to move the robot
@@ -219,15 +229,23 @@ public class StarterBotTeleop extends OpMode {
          * Here we give the user control of the speed of the launcher motor without automatically
          * queuing a shot.
          */
-        chassisController.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(
-                        new LaunchCommandGroup(launcher, leftFeeder, rightFeeder))
-                );
 
         if (gamepad1.y) {
             //launcher.setVelocity(LAUNCHER_TARGET_VELOCITY);
         } else if (gamepad1.b) { // stop flywheel
             launcher.setVelocity(STOP_SPEED);
+        }
+
+        if(gamepad1.left_trigger >= 0.1){
+            intake.setPower(-gamepad1.left_trigger);
+        }
+
+        if(gamepad1.right_trigger >= 0.1){
+            intake.setPower(gamepad1.right_trigger);
+        }
+
+        if(gamepad1.right_trigger == 0 && gamepad1.left_trigger == 0){
+            intake.setPower(0);
         }
 
         /*
