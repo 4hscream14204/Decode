@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -15,10 +16,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.teamcode.subsystems.Chassis;
+
 import java.util.List;
 
-@TeleOp(name = "AlignToBall")
-public class AlignToBallTest extends OpMode {
+@TeleOp(name = "Heading Lock No Obelisk")
+public class TurnToAprilTagExceptObeliskTest extends OpMode {
 
     PIDController headingControl = new PIDController(0.05, 0, 0);
 
@@ -30,13 +34,31 @@ public class AlignToBallTest extends OpMode {
     DcMotor backLeftmotor;
     DcMotor backRightmotor;
 
-    public boolean bolTurnToArtifact = false;
+    boolean isOnBlueAlliance = true;
+
+    public boolean bolTurnToGoal = false;
     public double dblXOffset;
     public double botHeading;
     public double dblHeadingOutput;
 
-    public void toggleTurnToArtifact(){
-        bolTurnToArtifact = !bolTurnToArtifact;
+    /*public double angleToGoal(double targetY){
+        return mountingAngle + targetY;
+    }
+
+    public double getHorizontalDistance(double ty){
+        return ((goalHeight - limelightHeight) / Math.tan(Math.toRadians(angleToGoal(ty))));
+    }
+
+    public void getGroundAngle(double tx){
+
+    }*/
+
+    public void turnToGoal(){
+
+    }
+
+    public void toggleTurnToGoal(){
+        bolTurnToGoal = !bolTurnToGoal;
     }
 
     @Override
@@ -55,34 +77,39 @@ public class AlignToBallTest extends OpMode {
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        limelight.pipelineSwitch(0);
+        limelight.pipelineSwitch(Chassis.limelightPiplines.REDGOAL.value);
         limelight.start(); // This tells Limelight to start looking!
 
         chassis.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()-> toggleTurnToArtifact())
+                .whenPressed(()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()-> toggleTurnToGoal())
+                ));
+
+        chassis.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->isOnBlueAlliance = !isOnBlueAlliance)
                 ));
     }
 
-    @Override
     public void loop() {
         chassis.readButtons();
 
         LLResult result = limelight.getLatestResult();
-        List<LLResultTypes.ColorResult> fiducials = result.getColorResults();
+        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults();
         int id = 0;
-        for (LLResultTypes.ColorResult fiducial : fiducials) {
+        for (LLResultTypes.FiducialResult fiducial : fiducials) {
+            id = fiducial.getFiducialId(); // The ID number of the fiducial
             double limelightx = fiducial.getTargetXDegrees(); // Where it is (left-right)
             double limelighty = fiducial.getTargetYDegrees(); // Where it is (up-down)
             double StrafeDistance_3D = fiducial.getRobotPoseTargetSpace().getPosition().y;
 
-            //telemetry.addData("Fiducial " + id, "is " + StrafeDistance_3D + " meters away");
+            //Matelemetry.addData("Fiducial " + id, "is " + StrafeDistance_3D + " meters away");
         }
 
         double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
         double x = gamepad1.left_stick_x * 1.1;
         double rx = 0;
-        if (bolTurnToArtifact) {
+        if (bolTurnToGoal && (isOnBlueAlliance && id == 20 || !isOnBlueAlliance && id == 24)) {
             dblXOffset = 0 - result.getTx();
             dblHeadingOutput = (headingControl.calculate(dblXOffset));
             rx = dblHeadingOutput;
@@ -95,12 +122,12 @@ public class AlignToBallTest extends OpMode {
         frontRightmotor.setPower(y - x - rx);
         backRightmotor.setPower(y + x - rx);
 
-       // telemetry.addData("id", id);
+        telemetry.addData("id", id);
         telemetry.addData("tx", result.getTx());
         telemetry.addData("ty", result.getTy());
         telemetry.addData("ta", result.getTa());
         telemetry.addData("Pipeline type", result.getPipelineType());
-        telemetry.addData("Align With Artifact", bolTurnToArtifact);
+        telemetry.addData("Align With April Tag", bolTurnToGoal);
         CommandScheduler.getInstance().run();
     }
 }
