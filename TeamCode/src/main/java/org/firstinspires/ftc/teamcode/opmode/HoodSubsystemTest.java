@@ -24,10 +24,19 @@ public class HoodSubsystemTest extends OpMode {
     @Override
     public void init() {
         robotBase = new RobotBase(hardwareMap);
+        robotBase.chassisSubsystem.initLimelight();
+        robotBase.chassisSubsystem.changePipline(Chassis.limelightPiplines.REDGOAL);
     }
 
     @Override
     public void loop() {
-        hood.autoSetPosition(chassis.getLaunchAngle());
+        robotBase.chassisSubsystem.updateLimelight();
+        if(gamepad1.start){
+            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true);
+        }
+        else{
+            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, false);
+        }
+        robotBase.hoodSubsystem.autoSetPosition(chassis.getLaunchAngle());
     }
 }
