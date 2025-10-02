@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 
@@ -19,10 +20,10 @@ public class HoodSubsystemTest extends OpMode {
     Servo hoodServo;
     Chassis chassis;
     Hood hood;
+    RobotBase robotBase;
     @Override
     public void init() {
-        chassis = new Chassis(limelight3A, frontRightMotor, frontLeftMotor, backRightMotor, backLeftMotor);
-        hood = new Hood(hoodServo);
+        robotBase = new RobotBase(hardwareMap);
     }
 
     @Override
