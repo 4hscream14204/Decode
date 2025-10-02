@@ -33,12 +33,12 @@ public class Chassis extends SubsystemBase {
     public String limelightPiplineType;
     public double limelightTa;
     public double mountingAngle = 0;
-    public double goalAprilTagHeight = 29.5;
-    public double goalHeight = 38.75;
-    public double limelightHeight = 16;
+    public double goalAprilTagHeight = 75;
+    public double goalHeight = 99;
+    public double limelightHeight = 40;
     public double goalHeightOffset = goalHeight - limelightHeight;
-    public final double gravity = 388.476;
-    public double shooterOffsetY = 7;
+    public final double gravity = 981;
+    public double shooterOffsetY = 17;
     public double ShooterOffsetX = 0;
 
     public limelightPiplines enmLimelightPiplines;
