@@ -37,6 +37,16 @@ public class HoodSubsystemTest extends OpMode {
         else{
             robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, false);
         }
-        robotBase.hoodSubsystem.autoSetPosition(chassis.getLaunchAngle());
+        double angle = robotBase.chassisSubsystem.getLaunchAngle();
+        double verticalComp = robotBase.chassisSubsystem.getVerticalComp();
+        double launchSpeed = robotBase.chassisSubsystem.getLaunchSpeed();
+        robotBase.hoodSubsystem.autoSetPosition(angle);
+        telemetry.addData("Horizontal Distance", robotBase.chassisSubsystem.getHorizontalDistance(0));
+        telemetry.addData("getLaunchAngle", robotBase.chassisSubsystem.getLaunchAngle());
+        telemetry.addData("AngleToGoal", robotBase.chassisSubsystem.getAngleToGoal());
+        telemetry.addData("Vertical Comp", verticalComp);
+        telemetry.addData("Launch Speed", launchSpeed);
+        telemetry.addData("Limelight X", robotBase.chassisSubsystem.limelightTX);
+        telemetry.addData("Desired Servo Position", robotBase.chassisSubsystem.getLaunchAngle()/300);
     }
 }

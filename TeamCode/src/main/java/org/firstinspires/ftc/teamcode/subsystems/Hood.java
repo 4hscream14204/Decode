@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Hood extends SubsystemBase {
     Servo hoodServo;
-    double rangeOfMotion;
+    double rangeOfMotion = 300;
     public Hood(Servo m_hoodServo){
         hoodServo = m_hoodServo;
     }

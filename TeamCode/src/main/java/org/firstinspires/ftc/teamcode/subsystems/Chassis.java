@@ -69,7 +69,7 @@ public class Chassis extends SubsystemBase {
     }
 
     public double getHorizontalDistance(double m_Offset){
-        return ((getVerticalDistance(0) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset);
+        return (((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset);
     }
 
     public double getVerticalDistance(double m_Offset){
@@ -93,7 +93,7 @@ public class Chassis extends SubsystemBase {
     }
 
     public double getLaunchAngle() {
-        return Math.asin(getVerticalComp() / getLaunchSpeed());
+        return 1/*Math.asin(getVerticalComp() / getLaunchSpeed())*/;
     }
 
     /*public double getLaunchRPM() {
