@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import android.util.Size;
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -18,6 +21,9 @@ public class GoBILDACameraTest extends LinearOpMode
 {
     double purpleArtifacts;
     double greenArtifacts;
+    PredominantColorProcessor.Result result;
+    PredominantColorProcessor.Result resultLeft;
+    PredominantColorProcessor.Result resultRight;
     @Override
     public void runOpMode()
     {
@@ -64,6 +70,10 @@ public class GoBILDACameraTest extends LinearOpMode
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
                 .build();
 
+        result = colorSensor.getAnalysis();
+        resultLeft = colorSensorLeft.getAnalysis();
+        resultRight = colorSensorRight.getAnalysis();
+
         /*
          * Build a vision portal to run the Color Sensor process.
          *
@@ -106,15 +116,41 @@ public class GoBILDACameraTest extends LinearOpMode
             //  or:
             //    if (result.RGB[0] > 128) {... some code  ...}
 
-            PredominantColorProcessor.Result result = colorSensor.getAnalysis();
-            PredominantColorProcessor.Result resultLeft = colorSensorLeft.getAnalysis();
-            PredominantColorProcessor.Result resultRight = colorSensorRight.getAnalysis();
+            result = colorSensor.getAnalysis();
+            resultLeft = colorSensorLeft.getAnalysis();
+            resultRight = colorSensorRight.getAnalysis();
+
+            new Trigger(()->result.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                    .whenActive(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts = purpleArtifacts + 1)))
+                    .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts = purpleArtifacts - 1)));
+
+            new Trigger(()->result.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
+                    .whenActive(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->greenArtifacts++)))
+                    .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts--)));
+
+            new Trigger(()->resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                    .whenActive(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts++)))
+                    .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts--)));
+
+            new Trigger(()->resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
+                    .whenActive(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->greenArtifacts++)))
+                    .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts--)));
+
+            new Trigger(()->resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                    .whenActive(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts++)))
+                    .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts--)));
+
+            new Trigger(()->resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
+                    .whenActive(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->greenArtifacts++)))
+                    .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts--)));
 
 
             // Display the Color Sensor result.
             telemetry.addData("Best Match Left", resultLeft.closestSwatch);
             telemetry.addData("Best Match", result.closestSwatch);
             telemetry.addData("Best Match Right", resultRight.closestSwatch);
+            telemetry.addData("Purple Artifacts: ", purpleArtifacts);
+            telemetry.addData("Green Artifacts: ", greenArtifacts);
             /*telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
                     result.RGB[0], result.RGB[1], result.RGB[2]));
             telemetry.addLine(String.format("HSV   (%3d, %3d, %3d)",
