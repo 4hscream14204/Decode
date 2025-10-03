@@ -16,6 +16,8 @@ import org.opencv.core.Rect;
 @TeleOp(name = "Concept: Vision Color-Sensor", group = "Concept")
 public class GoBILDACameraTest extends LinearOpMode
 {
+    double purpleArtifacts;
+    double greenArtifacts;
     @Override
     public void runOpMode()
     {
@@ -49,13 +51,18 @@ public class GoBILDACameraTest extends LinearOpMode
                 .build();
 
         PredominantColorProcessor colorSensorLeft = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.1, -1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.9, 0.1, -0.7, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
                 .build();
 
-        Rect rect = new Rect(0, 0, 10, 250);
+        PredominantColorProcessor colorSensorRight = new PredominantColorProcessor.Builder()
+                .setRoi(ImageRegion.asUnityCenterCoordinates(0.7, 0.1, 0.9, -0.1))
+                .setSwatches(
+                        PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
+                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                .build();
 
         /*
          * Build a vision portal to run the Color Sensor process.
@@ -72,6 +79,7 @@ public class GoBILDACameraTest extends LinearOpMode
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorSensor)
                 .addProcessor(colorSensorLeft)
+                .addProcessor(colorSensorRight)
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .build();
@@ -100,10 +108,13 @@ public class GoBILDACameraTest extends LinearOpMode
 
             PredominantColorProcessor.Result result = colorSensor.getAnalysis();
             PredominantColorProcessor.Result resultLeft = colorSensorLeft.getAnalysis();
+            PredominantColorProcessor.Result resultRight = colorSensorRight.getAnalysis();
+
 
             // Display the Color Sensor result.
-            telemetry.addData("Best Match", result.closestSwatch);
             telemetry.addData("Best Match Left", resultLeft.closestSwatch);
+            telemetry.addData("Best Match", result.closestSwatch);
+            telemetry.addData("Best Match Right", resultRight.closestSwatch);
             /*telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
                     result.RGB[0], result.RGB[1], result.RGB[2]));
             telemetry.addLine(String.format("HSV   (%3d, %3d, %3d)",
