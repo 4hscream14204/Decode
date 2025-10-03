@@ -35,6 +35,7 @@ public class LimelightTest extends OpMode {
         telemetry.addData("GroundDistance", robotBase.chassisSubsystem.getHorizontalDistance(0));
         telemetry.addData("AngleToGoal", robotBase.chassisSubsystem.getAngleToGoal());
         telemetry.addData("Pipline Type", robotBase.chassisSubsystem.getPiplineType());
+        telemetry.addData("Target Y", robotBase.chassisSubsystem.getTargetY());
 
         CommandScheduler.getInstance().run();
     }
