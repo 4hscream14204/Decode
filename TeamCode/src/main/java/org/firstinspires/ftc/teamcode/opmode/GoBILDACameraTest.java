@@ -112,9 +112,9 @@ public class GoBILDACameraTest extends LinearOpMode
             // Note: to take actions based on the detected color, simply use the colorSwatch or
             // color space value in a comparison or switch.   eg:
 
-            //    if (result.closestSwatch == PredominantColorProcessor.Swatch.RED) {.. some code ..}
+            //    if (resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.RED) {.. some code ..}
             //  or:
-            //    if (result.RGB[0] > 128) {... some code  ...}
+            //    if (resultMiddle.RGB[0] > 128) {... some code  ...}
 
             result = colorSensor.getAnalysis();
             resultLeft = colorSensorLeft.getAnalysis();
@@ -145,18 +145,18 @@ public class GoBILDACameraTest extends LinearOpMode
                     .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->purpleArtifacts--)));
 
 
-            // Display the Color Sensor result.
+            // Display the Color Sensor resultMiddle.
             telemetry.addData("Best Match Left", resultLeft.closestSwatch);
             telemetry.addData("Best Match", result.closestSwatch);
             telemetry.addData("Best Match Right", resultRight.closestSwatch);
             telemetry.addData("Purple Artifacts: ", purpleArtifacts);
             telemetry.addData("Green Artifacts: ", greenArtifacts);
             /*telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
-                    result.RGB[0], result.RGB[1], result.RGB[2]));
+                    resultMiddle.RGB[0], resultMiddle.RGB[1], resultMiddle.RGB[2]));
             telemetry.addLine(String.format("HSV   (%3d, %3d, %3d)",
-                    result.HSV[0], result.HSV[1], result.HSV[2]));
+                    resultMiddle.HSV[0], resultMiddle.HSV[1], resultMiddle.HSV[2]));
             telemetry.addLine(String.format("YCrCb (%3d, %3d, %3d)",
-                    result.YCrCb[0], result.YCrCb[1], result.YCrCb[2]));*/
+                    resultMiddle.YCrCb[0], resultMiddle.YCrCb[1], resultMiddle.YCrCb[2]));*/
             telemetry.update();
 
             sleep(20);
