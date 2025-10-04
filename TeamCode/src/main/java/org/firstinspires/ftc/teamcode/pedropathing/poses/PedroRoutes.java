@@ -74,7 +74,7 @@ public class PedroRoutes {
             .build();
 
 //Pedro route shooting from big launch zone
-public static PathChain goesFromWallToShootPreload = follower.pathBuilder()
+public PathChain goesFromWallToShootPreload = follower.pathBuilder()
         .addPath(
                 new BezierCurve(new Pose(79.000, 139.000), new Pose(73.000, 113.000), new Pose(100.000, 125.000)))
         .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(24))
