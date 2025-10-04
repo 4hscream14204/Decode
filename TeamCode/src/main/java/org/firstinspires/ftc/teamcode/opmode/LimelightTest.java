@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @TeleOp(name = "LimelightTest")
 public class LimelightTest extends OpMode {
@@ -23,19 +24,19 @@ public class LimelightTest extends OpMode {
     }
 
     public void start() {
-        robotBase.chassisSubsystem.initLimelight();
-        robotBase.chassisSubsystem.changePipline(Chassis.limelightPiplines.REDGOAL);
+        robotBase.limelightSubsystem.initLimelight();
+        robotBase.limelightSubsystem.changePipline(Limelight.limelightPiplines.REDGOAL);
     }
 
     public void loop() {
         chassis.readButtons();
-        robotBase.chassisSubsystem.updateLimelight();
-        robotBase.chassisSubsystem.drive(chassis.getLeftY(), chassis.getLeftX(), chassis.getRightX(), false);
+        robotBase.limelightSubsystem.updateLimelight();
+        robotBase.chassisSubsystem.drive(chassis.getLeftY(), chassis.getLeftX(), chassis.getRightX(), false, robotBase.limelightSubsystem.getTargetX());
 
-        telemetry.addData("GroundDistance", robotBase.chassisSubsystem.getHorizontalDistance(0));
-        telemetry.addData("AngleToGoal", robotBase.chassisSubsystem.getAngleToGoal());
-        telemetry.addData("Pipline Type", robotBase.chassisSubsystem.getPiplineType());
-        telemetry.addData("Target Y", robotBase.chassisSubsystem.getTargetY());
+        telemetry.addData("GroundDistance", robotBase.limelightSubsystem.getHorizontalDistance(0));
+        telemetry.addData("AngleToGoal", robotBase.limelightSubsystem.getAngleToGoal());
+        telemetry.addData("Pipline Type", robotBase.limelightSubsystem.getPiplineType());
+        telemetry.addData("Target Y", robotBase.limelightSubsystem.getTargetY());
 
         CommandScheduler.getInstance().run();
     }

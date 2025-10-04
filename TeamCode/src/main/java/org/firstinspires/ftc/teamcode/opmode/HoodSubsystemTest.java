@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @TeleOp(name = "Hood Subsystem Test")
 public class HoodSubsystemTest extends OpMode {
@@ -24,29 +25,29 @@ public class HoodSubsystemTest extends OpMode {
     @Override
     public void init() {
         robotBase = new RobotBase(hardwareMap);
-        robotBase.chassisSubsystem.initLimelight();
-        robotBase.chassisSubsystem.changePipline(Chassis.limelightPiplines.REDGOAL);
+        robotBase.limelightSubsystem.initLimelight();
+        robotBase.limelightSubsystem.changePipline(Limelight.limelightPiplines.REDGOAL);
     }
 
     @Override
     public void loop() {
-        robotBase.chassisSubsystem.updateLimelight();
+        robotBase.limelightSubsystem.updateLimelight();
         if(gamepad1.start){
-            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true);
+            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true, robotBase.limelightSubsystem.getTargetX());
         }
         else{
-            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, false);
+            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, false, robotBase.limelightSubsystem.getTargetX());
         }
-        double angle = robotBase.chassisSubsystem.getLaunchAngle();
-        double verticalComp = robotBase.chassisSubsystem.getVerticalComp();
-        double launchSpeed = robotBase.chassisSubsystem.getLaunchSpeed();
+        double angle = robotBase.limelightSubsystem.getLaunchAngle();
+        double verticalComp = robotBase.limelightSubsystem.getVerticalComp();
+        double launchSpeed = robotBase.limelightSubsystem.getLaunchSpeed();
         robotBase.hoodSubsystem.autoSetPosition(angle);
-        telemetry.addData("Horizontal Distance", robotBase.chassisSubsystem.getHorizontalDistance(0));
-        telemetry.addData("getLaunchAngle", robotBase.chassisSubsystem.getLaunchAngle());
-        telemetry.addData("AngleToGoal", robotBase.chassisSubsystem.getAngleToGoal());
+        telemetry.addData("Horizontal Distance", robotBase.limelightSubsystem.getHorizontalDistance(0));
+        telemetry.addData("getLaunchAngle", robotBase.limelightSubsystem.getLaunchAngle());
+        telemetry.addData("AngleToGoal", robotBase.limelightSubsystem.getAngleToGoal());
         telemetry.addData("Vertical Comp", verticalComp);
         telemetry.addData("Launch Speed", launchSpeed);
-        telemetry.addData("Limelight X", robotBase.chassisSubsystem.limelightTX);
-        telemetry.addData("Desired Servo Position", robotBase.chassisSubsystem.getLaunchAngle()/300);
+        telemetry.addData("Limelight X", robotBase.limelightSubsystem.limelightTX);
+        telemetry.addData("Desired Servo Position", robotBase.limelightSubsystem.getLaunchAngle()/300);
     }
 }

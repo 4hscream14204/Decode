@@ -11,45 +11,17 @@ import java.util.List;
 
 public class Chassis extends SubsystemBase {
 
-    public enum limelightPiplines {
-        OBELISK(2),
-        GREENARTIFACT(1),
-        REDGOAL(4),
-        BLUEGOAL(3),
-        PURPLEARTIFACT(0);
-        public final int value;
-        limelightPiplines(int m_val){
-            this.value = m_val;
-        }
-    }
-
-    public Limelight3A limelight;
     DcMotor frontLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backLeftMotor;
     DcMotor backRightMotor;
-    public double limelightTX;
-    public double limelightTY;
-    public String limelightPiplineType;
-    public double limelightTa;
-    public double mountingAngle = 0;
-    public final double goalAprilTagHeight = 75;
-    public final double goalHeight = 99;
-    public double limelightHeight = 40;
-    public double goalHeightOffset = goalHeight - limelightHeight;
-    public final double gravity = 981;
-    public double shooterOffsetY = 17;
-    public double ShooterOffsetX = 0;
-
-    public limelightPiplines enmLimelightPiplines;
 
     PIDController headingControl = new PIDController(0.05, 0, 0);
 
     double dblXOffset;
     public double dblHeadingOutput;
 
-    public Chassis(Limelight3A m_limelight, DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor) {
-        limelight = m_limelight;
+    public Chassis(DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor) {
         frontLeftMotor = m_frontLeftMotor;
         frontRightMotor = m_frontRightMotor;
         backLeftMotor = m_backLeftMotor;
@@ -64,105 +36,12 @@ public class Chassis extends SubsystemBase {
 
     }
 
-    public double getAngleToGoal(){
-        return mountingAngle + getTargetY();
-    }
-
-    public double getHorizontalDistance(double m_Offset){
-        return (((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset);
-    }
-
-    public double getVerticalDistance(double m_Offset){
-        return (goalHeightOffset) + m_Offset;
-    }
-
-    /*public double getHorizontalComp(){
-        return getHorizontalDistance(ShooterOffsetX) / getArcTime();
-    } */
-
-    public double getVerticalComp(){
-        return (getVerticalDistance(shooterOffsetY) * 2) / getArcTime();
-    }
-
-    public double getArcTime(){
-        return (getVerticalDistance(shooterOffsetY) / gravity) * (.5 * (getVerticalDistance(shooterOffsetY) / gravity));
-    }
-
-    public double getLaunchSpeed(){
-        return (((gravity * getHorizontalDistance(ShooterOffsetX)) * (gravity * getHorizontalDistance(ShooterOffsetX))) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity) * (.5 * (((gravity * getHorizontalDistance(ShooterOffsetX)) * (gravity * getHorizontalDistance(ShooterOffsetX))) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity));
-    }
-
-    public double getLaunchAngle() {
-        return 1/*Math.asin(getVerticalComp() / getLaunchSpeed())*/;
-    }
-
-    /*public double getLaunchRPM() {
-        return ;
-    }*/
-
-    public void initLimelight() {
-
-        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        limelight.pipelineSwitch(0);
-        limelight.start();
-
-
-
-        LLResult result = limelight.getLatestResult();
-        List<LLResultTypes.ColorResult> fiducials = result.getColorResults();
-        int id = 0;
-        for(LLResultTypes.ColorResult fiducial :fiducials) {
-            double limelightx = fiducial.getTargetXDegrees(); // Where it is (left-right)
-            double limelighty = fiducial.getTargetYDegrees(); // Where it is (up-down)
-            double StrafeDistance_3D = fiducial.getRobotPoseTargetSpace().getPosition().y;
-
-            //telemetry.addData("Fiducial " + id, "is " + StrafeDistance_3D + " meters away");
-        }
-    }
-
-    public void updateLimelight(){
-        LLResult result = limelight.getLatestResult();
-        limelightTX = result.getTx();
-        limelightTY = result.getTy();
-        limelightPiplineType = result.getPipelineType();
-        limelightTa = result.getTa();
-    }
-
-    public void changePipline(limelightPiplines m_pipline){
-        enmLimelightPiplines = m_pipline;
-        limelight.pipelineSwitch(m_pipline.value);
-    }
-
-    /*public void cycePiplines(){
-        if(enmLimelightPiplines == limelightPiplines.PURPLEARTIFACT) {
-            changePipline(limelightPiplines.OBELISK);
-        } else {
-            changePipline(limelightPiplines.PURPLEARTIFACT);
-        }
-    }*/
-
-    public double getTargetX(){
-        return limelightTX;
-    }
-
-    public double getTargetY() {
-        return limelightTY;
-    }
-
-    public String getPiplineType() {
-        return limelightPiplineType;
-    }
-
-    public double getTargetArea() {
-        return limelightTa;
-    }
-
-    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX,boolean m_PIDSteering) {
+    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX,boolean m_PIDSteering, double m_TX) {
         double y = -m_gamepadOneLSY; // Remember, Y stick is reversed!
         double x = m_gamepadOneLSX * 1.1;
         double rx = 0;
         if (m_PIDSteering) {
-            dblXOffset = 0 - limelightTX;
+            dblXOffset = 0 - m_TX;
             dblHeadingOutput = (headingControl.calculate(dblXOffset));
             rx = dblHeadingOutput;
         } else {

@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class TurnToAprilTagExceptObeliskTest extends OpMode {
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        limelight.pipelineSwitch(Chassis.limelightPiplines.REDGOAL.value);
+        limelight.pipelineSwitch(Limelight.limelightPiplines.REDGOAL.value);
         limelight.start(); // This tells Limelight to start looking!
 
         chassis.getGamepadButton(GamepadKeys.Button.START)
