@@ -21,21 +21,22 @@ public class LimelightTest extends OpMode {
         robotBase = new RobotBase(hardwareMap);
 
         chassis = new GamepadEx(gamepad1);
-    }
 
-    public void start() {
         robotBase.limelightSubsystem.initLimelight();
         robotBase.limelightSubsystem.changePipline(Limelight.limelightPiplines.REDGOAL);
+        robotBase.chassisSubsystem.resetIMU();
     }
 
+    
     public void loop() {
         chassis.readButtons();
         robotBase.limelightSubsystem.updateLimelight();
         robotBase.chassisSubsystem.drive(chassis.getLeftY(), chassis.getLeftX(), chassis.getRightX(), false, robotBase.limelightSubsystem.getTargetX());
 
         telemetry.addData("GroundDistance", robotBase.limelightSubsystem.getHorizontalDistance(0));
+        telemetry.addData("AngleToGoalRad", Math.toRadians(robotBase.limelightSubsystem.getAngleToGoal()));
         telemetry.addData("AngleToGoal", robotBase.limelightSubsystem.getAngleToGoal());
-        telemetry.addData("Pipline Type", robotBase.limelightSubsystem.getPiplineType());
+        telemetry.addData("Pipline Type", robotBase.limelightSubsystem.getPipline());
         telemetry.addData("Target Y", robotBase.limelightSubsystem.getTargetY());
 
         CommandScheduler.getInstance().run();

@@ -5,7 +5,9 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import java.util.List;
 
@@ -15,24 +17,25 @@ public class Chassis extends SubsystemBase {
     DcMotor frontRightMotor;
     DcMotor backLeftMotor;
     DcMotor backRightMotor;
+    IMU imu;
 
     PIDController headingControl = new PIDController(0.05, 0, 0);
 
     double dblXOffset;
     public double dblHeadingOutput;
 
-    public Chassis(DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor) {
+    public Chassis(DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor, IMU m_imu) {
         frontLeftMotor = m_frontLeftMotor;
         frontRightMotor = m_frontRightMotor;
         backLeftMotor = m_backLeftMotor;
         backRightMotor = m_backRightMotor;
+        imu = m_imu;
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        /*
-        imu = hardwareMap.get(IMU.class, "imu");
+
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)); */
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
     }
 
@@ -52,5 +55,9 @@ public class Chassis extends SubsystemBase {
         backLeftMotor.setPower(y - x + rx);
         frontRightMotor.setPower(y - x - rx);
         backRightMotor.setPower(y + x - rx);
+    }
+
+    public void resetIMU(){
+        imu.resetYaw();
     }
 }

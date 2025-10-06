@@ -27,9 +27,9 @@ public class Limelight extends SubsystemBase {
     public String limelightPiplineType;
     public double limelightTa;
     public double mountingAngle = 0;
-    public final double goalAprilTagHeight = 75;
+    public final double goalAprilTagHeight = 74.75;
     public final double goalHeight = 99;
-    public double limelightHeight = 40;
+    public double limelightHeight = 40.2;
     public double goalHeightOffset = goalHeight - limelightHeight;
     public final double gravity = 981;
     public double shooterOffsetY = 17;
@@ -118,7 +118,7 @@ public class Limelight extends SubsystemBase {
         return limelightTY;
     }
 
-    public String getPiplineType() {
+    public String getPipline() {
         return limelightPiplineType;
     }
 

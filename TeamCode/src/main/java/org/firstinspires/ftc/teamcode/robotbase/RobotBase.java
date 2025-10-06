@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robotbase;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
@@ -23,7 +24,7 @@ public class RobotBase {
 
             //intakeSubsystem = new Intake(hwMap.dcMotor.get("intake_motor"));
             //launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"));
-           chassisSubsystem = new Chassis(hwMap.dcMotor.get("right_front"), hwMap.dcMotor.get("left_front"), hwMap.dcMotor.get("right_back"), hwMap.dcMotor.get("left_back"));
+           chassisSubsystem = new Chassis(hwMap.dcMotor.get("right_front"), hwMap.dcMotor.get("left_front"), hwMap.dcMotor.get("right_back"), hwMap.dcMotor.get("left_back"), hwMap.get(IMU.class, "imu"));
            hoodSubsystem = new Hood(hwMap.get(Servo.class, "hoodServo"));
            limelightSubsystem = new Limelight(hwMap.get(Limelight3A.class, "limelight"));
         }
