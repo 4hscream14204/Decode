@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -10,15 +11,15 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.pedropathing.poses.PedroRoutes;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 
-@Autonomous(name = "Big Launch Zone Auto")
-public class LargeLaunchZoneRoute extends OpMode {
+@Autonomous(name = "Big Launch Zone Red Auto")
+public class LargeLaunchZoneRedRoute extends OpMode {
     Follower follower;
     SequentialCommandGroup route;
     @Override
     public void init() {
+        CommandScheduler.getInstance().reset();
          PathChain goesFromWallToShootPreload = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(new Pose(79.000, 139.000), new Pose(73.000, 113.000), new Pose(100.000, 125.000)))
@@ -89,7 +90,13 @@ public class LargeLaunchZoneRoute extends OpMode {
     }
 
     @Override
-    public void loop() {
+    public void start() {
+        CommandScheduler.getInstance().schedule(route);
+    }
 
+    @Override
+    public void loop() {
+        CommandScheduler.getInstance().run();
+        follower.update();
     }
 }
