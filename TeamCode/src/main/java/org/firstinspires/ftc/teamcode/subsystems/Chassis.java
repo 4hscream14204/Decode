@@ -17,7 +17,7 @@ public class Chassis extends SubsystemBase {
     DcMotor frontRightMotor;
     DcMotor backLeftMotor;
     DcMotor backRightMotor;
-    IMU imu;
+    public IMU imu;
 
     PIDController headingControl = new PIDController(0.05, 0, 0);
 

@@ -27,7 +27,7 @@ public class Limelight extends SubsystemBase {
     public String limelightPiplineType;
     public double limelightTa;
     public double mountingAngle = 0;
-    public final double goalAprilTagHeight = 74.75;
+    public final double goalAprilTagHeight = 63.0497917/*74.75*/;
     public final double goalHeight = 99;
     public double limelightHeight = 40.2;
     public double goalHeightOffset = goalHeight - limelightHeight;
@@ -66,7 +66,7 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getHorizontalDistance(double m_Offset){
-        return (((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset);
+        return (((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) /*+ m_Offset*/);
     }
 
     public double getVerticalDistance(double m_Offset){
