@@ -13,27 +13,64 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 public class SorterCamera extends SubsystemBase {
     WebcamName webcam;
+    PredominantColorProcessor colorSensor;
+    PredominantColorProcessor colorSensorLeft;
+    PredominantColorProcessor colorSensorRight;
+    PredominantColorProcessor.Result resultMiddle;
+    PredominantColorProcessor.Result resultLeft;
+    PredominantColorProcessor.Result resultRight;
     public SorterCamera(WebcamName m_webcam){
         webcam = m_webcam;
-        PredominantColorProcessor colorSensor = new PredominantColorProcessor.Builder()
+        colorSensor = new PredominantColorProcessor.Builder()
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0.1, 0.1, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
-                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
+                        PredominantColorProcessor.Swatch.WHITE,
+                        PredominantColorProcessor.Swatch.BLACK)
                 .build();
 
-        PredominantColorProcessor colorSensorLeft = new PredominantColorProcessor.Builder()
+        colorSensorLeft = new PredominantColorProcessor.Builder()
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.9, 0.1, -0.7, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
-                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
+                        PredominantColorProcessor.Swatch.WHITE,
+                        PredominantColorProcessor.Swatch.BLACK)
                 .build();
 
-        PredominantColorProcessor colorSensorRight = new PredominantColorProcessor.Builder()
+        colorSensorRight = new PredominantColorProcessor.Builder()
                 .setRoi(ImageRegion.asUnityCenterCoordinates(0.7, 0.1, 0.9, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
-                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                        PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
+                        PredominantColorProcessor.Swatch.WHITE,
+                        PredominantColorProcessor.Swatch.BLACK)
                 .build();
+
+        VisionPortal portal = new VisionPortal.Builder()
+                .addProcessor(colorSensor)
+                .addProcessor(colorSensorLeft)
+                .addProcessor(colorSensorRight)
+                .setCameraResolution(new Size(640, 480))
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .build();
+    }
+    public void getAnalysis(){
+        resultMiddle = colorSensor.getAnalysis();
+        resultLeft = colorSensorLeft.getAnalysis();
+        resultRight = colorSensorRight.getAnalysis();
+    }
+
+    public PredominantColorProcessor.Swatch getClosestSwatchMiddle(){
+        return resultMiddle.closestSwatch;
+    }
+
+    public PredominantColorProcessor.Swatch getClosestSwatchLeft(){
+        return resultLeft.closestSwatch;
+    }
+
+    public PredominantColorProcessor.Swatch getClosestSwatchRight(){
+        return resultRight.closestSwatch;
     }
 }
