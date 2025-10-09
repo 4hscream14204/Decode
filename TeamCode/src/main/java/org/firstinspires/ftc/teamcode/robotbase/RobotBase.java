@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
+import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class RobotBase {
 
@@ -19,6 +20,9 @@ public class RobotBase {
         public Chassis chassisSubsystem;
         public Hood hoodSubsystem;
         public Limelight limelightSubsystem;
+        public SorterServo ejectorMiddleSubsystem;
+        public SorterServo ejectorLeftSubsystem;
+        public SorterServo ejectorRightSubsystem;
 
         public RobotBase(HardwareMap hwMap) {
 
@@ -27,5 +31,9 @@ public class RobotBase {
            chassisSubsystem = new Chassis(hwMap.dcMotor.get("right_front"), hwMap.dcMotor.get("left_front"), hwMap.dcMotor.get("right_back"), hwMap.dcMotor.get("left_back"), hwMap.get(IMU.class, "imu"));
            hoodSubsystem = new Hood(hwMap.get(Servo.class, "hoodServo"));
            limelightSubsystem = new Limelight(hwMap.get(Limelight3A.class, "limelight"));
+           /*ejectorMiddleSubsystem = new SorterServo(hwMap.servo.get("ejectorMiddle"));
+           ejectorLeftSubsystem = new SorterServo(hwMap.servo.get("ejectorLeft"));
+           ejectorRightSubsystem = new SorterServo(hwMap.servo.get("ejectorRight"));*/
+
         }
 }
