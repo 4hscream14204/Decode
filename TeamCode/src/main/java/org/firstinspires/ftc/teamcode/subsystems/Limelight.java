@@ -5,6 +5,8 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+
 import java.util.List;
 
 public class Limelight extends SubsystemBase {
@@ -27,13 +29,15 @@ public class Limelight extends SubsystemBase {
     public String limelightPiplineType;
     public double limelightTa;
     public double mountingAngle = 0;
-    public final double goalAprilTagHeight = 63.0497917/*74.75*/;
+    public final double goalAprilTagHeight = 70.27888/*72.69431*//*67.86345*//*63.0497917*//*74.75*/;
     public final double goalHeight = 99;
     public double limelightHeight = 40.2;
     public double goalHeightOffset = goalHeight - limelightHeight;
     public final double gravity = 981;
     public double shooterOffsetY = 17;
     public double ShooterOffsetX = 0;
+    public double x;
+    public Pose3D botPose;
 
     public Limelight.limelightPiplines enmLimelightPiplines;
 
@@ -56,6 +60,8 @@ public class Limelight extends SubsystemBase {
             double limelightx = fiducial.getTargetXDegrees(); // Where it is (left-right)
             double limelighty = fiducial.getTargetYDegrees(); // Where it is (up-down)
             double StrafeDistance_3D = fiducial.getRobotPoseTargetSpace().getPosition().y;
+            botPose = fiducial.getRobotPoseFieldSpace();
+
 
             //telemetry.addData("Fiducial " + id, "is " + StrafeDistance_3D + " meters away");
         }
@@ -78,11 +84,11 @@ public class Limelight extends SubsystemBase {
     } */
 
     public double getVerticalComp(){
-        return (getVerticalDistance(shooterOffsetY) * 2) / getArcTime();
+        return ((getVerticalDistance(shooterOffsetY) * 2) / getArcTime());
     }
 
     public double getArcTime(){
-        return (getVerticalDistance(shooterOffsetY) / gravity) * (.5 * (getVerticalDistance(shooterOffsetY) / gravity));
+        return Math.pow((getVerticalDistance(shooterOffsetY) / gravity), 0.5) /* (.5 * (getVerticalDistance(shooterOffsetY) / gravity))*/;
     }
 
     public double getLaunchSpeed(){

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
@@ -26,6 +27,7 @@ public class LimelightTest extends OpMode {
         robotBase.limelightSubsystem.initLimelight();
         robotBase.limelightSubsystem.changePipline(Limelight.limelightPiplines.REDGOAL);
         robotBase.chassisSubsystem.resetIMU();
+
     }
 
     
@@ -36,6 +38,9 @@ public class LimelightTest extends OpMode {
         robotBase.chassisSubsystem.drive(chassis.getLeftY(), chassis.getLeftX(), chassis.getRightX(), false, robotBase.limelightSubsystem.getTargetX());
 
         telemetry.addData("GroundDistance", robotBase.limelightSubsystem.getHorizontalDistance(0));
+        telemetry.addData("Vertical Comp", robotBase.limelightSubsystem.getVerticalComp());
+        telemetry.addData("Vertical Distance", robotBase.limelightSubsystem.getVerticalDistance(17));
+        telemetry.addData("Arc Time", robotBase.limelightSubsystem.getArcTime());
         telemetry.addData("AngleToGoalRad", Math.toRadians(robotBase.limelightSubsystem.getAngleToGoal()));
         telemetry.addData("AngleToGoal", robotBase.limelightSubsystem.getAngleToGoal());
         telemetry.addData("Pipline Type", robotBase.limelightSubsystem.getPipline());
