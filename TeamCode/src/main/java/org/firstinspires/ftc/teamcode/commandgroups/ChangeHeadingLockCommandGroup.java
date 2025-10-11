@@ -4,7 +4,6 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 public class ChangeHeadingLockCommandGroup extends SequentialCommandGroup {
@@ -14,17 +13,17 @@ public class ChangeHeadingLockCommandGroup extends SequentialCommandGroup {
     public ChangeHeadingLockCommandGroup(RobotBase robotBase){
         if(!lookingAtArtiacts){
             addCommands(
-                    new InstantCommand(()->robotBase.limelightSubsystem.changePipline(Limelight.limelightPiplines.PURPLEARTIFACT))
+                    new InstantCommand(()->robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.PURPLEARTIFACT))
             );
         }
         else if(isBlueAlliance && lookingAtArtiacts){
             addCommands(
-                    new InstantCommand(()->robotBase.limelightSubsystem.changePipline(Limelight.limelightPiplines.BLUEGOAL))
+                    new InstantCommand(()->robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.BLUEGOAL))
             );
         }
         if (isBlueAlliance = false && lookingAtArtiacts){
             addCommands(
-                    new InstantCommand(()->robotBase.limelightSubsystem.changePipline(Limelight.limelightPiplines.REDGOAL))
+                    new InstantCommand(()->robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.REDGOAL))
             );
         }
 

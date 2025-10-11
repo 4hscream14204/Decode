@@ -11,14 +11,14 @@ import java.util.List;
 
 public class Limelight extends SubsystemBase {
 
-    public enum limelightPiplines {
+    public enum limelightPipelines {
         OBELISK(2),
         GREENARTIFACT(1),
         REDGOAL(4),
         BLUEGOAL(3),
         PURPLEARTIFACT(0);
         public final int value;
-        limelightPiplines(int m_val){
+        limelightPipelines(int m_val){
             this.value = m_val;
         }
     }
@@ -29,7 +29,7 @@ public class Limelight extends SubsystemBase {
     public String limelightPiplineType;
     public double limelightTa;
     public double mountingAngle = 0;
-    public final double goalAprilTagHeight = 70.27888/*72.69431*//*67.86345*//*63.0497917*//*74.75*/;
+    public final double goalAprilTagHeight = /*70.27888*//*72.69431*//*67.86345*//*63.0497917*/74.75;
     public final double goalHeight = 99;
     public double limelightHeight = 40.2;
     public double goalHeightOffset = goalHeight - limelightHeight;
@@ -37,9 +37,10 @@ public class Limelight extends SubsystemBase {
     public double shooterOffsetY = 17;
     public double ShooterOffsetX = 0;
     public double x;
+    public double limelightTZ;
     public Pose3D botPose;
 
-    public Limelight.limelightPiplines enmLimelightPiplines;
+    public limelightPipelines enmLimelightPipelines;
 
     public Limelight(Limelight3A m_limelight) {
         limelight = m_limelight;
@@ -52,11 +53,10 @@ public class Limelight extends SubsystemBase {
         limelight.start();
 
 
-
         LLResult result = limelight.getLatestResult();
         List<LLResultTypes.ColorResult> fiducials = result.getColorResults();
         int id = 0;
-        for(LLResultTypes.ColorResult fiducial :fiducials) {
+        for (LLResultTypes.ColorResult fiducial : fiducials) {
             double limelightx = fiducial.getTargetXDegrees(); // Where it is (left-right)
             double limelighty = fiducial.getTargetYDegrees(); // Where it is (up-down)
             double StrafeDistance_3D = fiducial.getRobotPoseTargetSpace().getPosition().y;
@@ -65,6 +65,17 @@ public class Limelight extends SubsystemBase {
 
             //telemetry.addData("Fiducial " + id, "is " + StrafeDistance_3D + " meters away");
         }
+        /*LLResult aprilTagResult = limelight.getLatestResult()
+        List<LLResultTypes.FiducialResult> fiducialsAprilTag = result.getFiducialResults();
+        for (LLResultTypes.FiducialResult fiducialAprilTag : fiducialsAprilTag) {
+            int idAprilTag = fiducialAprilTag.getFiducialId(); // The ID number of the fiducial
+            double x = fiducialAprilTag.getTargetXDegrees(); // Where it is (left-right)
+            double y = fiducialAprilTag.getTargetYDegrees(); // Where it is (up-down)
+            double StrafeDistance_3DZ = fiducialAprilTag.getRobotPoseTargetSpace().getPosition().z;
+            double StrafeDistance_3DX = fiducialAprilTag.getRobotPoseTargetSpace().getPosition().x;
+            double StrafeDistance_3DY = fiducialAprilTag.getRobotPoseTargetSpace().getPosition().y;
+            //telemetry.addData("Fiducial " + id, "is " + distance + " meters away");
+        }*/
     }
 
     public double getAngleToGoal(){
@@ -72,7 +83,8 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getHorizontalDistance(double m_Offset){
-        return (((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) /*+ m_Offset*/);
+        return (((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset);
+
     }
 
     public double getVerticalDistance(double m_Offset){
@@ -92,11 +104,11 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getLaunchSpeed(){
-        return (((gravity * getHorizontalDistance(ShooterOffsetX)) * (gravity * getHorizontalDistance(ShooterOffsetX))) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity) * (.5 * (((gravity * getHorizontalDistance(ShooterOffsetX)) * (gravity * getHorizontalDistance(ShooterOffsetX))) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity));
+        return Math.pow(((Math.pow(gravity * getHorizontalDistance(ShooterOffsetX), 2)) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity), 0.5);
     }
 
     public double getLaunchAngle() {
-        return 1/*Math.asin(getVerticalComp() / getLaunchSpeed())*/;
+        return Math.asin(getVerticalComp() / getLaunchSpeed());
     }
 
     /*public double getLaunchRPM() {
@@ -107,12 +119,14 @@ public class Limelight extends SubsystemBase {
         LLResult result = limelight.getLatestResult();
         limelightTX = result.getTx();
         limelightTY = result.getTy();
+        //limelightTZ = result.getFiducialResults();
         limelightPiplineType = result.getPipelineType();
         limelightTa = result.getTa();
+
     }
 
-    public void changePipline(Limelight.limelightPiplines m_pipline){
-        enmLimelightPiplines = m_pipline;
+    public void changePipeline(limelightPipelines m_pipline){
+        enmLimelightPipelines = m_pipline;
         limelight.pipelineSwitch(m_pipline.value);
     }
 
