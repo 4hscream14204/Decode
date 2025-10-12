@@ -19,6 +19,7 @@ public class SorterCamera extends SubsystemBase {
     PredominantColorProcessor.Result resultMiddle;
     PredominantColorProcessor.Result resultLeft;
     PredominantColorProcessor.Result resultRight;
+    public int intPurple = 0;
     public SorterCamera(WebcamName m_webcam){
         webcam = m_webcam;
         colorSensor = new PredominantColorProcessor.Builder()
@@ -53,7 +54,7 @@ public class SorterCamera extends SubsystemBase {
                 .addProcessor(colorSensorLeft)
                 .addProcessor(colorSensorRight)
                 .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCamera(m_webcam)
                 .build();
     }
     public void getAnalysis(){
@@ -73,4 +74,5 @@ public class SorterCamera extends SubsystemBase {
     public PredominantColorProcessor.Swatch getClosestSwatchRight(){
         return resultRight.closestSwatch;
     }
+
 }
