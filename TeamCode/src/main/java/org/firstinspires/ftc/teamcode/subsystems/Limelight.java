@@ -29,7 +29,7 @@ public class Limelight extends SubsystemBase {
     public String limelightPiplineType;
     public double limelightTa;
     public double mountingAngle = 0;
-    public final double goalAprilTagHeight = /*70.27888*//*72.69431*//*67.86345*//*63.0497917*/74.75;
+    public final double goalAprilTagHeight = 74.75;
     public final double goalHeight = 99;
     public double limelightHeight = 40.2;
     public double goalHeightOffset = goalHeight - limelightHeight;
@@ -37,8 +37,12 @@ public class Limelight extends SubsystemBase {
     public double shooterOffsetY = 17;
     public double ShooterOffsetX = 0;
     public double x;
+    public double y;
+    public double distance;
     public double limelightTZ;
     public Pose3D botPose;
+
+    LLResult result;
 
     public limelightPipelines enmLimelightPipelines;
 
@@ -53,18 +57,26 @@ public class Limelight extends SubsystemBase {
         limelight.start();
 
 
-        LLResult result = limelight.getLatestResult();
-        List<LLResultTypes.ColorResult> fiducials = result.getColorResults();
+        result = limelight.getLatestResult();
+        List<LLResultTypes.FiducialResult> aprilTagResult = result.getFiducialResults();
+        //loop through the list, even if there is only 1 item since it is a List type
+        for (LLResultTypes.FiducialResult fr : aprilTagResult) {
+            x = fr.getTargetPoseRobotSpace().getPosition().x; // Where it is (left-right)
+            y = fr.getTargetPoseRobotSpace().getPosition().y; // Where it is (up-down)
+            distance = fr.getTargetPoseRobotSpace().getPosition().z;
+        }
+        /*List<LLResultTypes.ColorResult> fiducials = result.getColorResults();
         int id = 0;
         for (LLResultTypes.ColorResult fiducial : fiducials) {
             double limelightx = fiducial.getTargetXDegrees(); // Where it is (left-right)
             double limelighty = fiducial.getTargetYDegrees(); // Where it is (up-down)
             double StrafeDistance_3D = fiducial.getRobotPoseTargetSpace().getPosition().y;
-            botPose = fiducial.getRobotPoseFieldSpace();
+            botPose = fiducial.getRobotPoseFieldSpace();*/
 
 
             //telemetry.addData("Fiducial " + id, "is " + StrafeDistance_3D + " meters away");
         }
+
         /*LLResult aprilTagResult = limelight.getLatestResult()
         List<LLResultTypes.FiducialResult> fiducialsAprilTag = result.getFiducialResults();
         for (LLResultTypes.FiducialResult fiducialAprilTag : fiducialsAprilTag) {
@@ -76,15 +88,13 @@ public class Limelight extends SubsystemBase {
             double StrafeDistance_3DY = fiducialAprilTag.getRobotPoseTargetSpace().getPosition().y;
             //telemetry.addData("Fiducial " + id, "is " + distance + " meters away");
         }*/
-    }
 
     public double getAngleToGoal(){
         return mountingAngle + getTargetY();
     }
 
     public double getHorizontalDistance(double m_Offset){
-        return (((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset);
-
+        return limelightTZ/*(((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset)*/;
     }
 
     public double getVerticalDistance(double m_Offset){
@@ -116,10 +126,17 @@ public class Limelight extends SubsystemBase {
     }*/
 
     public void updateLimelight(){
-        LLResult result = limelight.getLatestResult();
+        result = limelight.getLatestResult();
+        List<LLResultTypes.FiducialResult> aprilTagResult = result.getFiducialResults();
+        //loop through the list, even if there is only 1 item since it is a List type
+        for (LLResultTypes.FiducialResult fr : aprilTagResult) {
+            x = fr.getTargetPoseRobotSpace().getPosition().x; // Where it is (left-right)
+            y = fr.getTargetPoseRobotSpace().getPosition().y; // Where it is (up-down)
+            distance = fr.getTargetPoseRobotSpace().getPosition().z;
+        }
         limelightTX = result.getTx();
         limelightTY = result.getTy();
-        //limelightTZ = result.getFiducialResults();
+        limelightTZ = distance;
         limelightPiplineType = result.getPipelineType();
         limelightTa = result.getTa();
 
