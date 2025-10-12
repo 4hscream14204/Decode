@@ -6,9 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @TeleOp(name = "LimelightTest")
@@ -25,7 +23,7 @@ public class LimelightTest extends OpMode {
         chassis = new GamepadEx(gamepad1);
 
         robotBase.limelightSubsystem.initLimelight();
-        robotBase.limelightSubsystem.changePipline(Limelight.limelightPiplines.REDGOAL);
+        robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.REDGOAL);
         robotBase.chassisSubsystem.resetIMU();
 
     }
