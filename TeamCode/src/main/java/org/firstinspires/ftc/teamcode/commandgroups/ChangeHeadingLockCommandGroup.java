@@ -8,20 +8,20 @@ import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 public class ChangeHeadingLockCommandGroup extends SequentialCommandGroup {
     boolean isBlueAlliance = true;
-    boolean lookingAtArtiacts = true;
+    boolean lookingAtArtifacts = true;
 
     public ChangeHeadingLockCommandGroup(RobotBase robotBase){
-        if(!lookingAtArtiacts){
+        if(lookingAtArtifacts){
             addCommands(
                     new InstantCommand(()->robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.PURPLEARTIFACT))
             );
         }
-        else if(isBlueAlliance && lookingAtArtiacts){
+        else if(isBlueAlliance && !lookingAtArtifacts){
             addCommands(
                     new InstantCommand(()->robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.BLUEGOAL))
             );
         }
-        if (isBlueAlliance = false && lookingAtArtiacts){
+        if (!isBlueAlliance && !lookingAtArtifacts){
             addCommands(
                     new InstantCommand(()->robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.REDGOAL))
             );

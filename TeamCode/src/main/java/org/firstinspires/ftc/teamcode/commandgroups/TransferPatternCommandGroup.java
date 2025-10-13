@@ -24,9 +24,19 @@ public class TransferPatternCommandGroup extends SequentialCommandGroup {
         }
         else if (DataStorage.pattern == DecodeEnums.Patterns.GPP){
             addCommands(
-            new TransferGreenBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
-            new WaitCommand(1000),
-            new TransferTwoPurpleCommandGroup(camera, sorterServo, sorterServoM, sorterServoR));
+                new TransferGreenBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
+                new WaitCommand(1000),
+                new TransferTwoPurpleCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
+                new WaitCommand(1000),
+                new TransferResetCommandGroup(sorterServo, sorterServoM, sorterServoR)
+            );
+        }
+        else if(DataStorage.pattern == DecodeEnums.Patterns.PGP){
+            addCommands(
+                    new TransferPurpleBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
+                    new TransferGreenBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
+                    new TransferPurpleBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR)
+            );
         }
     }
 }

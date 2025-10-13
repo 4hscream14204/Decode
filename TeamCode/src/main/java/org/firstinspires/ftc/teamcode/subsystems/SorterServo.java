@@ -4,7 +4,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class SorterServo extends SubsystemBase {
-    Servo sorterServo;
+    public Servo sorterServo;
     public enum ServoPosition {
         EJECT(1),
         STABLE(0),

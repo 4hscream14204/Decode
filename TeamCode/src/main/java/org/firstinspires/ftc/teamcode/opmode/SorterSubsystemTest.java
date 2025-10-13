@@ -33,7 +33,7 @@ public class SorterSubsystemTest extends OpMode {
         sorterServoMiddle = new SorterServo(hardwareMap.servo.get("sorterServoMiddle"));
         sorterServoRight = new SorterServo(hardwareMap.servo.get("sorterServoRight"));
         chassis.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(new TransferPurpleBallCommandGroup(camera, sorterServoLeft)));
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new TransferPurpleBallCommandGroup(camera, sorterServoLeft, sorterServoMiddle, sorterServoRight)));
 
         chassis.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferPatternCommandGroup(camera, sorterServoLeft, sorterServoMiddle, sorterServoRight)));

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 public class TransferPurpleBallCommandGroup extends SequentialCommandGroup {
-    public TransferPurpleBallCommandGroup(SorterCamera sorterCamera, SorterServo sorterServo){
+    public TransferPurpleBallCommandGroup(SorterCamera sorterCamera, SorterServo sorterServo, SorterServo sorterServoM, SorterServo sorterServoR){
         if(sorterCamera.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             addCommands(
                    new InstantCommand(()->sorterServo.setPosition(SorterServo.ServoPosition.TEST1))
@@ -16,12 +16,12 @@ public class TransferPurpleBallCommandGroup extends SequentialCommandGroup {
         }
         else if(sorterCamera.getClosestSwatchMiddle() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             addCommands(
-                    new InstantCommand(()->sorterServo.setPosition(SorterServo.ServoPosition.TEST2))
+                    new InstantCommand(()->sorterServoM.setPosition(SorterServo.ServoPosition.TEST2))
             );
         }
         else if(sorterCamera.getClosestSwatchRight() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             addCommands(
-                    new InstantCommand(()->sorterServo.setPosition(SorterServo.ServoPosition.TEST3))
+                    new InstantCommand(()->sorterServoR.setPosition(SorterServo.ServoPosition.TEST3))
             );
         }
     }
