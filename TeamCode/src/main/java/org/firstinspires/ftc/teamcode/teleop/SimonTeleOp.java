@@ -32,6 +32,11 @@ public class SimonTeleOp extends OpMode {
     }
     public void loop(){
 
+        //Copy the previous gamepad state so we can compare it to the current gamepad state
+        previousGamepad1.copy(currentGamepad1);
+        //Store gamepad state to compare with
+        currentGamepad1.copy(gamepad1);
+
         if(currentGamepad1.left_bumper && !previousGamepad1.left_bumper){
             clawSubsystem.toggleClaw();
         }
@@ -70,5 +75,8 @@ public class SimonTeleOp extends OpMode {
         backLeftMotor.setPower(backLeftPower);
         frontRightMotor.setPower(frontRightPower);
         backRightMotor.setPower(backRightPower);
+
+
     }
 }
+

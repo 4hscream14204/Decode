@@ -6,9 +6,9 @@ public class Arm {
     public enum ArmPosition {
         HOME(0),
         GROUND(0.03),
-        LOW(0.125),
-        MEDIUM(0.19),
-        HIGH(0.27);
+        LOW(0.1),
+        MEDIUM(0.153),
+        HIGH(0.194);
         public final double value;
         ArmPosition(double m_position){
             this.value = m_position;

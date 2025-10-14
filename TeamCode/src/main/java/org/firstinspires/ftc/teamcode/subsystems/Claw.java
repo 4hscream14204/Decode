@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Claw {
     private Servo srvClaw;
     private boolean bolClawOpen;
-    private double dblOpenPos = 0.28611;
-    private double dblClosedPos = 0.3222;
+    private double dblOpenPos = 0;
+    private double dblClosedPos = 0.35;
 
     public Claw(Servo m_srvClaw) {
         srvClaw = m_srvClaw;
