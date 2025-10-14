@@ -35,8 +35,8 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
             CommandScheduler.getInstance().reset();
             goesFromWallToShootPreload = follower.pathBuilder()
                     .addPath(
-                            new BezierCurve(new Pose(85, 135), new Pose(85.000, 115.000), new Pose(95, 110)))
-                    .setConstantHeadingInterpolation(0)
+                            new BezierCurve(new Pose(85, 135), new Pose(85.000, 115.000), new Pose(90, 95)))
+                    .setConstantHeadingInterpolation(-90)
                     .build();
 
             //Closest line//
@@ -52,7 +52,7 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
                     .build();
             shootsArtifacts = follower.pathBuilder()
                     .addPath(
-                            new BezierCurve(new Pose(129.438, 83.811), new Pose(75.721, 98.049), new Pose(95, 110)))
+                            new BezierCurve(new Pose(129.438, 83.811), new Pose(75.721, 98.049), new Pose(90, 95)))
                     .setTangentHeadingInterpolation()
                     .build();
 
@@ -69,7 +69,7 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
                     .build();
             goesToShootArtifacts = follower.pathBuilder()
                     .addPath(
-                            new BezierCurve(new Pose(127.497, 61.483), new Pose(79.604, 54.688), new Pose(88.018, 116.818), new Pose(95, 110)))
+                            new BezierCurve(new Pose(127.497, 61.483), new Pose(79.604, 54.688), new Pose(88.018, 116.818), new Pose(90, 95)))
                     .setTangentHeadingInterpolation()
                     .build();
 
@@ -77,31 +77,34 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
             linesUpWithFurthestRow = follower.pathBuilder()
                     .addPath(
                             new BezierCurve(new Pose(100.000, 125.000), new Pose(77.016, 85.753), new Pose(98.049, 30)))
-                    .setConstantHeadingInterpolation(Math.toRadians(0))
+                    .setConstantHeadingInterpolation(Math.toRadians(-90))
                     .build();
             intakesArtifacts = follower.pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(98.049, 38.508), new Pose(124.908, 38.184)))
+                            new BezierLine(new Pose(98.049, 38.508), new Pose(127, 35)))
                     .setTangentHeadingInterpolation()
                     .build();
             goesToShoot = follower.pathBuilder()
                     .addPath(
-                            new BezierCurve(new Pose(124.908, 38.184), new Pose(99.020, 40.449), new Pose(74.000, 106.000), new Pose(95, 110)))
+                            new BezierCurve(new Pose(124.908, 38.184), new Pose(99.020, 40.449), new Pose(74.000, 106.000), new Pose(90, 95)))
                     .setTangentHeadingInterpolation()
                     .build();
 
             follower = Constants.createFollower(hardwareMap);
             route = new SequentialCommandGroup(
                     new FollowPath(follower, goesFromWallToShootPreload, true, 1),
-                    new FollowPath(follower, linesUpWithFurthestRow, true, 1),
-                    new FollowPath(follower, intakesArtifacts, true, 1),
-                    new FollowPath(follower, goesToShoot, true, 1),
+                    new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
+                    new FollowPath(follower, intakesThirdRow, true, 1),
+                    new FollowPath(follower, shootsArtifacts, true, 1),
                     new FollowPath(follower, linesUpWithMiddleRow, true, 1),
                     new FollowPath(follower, intakesMiddleRow, true, 1),
                     new FollowPath(follower, goesToShootArtifacts, true, 1),
-                    new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
-                    new FollowPath(follower, intakesThirdRow, true, 1),
-                    new FollowPath(follower, shootsArtifacts, true, 1)
+                    new FollowPath(follower, linesUpWithFurthestRow, true, 1),
+                    new FollowPath(follower, intakesArtifacts, true, 1),
+                    new FollowPath(follower, goesToShoot, true, 1)
+
+
+
 
 
 
