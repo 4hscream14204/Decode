@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 public class EjectBallInSorterLeftCommandGroup extends SequentialCommandGroup {
     public EjectBallInSorterLeftCommandGroup(RobotBase robotBase){
         addCommands(
-                new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.EJECT)),
+                new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.TRANSFER)),
                 new WaitCommand(500),
                 new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.STABLE))
         );

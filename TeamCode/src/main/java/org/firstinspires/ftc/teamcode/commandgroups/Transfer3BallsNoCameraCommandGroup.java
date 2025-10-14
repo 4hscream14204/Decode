@@ -10,11 +10,11 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 public class Transfer3BallsNoCameraCommandGroup extends SequentialCommandGroup {
     public Transfer3BallsNoCameraCommandGroup(RobotBase robotBase){
         addCommands(
-                new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.EJECT)),
+                new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.TRANSFER)),
                 new WaitCommand(500),
-                new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.EJECT)),
+                new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.TRANSFER)),
                 new WaitCommand(500),
-                new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.EJECT)),
+                new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.TRANSFER)),
                 new WaitCommand(500),
                 new TransferResetCommandGroup(robotBase.ejectorLeftSubsystem, robotBase.ejectorMiddleSubsystem, robotBase.ejectorRightSubsystem)
         );

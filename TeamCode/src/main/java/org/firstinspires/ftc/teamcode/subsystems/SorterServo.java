@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class SorterServo extends SubsystemBase {
     public Servo sorterServo;
     public enum ServoPosition {
-        EJECT(1),
+        TRANSFER(1),
         STABLE(0),
         TEST1(0),
         TEST2(0.5),
