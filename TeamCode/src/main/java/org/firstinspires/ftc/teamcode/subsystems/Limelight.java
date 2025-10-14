@@ -34,8 +34,9 @@ public class Limelight extends SubsystemBase {
     public double limelightHeight = 40.2;
     public double goalHeightOffset = goalHeight - limelightHeight;
     public final double gravity = 981;
-    public double shooterOffsetY = 17;
-    public double ShooterOffsetX = 0;
+    public double shooterOffsetY = 0;
+    public double shooterOffsetX = 0;
+    public double yClearance = 17;
     public double x;
     public double y;
     public double distance;
@@ -94,31 +95,31 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getHorizontalDistance(double m_Offset){
-        return getTargetZ()/*(((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset)*/;
+        return getTargetZ() + m_Offset/*(((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset)*/;
     }
 
     public double getVerticalDistance(double m_Offset){
         return (goalHeightOffset) + m_Offset;
     }
 
-    /*public double getHorizontalComp(){
-        return getHorizontalDistance(ShooterOffsetX) / getArcTime();
-    } */
+    public double getHorizontalComp(){
+        return getHorizontalDistance(shooterOffsetX) / getArcTime();
+    }
 
     public double getVerticalComp(){
-        return ((getVerticalDistance(shooterOffsetY) * 2) / getArcTime());
+        return (getVerticalDistance(shooterOffsetY + yClearance) * 2) / getArcTime();
     }
 
     public double getArcTime(){
-        return Math.pow((getVerticalDistance(shooterOffsetY) / gravity), 0.5) /* (.5 * (getVerticalDistance(shooterOffsetY) / gravity))*/;
+        return Math.pow(((getVerticalDistance(shooterOffsetY + yClearance) * 2) / gravity), 0.5);
     }
 
     public double getLaunchSpeed(){
-        return Math.pow(((Math.pow(gravity * getHorizontalDistance(ShooterOffsetX), 2)) / (2 * getVerticalDistance(shooterOffsetY))) + (2 * getVerticalDistance(shooterOffsetY) * gravity), 0.5);
+        return Math.pow(Math.pow((gravity * getHorizontalDistance(shooterOffsetX)), 2) / (getVerticalDistance(shooterOffsetY + yClearance) * 2) + ( 2 * gravity * getVerticalDistance(shooterOffsetY + yClearance)), 0.5);
     }
 
     public double getLaunchAngle() {
-        return Math.asin(getVerticalComp() / getLaunchSpeed());
+        return Math.asin(getHorizontalComp() / getLaunchSpeed());
     }
 
     /*public double getLaunchRPM() {
@@ -156,7 +157,7 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getTargetZ(){
-        return limelightTZ;
+        return limelightTZ * 100;
     }
 
     public String getPipline() {

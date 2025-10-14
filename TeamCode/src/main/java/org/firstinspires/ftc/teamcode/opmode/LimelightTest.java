@@ -45,6 +45,8 @@ public class LimelightTest extends OpMode {
         telemetry.addData("Target Y", robotBase.limelightSubsystem.getTargetY());
         telemetry.addData("Heading", robotBase.chassisSubsystem.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         telemetry.addData("Robot Orientation", robotBase.limelightSubsystem.limelight.updateRobotOrientation(robotBase.chassisSubsystem.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)));
+        telemetry.addData("Velocity", robotBase.limelightSubsystem.getLaunchSpeed());
+        telemetry.addData("Angle", robotBase.limelightSubsystem.getLaunchAngle());
 
         CommandScheduler.getInstance().run();
     }
