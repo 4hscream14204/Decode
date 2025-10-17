@@ -7,20 +7,16 @@ import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.ftc.localization.constants.PinpointConstants;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.HeadingInterpolator;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorGoBildaPinpoint;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.pedropathing.routes.BuildPath;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 
 import java.util.function.Supplier;
@@ -29,30 +25,36 @@ import java.util.function.Supplier;
 public class PedroLaunchTeleOpTest extends OpMode {
     GamepadEx chassis;
     Follower follower;
-    Pose startPose = new Pose(56, 8, Math.toRadians(0));
+    Pose startPose = new Pose(56, 8, Math.toRadians(90));
     boolean automatedDrive;
-    Supplier<PathChain> pathChain;
+    //Supplier<PathChain> pathChain;
+    PathChain pathChain;
     double x;
     double y;
     double heading;
     GoBildaPinpointDriver pinpoint;
     SequentialCommandGroup route;
+    BuildPath pathHelper;
     @Override
     public void init() {
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 56, 8, AngleUnit.RADIANS, Math.toRadians(0)));
+        pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 56, 8, AngleUnit.RADIANS, Math.toRadians(90)));
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         CommandScheduler.getInstance().reset();
         chassis = new GamepadEx(gamepad1);
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
+        pathHelper = new BuildPath(follower);
 
-        pathChain =()-> follower.pathBuilder() //Lazy Curve Generation
-                .addPath(new Path(new BezierCurve(follower::getPose, new Pose(144, -12, Math.toRadians(-55)))))
-                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(-50), 1))
-                .build();
+        /*pathChain =()-> follower.pathBuilder() //Lazy Curve Generation
+                .addPath(new Path(new BezierCurve(follower::getPose, new Pose(77, 99, Math.toRadians(-55)))))
+                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(35), 1))
+                .build();*/
+        pathChain = pathHelper.buildPath(follower.getPose(), new Pose(77, 99, Math.toRadians(-55)), follower.getHeading(), -55.0);
+
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> follower.followPath(pathChain.get())), new InstantCommand(()->automatedDrive = true)));
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> follower.followPath(pathChain)), new InstantCommand(()->automatedDrive = true)));
 
         new Trigger(()->automatedDrive && (chassis.wasJustPressed(GamepadKeys.Button.B) || !follower.isBusy()))
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.startTeleopDrive(true)), new InstantCommand(()->automatedDrive = false)));
@@ -73,8 +75,8 @@ public class PedroLaunchTeleOpTest extends OpMode {
         CommandScheduler.getInstance().run();
         chassis.readButtons();
         follower.update();
-        pinpoint.setPosX(follower.getPose().getX(), DistanceUnit.INCH);
-        pinpoint.setPosY(follower.getPose().getY(), DistanceUnit.INCH);
+        //pinpoint.setPosX(follower.getPose().getX(), DistanceUnit.INCH);
+        //pinpoint.setPosY(follower.getPose().getY(), DistanceUnit.INCH);
         x = follower.getPose().getX();
         y = follower.getPose().getY();
         heading = follower.getHeading();
@@ -88,6 +90,8 @@ public class PedroLaunchTeleOpTest extends OpMode {
         telemetry.addData("position", follower.getPose());
         telemetry.addData("velocity", follower.getVelocity());
         telemetry.addData("Heading: ", Math.toDegrees(follower.getHeading()));
+        telemetry.addData("Pinpoint X", pinpoint.getPosition().getX(DistanceUnit.INCH));
+        telemetry.addData("Pinpoint Y", pinpoint.getPosition().getY(DistanceUnit.INCH));
         telemetry.addData("automatedDrive", automatedDrive);
     }
 }
