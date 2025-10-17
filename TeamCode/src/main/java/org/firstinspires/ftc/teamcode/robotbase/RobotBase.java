@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
+import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class RobotBase {
@@ -23,6 +24,7 @@ public class RobotBase {
         public SorterServo ejectorMiddleSubsystem;
         public SorterServo ejectorLeftSubsystem;
         public SorterServo ejectorRightSubsystem;
+        public SorterCamera sorterCameraSubsystem;
 
         public RobotBase(HardwareMap hwMap) {
 
