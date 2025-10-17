@@ -23,6 +23,7 @@ public class SchematicannonTeleOp extends OpMode {
     DcMotorEx launcher1;
     DcMotorEx launcher2;
     DcMotorEx launcher3;
+    DcMotorEx intake;
 
     public boolean bolTurnToArtifact = false;
 
@@ -34,6 +35,7 @@ public class SchematicannonTeleOp extends OpMode {
         launcher1 = hardwareMap.get(DcMotorEx.class, "launcher1");
         launcher2 = hardwareMap.get(DcMotorEx.class,"launcher2");
         launcher3 = hardwareMap.get(DcMotorEx.class, "launcher3");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
 
         chassis = new GamepadEx(gamepad1);
 
