@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.teamcode.commandgroups.LaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 
 @TeleOp(name = "Schematic Cannon")
@@ -23,17 +24,19 @@ public class SchematicannonTeleOp extends OpMode {
     DcMotorEx launcher1;
     DcMotorEx launcher2;
     DcMotorEx launcher3;
+    Intake intake;
 
     public boolean bolTurnToArtifact = false;
 
     @Override
     public void init() {
 
-        robotBase = new RobotBase(hardwareMap);
+        //robotBase = new RobotBase(hardwareMap);
         //robotBase.chassisSubsystem.initLimelight();
-        launcher1 = hardwareMap.get(DcMotorEx.class, "launcher1");
+        /*launcher1 = hardwareMap.get(DcMotorEx.class, "launcher1");
         launcher2 = hardwareMap.get(DcMotorEx.class,"launcher2");
-        launcher3 = hardwareMap.get(DcMotorEx.class, "launcher3");
+        launcher3 = hardwareMap.get(DcMotorEx.class, "launcher3");*/
+        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intake"));
 
         chassis = new GamepadEx(gamepad1);
 
@@ -80,7 +83,7 @@ public class SchematicannonTeleOp extends OpMode {
     @Override
     public void loop() {
         chassis.readButtons();
-
+        intake.intake(gamepad1.left_trigger / 2 + -1 * gamepad1.right_trigger / 2 );
         //telemetry.addData("id", id);
         //telemetry.addData("tx", robotBase.chassisSubsystem.getTargetX());
         //telemetry.addData("ty", robotBase.chassisSubsystem.getTargetY());
@@ -88,5 +91,7 @@ public class SchematicannonTeleOp extends OpMode {
         //telemetry.addData("Pipeline type", robotBase.chassisSubsystem.getPiplineType());
         //telemetry.addData("Align With Artifact", bolTurnToArtifact);
         CommandScheduler.getInstance().run();
+
+
     }
 }

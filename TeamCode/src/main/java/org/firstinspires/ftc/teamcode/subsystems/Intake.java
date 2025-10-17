@@ -9,6 +9,7 @@ public class Intake extends SubsystemBase {
 
     public Intake(DcMotor m_intakeMotor) {
         intakeMotor = m_intakeMotor;
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void intake(double m_Power) {
