@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -38,7 +39,15 @@ public class SchematicannonTeleOp extends OpMode {
         launcher3 = hardwareMap.get(DcMotorEx.class, "launcher3");*/
         intake = new Intake(hardwareMap.get(DcMotorEx.class, "intake"));
 
+
         chassis = new GamepadEx(gamepad1);
+
+        new Trigger(()->chassis.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
+                .or(new Trigger(()->chassis.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
+                        .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
+                                new InstantCommand(()->robotBase.intakeSubsystem.intake(gamepad1.left_trigger - gamepad1.right_trigger)))
+                                .whenFinished(()->CommandScheduler.getInstance().schedule(
+                                                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)))));
 
         chassis.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
