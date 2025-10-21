@@ -32,7 +32,7 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
         @Override
         public void init() {
             follower = Constants.createFollower(hardwareMap);
-            startPose = new Pose(85, 135);
+            startPose = new Pose(118, 135);
             CommandScheduler.getInstance().reset();
             goesFromWallToShootPreload = follower.pathBuilder()
                     .addPath(
