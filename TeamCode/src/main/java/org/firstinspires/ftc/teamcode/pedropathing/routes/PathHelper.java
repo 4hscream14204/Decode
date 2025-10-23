@@ -74,6 +74,22 @@ public class PathHelper {
         return m_path;
     }
 
+    public PathChain buildPathMirror(PathChain m_path, Pose startPointPose, Pose endPointPose){
+        m_path = follower.pathBuilder()
+                .addPath(new BezierLine(startPointPose.mirror(), endPointPose.mirror()))
+                .setTangentHeadingInterpolation()
+                .build();
+        return m_path;
+    }
+
+    public PathChain buildPathMirror(PathChain m_path, Pose startPointPose, Pose endPointPose, double heading){
+        m_path = follower.pathBuilder()
+                .addPath(new BezierLine(startPointPose.mirror(), endPointPose.mirror()))
+                .setConstantHeadingInterpolation(Math.toRadians(heading))
+                .build();
+        return m_path;
+    }
+
     public Supplier<PathChain> buildPath(Supplier<PathChain> m_path, Pose startPointPose, Pose endPointPose, double endHeading){
         m_path =()-> follower.pathBuilder()
                 .addPath(new Path(new BezierCurve(startPointPose, endPointPose)))
