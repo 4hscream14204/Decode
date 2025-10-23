@@ -4,20 +4,15 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.HeadingInterpolator;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
-import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 
 import java.util.function.Supplier;
 
-public class BuildPath {
+public class PathHelper {
     Follower follower;
 
-    public BuildPath(Follower m_follower){
+    public PathHelper(Follower m_follower){
         follower = m_follower;
     }
 

@@ -3,26 +3,18 @@ package org.firstinspires.ftc.teamcode.opmode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.HeadingInterpolator;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode.pedropathing.routes.BuildPath;
-import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 
 import java.util.function.Supplier;
@@ -41,7 +33,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
     double heading;
     GoBildaPinpointDriver pinpoint;
     SequentialCommandGroup route;
-    //BuildPath pathHelper;
+    //PathHelper pathHelper;
     DcMotorEx launchMotor;
     double velocity = 0;
     @Override
@@ -54,7 +46,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
         chassis = new GamepadEx(gamepad1);
         /*follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
-        pathHelper = new BuildPath(follower);*/
+        pathHelper = new PathHelper(follower);*/
 
         /*pathChain =()-> follower.pathBuilder() //Lazy Curve Generation
                 .addPath(new Path(new BezierCurve(follower::getPose, new Pose(77, 99, Math.toRadians(-55)))))
