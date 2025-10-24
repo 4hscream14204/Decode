@@ -12,9 +12,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 
-public class SmallLaunchZoneAuto {
     @Autonomous(name = "SmallRedAuto")
-    public class SmallLaunchZone extends OpMode {
+    public class SmallLaunchZoneAuto extends OpMode {
         Follower follower;
         SequentialCommandGroup route;
         @Override
@@ -101,5 +100,3 @@ public class SmallLaunchZoneAuto {
             follower.update();
         }
     }
-
-}
