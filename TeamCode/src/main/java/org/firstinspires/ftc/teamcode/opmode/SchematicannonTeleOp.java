@@ -25,7 +25,6 @@ public class SchematicannonTeleOp extends OpMode {
     DcMotorEx launcher2;
     DcMotorEx launcher3;
     Intake intake;
-    RGBLightSubsystem RGBLight;
 
     public boolean bolTurnToArtifact = false;
 
@@ -94,6 +93,7 @@ chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
     public void loop() {
         chassis.readButtons();
         intake.intake(gamepad1.left_trigger / 2 + -1 * gamepad1.right_trigger / 2 );
+        robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
         //telemetry.addData("id", id);
         //telemetry.addData("tx", robotBase.chassisSubsystem.getTargetX());
         //telemetry.addData("ty", robotBase.chassisSubsystem.getTargetY());
