@@ -45,9 +45,9 @@ public class SchematicannonTeleOp extends OpMode {
         new Trigger(()->chassis.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()->chassis.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
                         .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
-                                new InstantCommand(()->robotBase.intakeSubsystem.intake(gamepad1.left_trigger - gamepad1.right_trigger)))
-                                .whenFinished(()->CommandScheduler.getInstance().schedule(
-                                                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)))));
+                                new InstantCommand(()->robotBase.intakeSubsystem.intake(gamepad1.left_trigger - gamepad1.right_trigger))
+                                .whenFinished (()->CommandScheduler.getInstance().schedule(
+                                                new InstantCommand(()->robotBase.intakeSubsystem.intake(0))))));
 
         chassis.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
