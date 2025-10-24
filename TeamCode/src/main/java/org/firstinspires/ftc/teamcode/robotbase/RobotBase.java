@@ -3,12 +3,10 @@ package org.firstinspires.ftc.teamcode.robotbase;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.RGBLight;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
@@ -16,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class RobotBase {
 
-        public Intake intakeSubsystem;
+        public RGBLight intakeSubsystem;
         public Launcher launcherSubsystem;
         public Chassis chassisSubsystem;
         public Hood hoodSubsystem;
