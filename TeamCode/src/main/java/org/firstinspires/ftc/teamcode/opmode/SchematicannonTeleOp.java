@@ -12,9 +12,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.commandgroups.LaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.Launcher;
+import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 
 @TeleOp(name = "Schematic Cannon")
 public class SchematicannonTeleOp extends OpMode {
@@ -45,18 +44,19 @@ public class SchematicannonTeleOp extends OpMode {
         new Trigger(()->chassis.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()->chassis.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
                         .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
-                                new InstantCommand(()->robotBase.intakeSubsystem.intake(gamepad1.left_trigger - gamepad1.right_trigger))
-                                .whenFinished(()->CommandScheduler.getInstance().schedule(
-                                                new InstantCommand(()->robotBase.intakeSubsystem.intake(0))))));
-
+                                new InstantCommand(()->intake.intake(gamepad1.left_trigger - gamepad1.right_trigger))))
+                                .whenInactive (()->CommandScheduler.getInstance().schedule(
+                                                new InstantCommand(()->intake.intake(0))));
+chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->RGBLight.Colors.green)));
         chassis.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
                         new InstantCommand(()-> bolTurnToArtifact = !bolTurnToArtifact)
                 ));
 
         chassis.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whileActiveContinuous(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.intakeSubsystem.intake(-1))
-                        .whenFinished(()->CommandScheduler.getInstance().schedule( new InstantCommand(()-> robotBase.intakeSubsystem.intake(0))))
+                .whileActiveContinuous(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> intake.intake(-1))
+                        .whenFinished(()->CommandScheduler.getInstance().schedule( new InstantCommand(()-> intake.intake(0))))
 
                 ));
 
