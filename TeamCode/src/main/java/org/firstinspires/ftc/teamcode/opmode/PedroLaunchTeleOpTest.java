@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 import java.util.function.Supplier;
 
@@ -44,6 +45,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         CommandScheduler.getInstance().reset();
         chassis = new GamepadEx(gamepad1);
+        robotBase.limelightSubsystem.initLimelight();
         /*follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
         pathHelper = new PathHelper(follower);*/
@@ -79,12 +81,15 @@ public class PedroLaunchTeleOpTest extends OpMode {
     @Override
     public void start() {
         //follower.startTeleopDrive(true);
+        robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.BLUEGOAL);
     }
 
     @Override
     public void loop() {
+        robotBase.limelightSubsystem.updateLimelight();
         CommandScheduler.getInstance().run();
         chassis.readButtons();
+        robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
         //follower.update();
         //pinpoint.setPosX(follower.getPose().getX(), DistanceUnit.INCH);
         //pinpoint.setPosY(follower.getPose().getY(), DistanceUnit.INCH);
@@ -105,5 +110,6 @@ public class PedroLaunchTeleOpTest extends OpMode {
         telemetry.addData("Pinpoint Y", pinpoint.getPosition().getY(DistanceUnit.INCH));
         telemetry.addData("automatedDrive", automatedDrive);
         telemetry.addData("Velocity", robotBase.launcherSubsystem.launcherMotor.getVelocity());
+        telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(0));
     }
 }
