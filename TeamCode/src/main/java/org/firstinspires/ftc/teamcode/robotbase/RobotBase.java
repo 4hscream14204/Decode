@@ -19,6 +19,9 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class RobotBase {
 
+        public RGBLightSubsystem RGBLightRightSubsystem;
+        public RGBLightSubsystem RGBLightMiddleSubsystem;
+        public RGBLightSubsystem RGBLightLeftSubsystem;
         public RGBLightSubsystem RGBLightSubsystem;
         public Launcher launcherSubsystem;
         public Chassis chassisSubsystem;
@@ -40,6 +43,9 @@ public class RobotBase {
            ejectorMiddleSubsystem = new SorterServo(hwMap.servo.get("ejectorMiddle"));
            ejectorLeftSubsystem = new SorterServo(hwMap.servo.get("ejectorLeft"));
            ejectorRightSubsystem = new SorterServo(hwMap.servo.get("ejectorRight"));
+           RGBLightRightSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightRightServo"));
+           RGBLightMiddleSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightMiddleServo"));
+           RGBLightLeftSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightLeftServo"));
            RGBLightSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightServo"));
 
         }
