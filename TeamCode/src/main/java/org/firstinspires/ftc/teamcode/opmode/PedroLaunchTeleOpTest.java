@@ -32,6 +32,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
     double x;
     double y;
     double heading;
+    boolean bolLockToBlue = false;
     GoBildaPinpointDriver pinpoint;
     SequentialCommandGroup route;
     //PathHelper pathHelper;
@@ -76,6 +77,11 @@ public class PedroLaunchTeleOpTest extends OpMode {
                 new InstantCommand(()->new FollowPath(follower, pathChain, true, 1)),
                 new WaitUntilCommand(()->follower.isBusy())
         );*/
+
+        chassis.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()-> bolLockToBlue = !bolLockToBlue)
+                ));
     }
 
     @Override
@@ -90,6 +96,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
         CommandScheduler.getInstance().run();
         chassis.readButtons();
         robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-15.625));
+        //robotBase.chassisSubsystem.drive(chassis.getLeftY(), chassis.getLeftX(), chassis.getRightX(), bolLockToBlue, robotBase.limelightSubsystem.getTargetX());
         //follower.update();
         //pinpoint.setPosX(follower.getPose().getX(), DistanceUnit.INCH);
         //pinpoint.setPosY(follower.getPose().getY(), DistanceUnit.INCH);
