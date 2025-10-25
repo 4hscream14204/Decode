@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.robotbase;
 
+import android.graphics.ColorSpace;
+
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
-import org.firstinspires.ftc.teamcode.subsystems.RGBLight;
+import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
@@ -14,7 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class RobotBase {
 
-        public RGBLight intakeSubsystem;
+        public RGBLightSubsystem RGBLightSubsystem;
         public Launcher launcherSubsystem;
         public Chassis chassisSubsystem;
         public Hood hoodSubsystem;

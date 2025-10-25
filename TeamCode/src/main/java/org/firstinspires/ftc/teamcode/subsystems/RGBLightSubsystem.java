@@ -7,19 +7,19 @@ public class RGBLightSubsystem extends SubsystemBase{
 
     Servo RGBLightServo;
 
-    public RGBLightSubsystem (Servo RGBLightServo){
-        RGBLightServo = RGBLightServo;
+    public RGBLightSubsystem (Servo m_RGBLightServo){
+        RGBLightServo = m_RGBLightServo;
     }
 
-public Colors enmColorHue;
+public RGBLightSubsystem.Colors enmColorHue;
     public enum Colors{
-        purple(.7183),
-        green(.4944);
+        PURPLE(.7183),
+        GREEN(.4944);
         public final double value;
         Colors(double m_color){this.value=m_color; }
 
     }
-    public void setColor(Colors enmTargetColor){
+    public void setColor(RGBLightSubsystem.Colors enmTargetColor){
         if (enmTargetColor != enmColorHue ){
             RGBLightServo.setPosition(enmTargetColor.value);
             enmColorHue = enmTargetColor;

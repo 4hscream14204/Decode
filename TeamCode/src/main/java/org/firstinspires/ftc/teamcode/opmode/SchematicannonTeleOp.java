@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.commandgroups.LaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
@@ -25,6 +26,7 @@ public class SchematicannonTeleOp extends OpMode {
     DcMotorEx launcher2;
     DcMotorEx launcher3;
     Intake intake;
+    RGBLightSubsystem RGBLightSubsystem;
 
     public boolean bolTurnToArtifact = false;
 
@@ -36,9 +38,8 @@ public class SchematicannonTeleOp extends OpMode {
         /*launcher1 = hardwareMap.get(DcMotorEx.class, "launcher1");
         launcher2 = hardwareMap.get(DcMotorEx.class,"launcher2");
         launcher3 = hardwareMap.get(DcMotorEx.class, "launcher3");*/
-        intake = new Intake(hardwareMap.get(DcMotorEx.class, "intake"));
-
-
+      //  intake = new Intake(hardwareMap.get(DcMotorEx.class, "intake"));
+        RGBLightSubsystem = new RGBLightSubsystem(hardwareMap.get(Servo.class,"RGBLightServo"));
         chassis = new GamepadEx(gamepad1);
 
         new Trigger(()->chassis.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
@@ -48,7 +49,11 @@ public class SchematicannonTeleOp extends OpMode {
                                 .whenInactive (()->CommandScheduler.getInstance().schedule(
                                                 new InstantCommand(()->intake.intake(0))));
 chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->RGBLight.Colors.green)));
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->RGBLightSubsystem.setColor(org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem.Colors.GREEN))));
+
+        chassis.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->RGBLightSubsystem.setColor(org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem.Colors.PURPLE))));
+
         chassis.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
                         new InstantCommand(()-> bolTurnToArtifact = !bolTurnToArtifact)
@@ -65,10 +70,10 @@ chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                         .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
                         ))));
 
-        chassis.getGamepadButton(GamepadKeys.Button.A)
-                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.75))
-                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
-                        ))));
+        //chassis.getGamepadButton(GamepadKeys.Button.A)
+          //      .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.75))
+            //            .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
+              //          ))));
 
         chassis.getGamepadButton(GamepadKeys.Button.X)
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.5))
@@ -92,8 +97,8 @@ chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
     @Override
     public void loop() {
         chassis.readButtons();
-        intake.intake(gamepad1.left_trigger / 2 + -1 * gamepad1.right_trigger / 2 );
-        robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
+       // intake.intake(gamepad1.left_trigger / 2 + -1 * gamepad1.right_trigger / 2 );
+       // robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
         //telemetry.addData("id", id);
         //telemetry.addData("tx", robotBase.chassisSubsystem.getTargetX());
         //telemetry.addData("ty", robotBase.chassisSubsystem.getTargetY());
