@@ -40,6 +40,19 @@ import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
                     .whileActiveContinuous(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.Intake.intake(-1))
                             .whenFinished(()->CommandScheduler.getInstance().schedule( new InstantCommand(()-> robotBase.Intake.intake(0))))));
 
+            chassisController.getGamepadButton(GamepadKeys.Button.B)
+                    .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1700))
+                            .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
+                            ))));
+
+            chassisController.getGamepadButton(GamepadKeys.Button.X)
+                    .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000))
+                            .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
+                            ))));
+            chassisController.getGamepadButton(GamepadKeys.Button.Y)
+                    .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2500))
+                            .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
+                            ))));
 
 
 
