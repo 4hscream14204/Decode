@@ -40,6 +40,6 @@ public class Launcher extends SubsystemBase {
 
     public void setLaunchVelocity(double m_Distance) {
         double velocity = (0 - ((launchVar1 * m_Distance) + launchVar2));
-        launcherMotor.setVelocity(velocity);
+        setVelocity(velocity);
     }
 }
