@@ -32,6 +32,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
     double x;
     double y;
     double heading;
+    boolean bolLockToBlue = false;
     GoBildaPinpointDriver pinpoint;
     SequentialCommandGroup route;
     //PathHelper pathHelper;
@@ -56,7 +57,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
                 .build();*/
         //pathChain = pathHelper.buildPath(pathChain, follower.getPose(), new Pose(77, 99, Math.toRadians(-55)), -55.0);
 
-        chassis.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+        /*chassis.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
                         new InstantCommand(()-> robotBase.launcherSubsystem.launcherMotor.setVelocity(robotBase.launcherSubsystem.launcherMotor.getVelocity() + 10))
                 ));
@@ -64,7 +65,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
         chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
                         new InstantCommand(()-> robotBase.launcherSubsystem.launcherMotor.setVelocity(robotBase.launcherSubsystem.launcherMotor.getVelocity() - 10))
-                ));
+                ));*/
 
         /*chassis.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()-> follower.followPath(pathChain.get())), new InstantCommand(()->automatedDrive = true)));
@@ -76,6 +77,11 @@ public class PedroLaunchTeleOpTest extends OpMode {
                 new InstantCommand(()->new FollowPath(follower, pathChain, true, 1)),
                 new WaitUntilCommand(()->follower.isBusy())
         );*/
+
+        chassis.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()-> bolLockToBlue = !bolLockToBlue)
+                ));
     }
 
     @Override
@@ -89,7 +95,8 @@ public class PedroLaunchTeleOpTest extends OpMode {
         robotBase.limelightSubsystem.updateLimelight();
         CommandScheduler.getInstance().run();
         chassis.readButtons();
-        robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
+        robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-15.625));
+        //robotBase.chassisSubsystem.drive(chassis.getLeftY(), chassis.getLeftX(), chassis.getRightX(), bolLockToBlue, robotBase.limelightSubsystem.getTargetX());
         //follower.update();
         //pinpoint.setPosX(follower.getPose().getX(), DistanceUnit.INCH);
         //pinpoint.setPosY(follower.getPose().getY(), DistanceUnit.INCH);
@@ -109,7 +116,8 @@ public class PedroLaunchTeleOpTest extends OpMode {
         telemetry.addData("Pinpoint X", pinpoint.getPosition().getX(DistanceUnit.INCH));
         telemetry.addData("Pinpoint Y", pinpoint.getPosition().getY(DistanceUnit.INCH));
         telemetry.addData("automatedDrive", automatedDrive);
-        telemetry.addData("Velocity", robotBase.launcherSubsystem.launcherMotor.getVelocity());
-        telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(0));
+        telemetry.addData("Velocity", robotBase.launcherSubsystem.getVelocity());
+        telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-15.625));
+        telemetry.addData("Intended Velocity", 0 - ((2.2787 * robotBase.limelightSubsystem.getHorizontalDistance(-15.625)) + 1770.4));
     }
 }

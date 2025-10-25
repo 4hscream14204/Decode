@@ -8,7 +8,7 @@ public class Launcher extends SubsystemBase {
     public DcMotorEx launcherMotor;
 
     public final double dblLaunchWheelRadius = 1.375;
-    public final double launchVar1 = 5.7879;
+    public final double launchVar1 = 2.2787;
     public final double launchVar2 = 1770.4;
 
     public Launcher(DcMotorEx m_Launcher){
@@ -30,12 +30,16 @@ public class Launcher extends SubsystemBase {
         launcherMotor.setVelocity(m_RPMToVelocity);
     }
 
+    public double getVelocity(){
+        return launcherMotor.getVelocity();
+    }
+
     public double getRPM() {
         return launcherMotor.getVelocity() * (6.28 * dblLaunchWheelRadius);
     }
 
     public void setLaunchVelocity(double m_Distance) {
-        double velocity = 0 - ((launchVar1 * m_Distance) + launchVar2);
+        double velocity = (0 - ((launchVar1 * m_Distance) + launchVar2));
         setVelocity(velocity);
     }
 }
