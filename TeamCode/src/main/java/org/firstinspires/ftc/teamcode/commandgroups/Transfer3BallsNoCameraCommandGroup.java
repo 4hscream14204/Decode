@@ -16,7 +16,7 @@ public class Transfer3BallsNoCameraCommandGroup extends SequentialCommandGroup {
                 new WaitCommand(500),
                 new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.TRANSFER)),
                 new WaitCommand(500),
-                new TransferResetCommandGroup(robotBase.ejectorLeftSubsystem, robotBase.ejectorMiddleSubsystem, robotBase.ejectorRightSubsystem)
+                new TransferResetCommandGroup(robotBase)
         );
     }
 }

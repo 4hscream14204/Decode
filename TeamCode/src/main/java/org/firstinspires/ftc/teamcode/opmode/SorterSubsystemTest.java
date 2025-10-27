@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.commandgroups.TransferPurpleBallCommandGro
 import org.firstinspires.ftc.teamcode.commandgroups.TransferTwoPurpleCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
+import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
@@ -24,22 +25,24 @@ public class SorterSubsystemTest extends OpMode {
     SorterServo sorterServoRight;
     SorterCamera camera;
     GamepadEx chassis;
+    RobotBase robotBase;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
+        robotBase = new RobotBase(hardwareMap);
         chassis = new GamepadEx(gamepad1);
         camera = new SorterCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
         sorterServoLeft = new SorterServo(hardwareMap.servo.get("sorterServoLeft"));
         sorterServoMiddle = new SorterServo(hardwareMap.servo.get("sorterServoMiddle"));
         sorterServoRight = new SorterServo(hardwareMap.servo.get("sorterServoRight"));
         chassis.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(new TransferPurpleBallCommandGroup(camera, sorterServoLeft, sorterServoMiddle, sorterServoRight)));
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new TransferPurpleBallCommandGroup(robotBase)));
 
         chassis.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferPatternCommandGroup(camera, sorterServoLeft, sorterServoMiddle, sorterServoRight)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferPatternCommandGroup(robotBase)));
 
         chassis.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferTwoPurpleCommandGroup(camera, sorterServoLeft, sorterServoMiddle, sorterServoRight)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferTwoPurpleCommandGroup(robotBase)));
 
 
         chassis.getGamepadButton(GamepadKeys.Button.BACK)

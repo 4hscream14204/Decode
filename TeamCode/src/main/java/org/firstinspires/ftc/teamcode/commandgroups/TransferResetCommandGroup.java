@@ -3,14 +3,15 @@ package org.firstinspires.ftc.teamcode.commandgroups;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
+import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class TransferResetCommandGroup extends SequentialCommandGroup {
-    public TransferResetCommandGroup(SorterServo sorterServoL, SorterServo sorterServoM, SorterServo sorterServoR){
+    public TransferResetCommandGroup(RobotBase robotBase){
         addCommands(
-                new InstantCommand(()->sorterServoL.setPosition(SorterServo.ServoPosition.STABLE)),
-                new InstantCommand(()->sorterServoM.setPosition(SorterServo.ServoPosition.STABLE)),
-                new InstantCommand(()->sorterServoR.setPosition(SorterServo.ServoPosition.STABLE))
+                new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.STABLE)),
+                new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.STABLE)),
+                new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.STABLE))
         );
     }
 }

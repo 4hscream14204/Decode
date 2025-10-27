@@ -60,6 +60,8 @@ import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 
      @Override
      public void loop() {
-
+        CommandScheduler.getInstance().run();
+        chassisController.readButtons();
+        telemetry.addData("Motor Velocity", robotBase.launcherSubsystem.getVelocity());
      }
  }

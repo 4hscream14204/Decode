@@ -8,34 +8,35 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
+import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class TransferPatternCommandGroup extends SequentialCommandGroup {
-    public TransferPatternCommandGroup(SorterCamera camera, SorterServo sorterServo, SorterServo sorterServoM, SorterServo sorterServoR){
+    public TransferPatternCommandGroup(RobotBase robotBase){
         if(DataStorage.pattern == DecodeEnums.Patterns.PPG){
             addCommands(
-                    new TransferTwoPurpleCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
+                    new TransferTwoPurpleCommandGroup(robotBase),
                     new WaitCommand(1000),
-                    new TransferGreenBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
+                    new TransferGreenBallCommandGroup(robotBase),
                     new WaitCommand(1000),
-                    new TransferResetCommandGroup(sorterServo, sorterServoM, sorterServoR)
+                    new TransferResetCommandGroup(robotBase)
             );
         }
         else if (DataStorage.pattern == DecodeEnums.Patterns.GPP){
             addCommands(
-                new TransferGreenBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
+                new TransferGreenBallCommandGroup(robotBase),
                 new WaitCommand(1000),
-                new TransferTwoPurpleCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
+                new TransferTwoPurpleCommandGroup(robotBase),
                 new WaitCommand(1000),
-                new TransferResetCommandGroup(sorterServo, sorterServoM, sorterServoR)
+                new TransferResetCommandGroup(robotBase)
             );
         }
         else if(DataStorage.pattern == DecodeEnums.Patterns.PGP){
             addCommands(
-                    new TransferPurpleBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
-                    new TransferGreenBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR),
-                    new TransferPurpleBallCommandGroup(camera, sorterServo, sorterServoM, sorterServoR)
+                    new TransferPurpleBallCommandGroup(robotBase),
+                    new TransferGreenBallCommandGroup(robotBase),
+                    new TransferPurpleBallCommandGroup(robotBase)
             );
         }
     }
