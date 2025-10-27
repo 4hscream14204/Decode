@@ -33,15 +33,15 @@ public class HoodSubsystemTest extends OpMode {
     public void loop() {
         robotBase.limelightSubsystem.updateLimelight();
         if(gamepad1.start){
-            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true, robotBase.limelightSubsystem.getTargetX());
+            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true, true, robotBase.limelightSubsystem.getTargetX());
         }
         else{
-            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, false, robotBase.limelightSubsystem.getTargetX());
+            robotBase.chassisSubsystem.drive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, false, true, robotBase.limelightSubsystem.getTargetX());
         }
         double angle = robotBase.limelightSubsystem.getLaunchAngle();
         double verticalComp = robotBase.limelightSubsystem.getVerticalComp();
         double launchSpeed = robotBase.limelightSubsystem.getLaunchSpeed();
-        robotBase.hoodSubsystem.autoSetPosition(angle);
+        //robotBase.hoodSubsystem.autoSetPosition(angle);
         telemetry.addData("Horizontal Distance", robotBase.limelightSubsystem.getHorizontalDistance(0));
         telemetry.addData("getLaunchAngle", robotBase.limelightSubsystem.getLaunchAngle());
         telemetry.addData("AngleToGoal", robotBase.limelightSubsystem.getAngleToGoal());

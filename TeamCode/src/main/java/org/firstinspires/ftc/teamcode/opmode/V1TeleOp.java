@@ -76,12 +76,23 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchRight() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
                     .whenActive(()->new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE)));
 
+            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
+                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.RED)));
+
+            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchMiddle() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchMiddle() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
+                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.RED)));
+
+            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchLeft() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
+                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.RED)));
+
         }
 
      @Override
      public void loop() {
         CommandScheduler.getInstance().run();
         chassisController.readButtons();
+        robotBase.chassisSubsystem.pinpoint.getPosition();
+        robotBase.chassisSubsystem.drive(chassisController.getLeftY(), chassisController.getLeftX(), chassisController.getRightX(), false, true, robotBase.limelightSubsystem.getTargetY());
         telemetry.addData("Launcher Velocity", robotBase.launcherSubsystem.getVelocity());
         telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
      }
