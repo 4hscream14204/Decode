@@ -7,14 +7,14 @@ public class CameraLight extends SubsystemBase{
 
     Servo cameraLightServo;
 
-    public CameraLight(Servo m_RGBLightServo){
-        cameraLightServo = m_RGBLightServo;
+    public CameraLight(Servo m_cameraLightServo){
+        cameraLightServo = m_cameraLightServo;
     }
 
     public Shades enmColorHue;
     public enum Shades {
         OFF(0),
-        GREEN(1);
+        FULL(1);
         public final double value;
         Shades(double m_color){this.value=m_color; }
 

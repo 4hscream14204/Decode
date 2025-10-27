@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -22,23 +24,21 @@ public class RobotBase {
         public RGBLightSubsystem RGBLightRightSubsystem;
         public RGBLightSubsystem RGBLightMiddleSubsystem;
         public RGBLightSubsystem RGBLightLeftSubsystem;
-        public RGBLightSubsystem RGBLightSubsystem;
         public Launcher launcherSubsystem;
         public Chassis chassisSubsystem;
-        public Hood hoodSubsystem;
         public Limelight limelightSubsystem;
         public SorterServo ejectorMiddleSubsystem;
         public SorterServo ejectorLeftSubsystem;
         public SorterServo ejectorRightSubsystem;
         public SorterCamera sorterCameraSubsystem;
-        public Intake Intake;
+        public Intake intakeSubsystem;
+        public CameraLight cameraLightSubsystemLeft;
+        public CameraLight cameraLightSubsystemRight;
 
         public RobotBase(HardwareMap hwMap) {
-
-            Intake = new Intake(hwMap.dcMotor.get("intake_motor"));
+            intakeSubsystem = new Intake(hwMap.dcMotor.get("intake_motor"));
             launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"));
            chassisSubsystem = new Chassis(hwMap.dcMotor.get("rf"), hwMap.dcMotor.get("lf"), hwMap.dcMotor.get("rr"), hwMap.dcMotor.get("lr"), hwMap.get(IMU.class, "imu"));
-           hoodSubsystem = new Hood(hwMap.get(Servo.class, "hoodServo"));
            limelightSubsystem = new Limelight(hwMap.get(Limelight3A.class, "limelight"));
            ejectorMiddleSubsystem = new SorterServo(hwMap.servo.get("ejectorMiddle"));
            ejectorLeftSubsystem = new SorterServo(hwMap.servo.get("ejectorLeft"));
@@ -46,7 +46,9 @@ public class RobotBase {
            RGBLightRightSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightRightServo"));
            RGBLightMiddleSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightMiddleServo"));
            RGBLightLeftSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightLeftServo"));
-           RGBLightSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightServo"));
+           cameraLightSubsystemLeft = new CameraLight(hwMap.servo.get("cameraLightLeft"));
+           cameraLightSubsystemRight = new CameraLight(hwMap.servo.get("cameraLightRight"));
+           sorterCameraSubsystem = new SorterCamera(hwMap.get(WebcamName.class, "SorterCamera"));
 
         }
 }
