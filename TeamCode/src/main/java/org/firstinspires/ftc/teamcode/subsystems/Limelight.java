@@ -28,6 +28,7 @@ public class Limelight extends SubsystemBase {
     public double limelightTY;
     public String limelightPiplineType;
     public double limelightTa;
+    public double limeLightID;
     public double mountingAngle = 0;
     public final double goalAprilTagHeight = 74.75;
     public final double goalHeight = 99;
@@ -40,6 +41,7 @@ public class Limelight extends SubsystemBase {
     public double x;
     public double y;
     public double distance;
+    public double id;
     public double limelightTZ;
     public Pose3D botPose;
 
@@ -62,6 +64,7 @@ public class Limelight extends SubsystemBase {
         List<LLResultTypes.FiducialResult> aprilTagResult = result.getFiducialResults();
         //loop through the list, even if there is only 1 item since it is a List type
         for (LLResultTypes.FiducialResult fr : aprilTagResult) {
+            id = fr.getFiducialId();
             x = fr.getTargetPoseRobotSpace().getPosition().x; // Where it is (left-right)
             y = fr.getTargetPoseRobotSpace().getPosition().y; // Where it is (up-down)
             distance = fr.getTargetPoseRobotSpace().getPosition().z;
@@ -131,10 +134,13 @@ public class Limelight extends SubsystemBase {
         List<LLResultTypes.FiducialResult> aprilTagResult = result.getFiducialResults();
         //loop through the list, even if there is only 1 item since it is a List type
         for (LLResultTypes.FiducialResult fr : aprilTagResult) {
+            id = fr.getFiducialId();
             x = fr.getTargetPoseRobotSpace().getPosition().x; // Where it is (left-right)
             y = fr.getTargetPoseRobotSpace().getPosition().y; // Where it is (up-down)
             distance = fr.getTargetPoseRobotSpace().getPosition().z;
         }
+
+        limeLightID = id;
         limelightTX = result.getTx();
         limelightTY = result.getTy();
         limelightTZ = distance;
@@ -158,6 +164,10 @@ public class Limelight extends SubsystemBase {
 
     public double getTargetZ(){
         return limelightTZ * 100;
+    }
+
+    public double getID(){
+        return limeLightID;
     }
 
     public String getPipline() {

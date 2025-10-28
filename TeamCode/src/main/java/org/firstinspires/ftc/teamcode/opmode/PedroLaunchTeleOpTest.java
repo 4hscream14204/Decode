@@ -119,5 +119,9 @@ public class PedroLaunchTeleOpTest extends OpMode {
         telemetry.addData("Velocity", robotBase.launcherSubsystem.getVelocity());
         telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-15.625));
         telemetry.addData("Intended Velocity", 0 - ((2.2787 * robotBase.limelightSubsystem.getHorizontalDistance(-15.625)) + 1770.4));
+        telemetry.addData("TY", robotBase.limelightSubsystem.getTargetY());
+        telemetry.addData("TX", robotBase.limelightSubsystem.getTargetX());
+        telemetry.addData("This Is new Code", true);
+
     }
 }
