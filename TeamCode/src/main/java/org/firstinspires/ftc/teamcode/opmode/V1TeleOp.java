@@ -32,6 +32,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             CommandScheduler.getInstance().reset();
             robotBase = new RobotBase(hardwareMap);
             robotBase.sorterCameraSubsystem.getAnalysis();
+            robotBase.limelightSubsystem.initLimelight();
 
             chassisController = new GamepadEx(gamepad1);
             armController = new GamepadEx(gamepad2);
@@ -71,6 +72,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
         chassisController.readButtons();
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.getPosition();
+        robotBase.limelightSubsystem.updateLimelight();
         rgbLightLeftColorCommandGroup.schedule();
         rgbLightMiddleColorCommandGroup.schedule();
         rgbLightRightColorCommandGroup.schedule();

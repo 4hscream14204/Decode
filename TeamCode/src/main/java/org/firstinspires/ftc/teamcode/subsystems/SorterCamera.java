@@ -20,9 +20,9 @@ public class SorterCamera extends SubsystemBase {
     PredominantColorProcessor.Result resultLeft;
     PredominantColorProcessor.Result resultRight;
     public int intPurple = 0;
-    public boolean isMiddleAndLeftPurple;
-    public boolean isRightAndLeftPurple;
-    public boolean isMiddleAndRightPurple;
+    public boolean isMiddleAndLeftPurple = false;
+    public boolean isRightAndLeftPurple = false;
+    public boolean isMiddleAndRightPurple = false;
     public SorterCamera(WebcamName m_webcam){
         webcam = m_webcam;
         colorSensor = new PredominantColorProcessor.Builder()
@@ -106,12 +106,7 @@ public class SorterCamera extends SubsystemBase {
     }
 
     public boolean hasThreeArtifacts(){
-        if((resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE) && (resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE) && (resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return (resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE) && (resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE) && (resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE);
     }
 
 }
