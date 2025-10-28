@@ -84,8 +84,8 @@ chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.2))
                         .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
                         ))));
-        chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchCommandGroup(launcher1, launcher2,launcher3)));
+        /*chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchCommandGroup(launcher1, launcher2,launcher3)));*/
 
 
         /*chassis.getGamepadButton(GamepadKeys.Button.BACK)

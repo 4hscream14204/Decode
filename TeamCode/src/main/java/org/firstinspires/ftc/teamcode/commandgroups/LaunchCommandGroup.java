@@ -11,16 +11,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 
 
 public class LaunchCommandGroup extends SequentialCommandGroup {
-
-    RobotBase robotBase;
-
-    public LaunchCommandGroup(DcMotor launcher1, DcMotor launcher2, DcMotor launcher3){
+    public LaunchCommandGroup(RobotBase robotBase){
         addCommands(
-                new InstantCommand(()->launcher1.setPower(.7)),
-                new WaitCommand(1000),
-                new InstantCommand(()->launcher2.setPower(.7)),
-                new WaitCommand(1000),
-                new InstantCommand(()->launcher3.setPower(.7)));
+                new InstantCommand(()->robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0))));
 
 
     }

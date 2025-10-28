@@ -8,6 +8,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commandgroups.Launch3ArtifactsNoCameraCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.PreloadThreeArtifactsCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.RGBLightLeftColorCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.RGBLightMiddleColorCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.RGBLightRightColorCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
@@ -16,21 +21,16 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 @TeleOp(name = ("V1 Teleop"))
     public class V1TeleOp extends OpMode {
-        public RobotBase robotBase;
-        public GamepadEx armController;
-        public GamepadEx chassisController;
-
-
-
+        RobotBase robotBase;
+        GamepadEx armController;
+        GamepadEx chassisController;
+        RGBLightLeftColorCommandGroup rgbLightLeftColorCommandGroup;
+        RGBLightMiddleColorCommandGroup rgbLightMiddleColorCommandGroup;
+        RGBLightRightColorCommandGroup rgbLightRightColorCommandGroup;
         @Override
         public void init() {
             CommandScheduler.getInstance().reset();
             robotBase = new RobotBase(hardwareMap);
-
-            robotBase.intakeSubsystem.intakeMotor.setPower(0);
-            robotBase.launcherSubsystem.launcherMotorLeft.setPower(0);
-            robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.GREEN);
-            robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
             robotBase.sorterCameraSubsystem.getAnalysis();
 
             chassisController = new GamepadEx(gamepad1);
@@ -52,7 +52,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             chassisController.getGamepadButton(GamepadKeys.Button.X)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000))));
             chassisController.getGamepadButton(GamepadKeys.Button.Y)
-                    .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2500))));
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoCameraCommandGroup(robotBase)));
 
             chassisController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)));
@@ -60,32 +60,8 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             chassisController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)));
 
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.GREEN)));
-
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchMiddle() == PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.GREEN)));
-
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchRight() == PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.GREEN)));
-
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE)));
-
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchMiddle() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE)));
-
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchRight() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE)));
-
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.RED)));
-
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchMiddle() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchMiddle() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.RED)));
-
-            new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchLeft() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
-                    .whenActive(()->new InstantCommand(()->robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.RED)));
+            new Trigger(()->robotBase.sorterCameraSubsystem.hasThreeArtifacts())
+                    .whenActive(()->CommandScheduler.getInstance().schedule(new PreloadThreeArtifactsCommandGroup(robotBase)));
 
         }
 
@@ -95,7 +71,10 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
         chassisController.readButtons();
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.getPosition();
-        robotBase.chassisSubsystem.drive(-chassisController.getLeftY(), -chassisController.getLeftX(), chassisController.getRightX(), false, false, robotBase.limelightSubsystem.getTargetY());
+        rgbLightLeftColorCommandGroup.schedule();
+        rgbLightMiddleColorCommandGroup.schedule();
+        rgbLightRightColorCommandGroup.schedule();
+        robotBase.chassisSubsystem.drive(-chassisController.getLeftY(), -chassisController.getLeftX(), chassisController.getRightX(), false, true, robotBase.limelightSubsystem.getTargetY());
         telemetry.addData("Launcher Velocity", robotBase.launcherSubsystem.getVelocity());
         telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
      }

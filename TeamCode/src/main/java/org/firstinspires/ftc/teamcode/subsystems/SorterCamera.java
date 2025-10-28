@@ -105,4 +105,13 @@ public class SorterCamera extends SubsystemBase {
         }
     }
 
+    public boolean hasThreeArtifacts(){
+        if((resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE) && (resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE) && (resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }

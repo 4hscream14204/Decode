@@ -21,6 +21,10 @@ public class Chassis extends SubsystemBase {
     DcMotor backLeftMotor;
     DcMotor backRightMotor;
     public GoBildaPinpointDriver pinpoint;
+    double dblFrontLeftPower;
+    double dblFrontRightPower;
+    double dblBackLeftPower;
+    double dblBackRightPower;
 
     PIDController headingControl = new PIDController(0.05, 0, 0);
 
@@ -35,42 +39,45 @@ public class Chassis extends SubsystemBase {
         pinpoint = m_pinpoint;
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean isFieldCentric, double m_TX) {
         double dblDenominator;
-        double y = -m_gamepadOneLSY; // Remember, Y stick is reversed!
-        double x = (m_gamepadOneLSX * Math.abs(m_gamepadOneLSX) * -1);
-        double rx;
+        double y = (m_gamepadOneLSY * Math.abs(m_gamepadOneLSY) * -1); // Remember, Y stick is reversed!
+        double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
+        double rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
         double botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
-        if (m_PIDSteering) {
-            dblXOffset = 0 - m_TX;
-            dblHeadingOutput = (headingControl.calculate(dblXOffset));
-            rx = dblHeadingOutput;
-        } else {
-            rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
-        }
         if(isFieldCentric){
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+            if (m_PIDSteering) {
+                dblXOffset = 0 - m_TX;
+                dblHeadingOutput = (headingControl.calculate(dblXOffset));
+                rx = dblHeadingOutput;
+            } else {
+                rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
+            }
             dblDenominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            frontLeftMotor.setPower((rotY + rotX + rx) / dblDenominator);
-            backLeftMotor.setPower((rotY - rotX + rx) / dblDenominator);
-            frontRightMotor.setPower((rotY - rotX - rx) / dblDenominator);
-            backRightMotor.setPower((rotY + rotX - rx) / dblDenominator);
+            dblFrontLeftPower = (rotY + rotX + rx) / dblDenominator;
+            dblBackLeftPower = (rotY - rotX + rx) / dblDenominator;
+            dblFrontRightPower = (rotY - rotX - rx) / dblDenominator;
+            dblBackRightPower = (rotY + rotX - rx) / dblDenominator;
         }
         else{
-            dblDenominator = Math.max(Math.abs(m_gamepadOneLSX) + Math.abs(m_gamepadOneLSX) + Math.abs(rx), 1);
-            double dblFrontLeftPower = (m_gamepadOneLSY + m_gamepadOneLSX + rx) / dblDenominator;
-            double dblBackLeftPower = (m_gamepadOneLSY - m_gamepadOneLSX + rx) / dblDenominator;
-            double dblFrontRightPower = (m_gamepadOneLSY - m_gamepadOneLSX - rx) / dblDenominator;
-            double dblBackRightPower = (m_gamepadOneLSY + m_gamepadOneLSX - rx) / dblDenominator;
-            frontLeftMotor.setPower(dblFrontLeftPower);
-            backLeftMotor.setPower(dblBackLeftPower);
-            frontRightMotor.setPower(dblFrontRightPower);
-            backRightMotor.setPower(dblBackRightPower);
+            dblDenominator = Math.max(Math.abs(x) + Math.abs(x) + Math.abs(rx), 1);
+            dblFrontLeftPower = (y + x + rx) / dblDenominator;
+            dblBackLeftPower = (y - x + rx) / dblDenominator;
+            dblFrontRightPower = (y - x - rx) / dblDenominator;
+            dblBackRightPower = (y + x - rx) / dblDenominator;
         }
+        frontLeftMotor.setPower(dblFrontLeftPower);
+        frontRightMotor.setPower(dblFrontRightPower);
+        backLeftMotor.setPower(dblBackLeftPower);
+        backRightMotor.setPower(dblBackRightPower);
     }
 
     public void resetIMU(){

@@ -11,10 +11,9 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 public class Launch3ArtifactsNoCameraCommandGroup extends SequentialCommandGroup {
     public Launch3ArtifactsNoCameraCommandGroup(RobotBase robotBase){
         addCommands(
-                new InstantCommand(()->robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-15.625))),
-                new WaitUntilCommand(()->robotBase.launcherSubsystem.getVelocity() == 2000),
+                new LaunchCommandGroup(robotBase),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-                new WaitCommand(1000),
+                new WaitCommand(1500),
                 new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
         );
     }
