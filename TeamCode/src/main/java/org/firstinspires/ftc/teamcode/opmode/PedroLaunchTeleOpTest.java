@@ -59,12 +59,12 @@ public class PedroLaunchTeleOpTest extends OpMode {
 
         /*chassis.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()-> robotBase.launcherSubsystem.launcherMotor.setVelocity(robotBase.launcherSubsystem.launcherMotor.getVelocity() + 10))
+                        new InstantCommand(()-> robotBase.launcherSubsystem.launcherMotorLeft.setVelocity(robotBase.launcherSubsystem.launcherMotorLeft.getVelocity() + 10))
                 ));
 
         chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()-> robotBase.launcherSubsystem.launcherMotor.setVelocity(robotBase.launcherSubsystem.launcherMotor.getVelocity() - 10))
+                        new InstantCommand(()-> robotBase.launcherSubsystem.launcherMotorLeft.setVelocity(robotBase.launcherSubsystem.launcherMotorLeft.getVelocity() - 10))
                 ));*/
 
         /*chassis.getGamepadButton(GamepadKeys.Button.A)

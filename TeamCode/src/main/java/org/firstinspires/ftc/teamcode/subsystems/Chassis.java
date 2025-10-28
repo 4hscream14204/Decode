@@ -41,7 +41,7 @@ public class Chassis extends SubsystemBase {
     public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean isFieldCentric, double m_TX) {
         double dblDenominator;
         double y = -m_gamepadOneLSY; // Remember, Y stick is reversed!
-        double x = (m_gamepadOneLSY * Math.abs(m_gamepadOneLSY) * -1);
+        double x = (m_gamepadOneLSX * Math.abs(m_gamepadOneLSX) * -1);
         double rx;
         double botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         if (m_PIDSteering) {

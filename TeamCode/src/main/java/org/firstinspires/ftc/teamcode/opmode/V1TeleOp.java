@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commandgroups.Transfer3BallsNoCameraCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
@@ -27,9 +28,10 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             robotBase = new RobotBase(hardwareMap);
 
             robotBase.intakeSubsystem.intakeMotor.setPower(0);
-            robotBase.launcherSubsystem.launcherMotor.setPower(0);
+            robotBase.launcherSubsystem.launcherMotorLeft.setPower(0);
             robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.GREEN);
             robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
+            robotBase.sorterCameraSubsystem.getAnalysis();
 
             chassisController = new GamepadEx(gamepad1);
             armController = new GamepadEx(gamepad2);
@@ -37,26 +39,26 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             new Trigger(()->chassisController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                     .or(new Trigger(()->chassisController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
                     .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
-                            new InstantCommand(()->robotBase.intakeSubsystem.intake(gamepad1.right_trigger - gamepad1.left_trigger))))
+                            new InstantCommand(()->robotBase.intakeSubsystem.intake(gamepad1.left_trigger - gamepad1.right_trigger))))
                     .whenInactive (()->CommandScheduler.getInstance().schedule(
                             new InstantCommand(()->robotBase.intakeSubsystem.intake(0))));
 
+            chassisController.getGamepadButton(GamepadKeys.Button.A)
+                            .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))));
+
             chassisController.getGamepadButton(GamepadKeys.Button.B)
-                    .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1700))
-                            .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
-                            ))));
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1700))));
 
             chassisController.getGamepadButton(GamepadKeys.Button.X)
-                    .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000))
-                            .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
-                            ))));
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000))));
             chassisController.getGamepadButton(GamepadKeys.Button.Y)
-                    .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2500))
-                            .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
-                            ))));
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2500))));
 
             chassisController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)));
+
+            chassisController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)));
 
             new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
                     .whenActive(()->new InstantCommand(()->robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.GREEN)));
@@ -91,8 +93,9 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
      public void loop() {
         CommandScheduler.getInstance().run();
         chassisController.readButtons();
+        robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.getPosition();
-        robotBase.chassisSubsystem.drive(chassisController.getLeftY(), chassisController.getLeftX(), chassisController.getRightX(), false, true, robotBase.limelightSubsystem.getTargetY());
+        robotBase.chassisSubsystem.drive(-chassisController.getLeftY(), -chassisController.getLeftX(), chassisController.getRightX(), false, false, robotBase.limelightSubsystem.getTargetY());
         telemetry.addData("Launcher Velocity", robotBase.launcherSubsystem.getVelocity());
         telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
      }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robotbase;
 
 import android.graphics.ColorSpace;
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -37,12 +38,12 @@ public class RobotBase {
 
         public RobotBase(HardwareMap hwMap) {
             intakeSubsystem = new Intake(hwMap.dcMotor.get("intake_motor"));
-            launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"));
-           chassisSubsystem = new Chassis(hwMap.dcMotor.get("rf"), hwMap.dcMotor.get("lf"), hwMap.dcMotor.get("rr"), hwMap.dcMotor.get("lr"), hwMap.get(IMU.class, "imu"));
+            launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotorLeft"), hwMap.get(DcMotorEx.class, "launcherMotorRight"));
+           chassisSubsystem = new Chassis(hwMap.dcMotor.get("rf"), hwMap.dcMotor.get("lf"), hwMap.dcMotor.get("rr"), hwMap.dcMotor.get("lr"), hwMap.get(GoBildaPinpointDriver.class, "pinpoint"));
            limelightSubsystem = new Limelight(hwMap.get(Limelight3A.class, "limelight"));
-           ejectorMiddleSubsystem = new SorterServo(hwMap.servo.get("ejectorMiddle"));
-           ejectorLeftSubsystem = new SorterServo(hwMap.servo.get("ejectorLeft"));
-           ejectorRightSubsystem = new SorterServo(hwMap.servo.get("ejectorRight"));
+           ejectorMiddleSubsystem = new SorterServo(hwMap.servo.get("transferMiddle"));
+           ejectorLeftSubsystem = new SorterServo(hwMap.servo.get("transferLeft"));
+           ejectorRightSubsystem = new SorterServo(hwMap.servo.get("transferRight"));
            RGBLightRightSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightRightServo"));
            RGBLightMiddleSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightMiddleServo"));
            RGBLightLeftSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightLeftServo"));

@@ -39,6 +39,6 @@ public class LauncherTest extends OpMode {
     public void loop() {
         chassis.readButtons();
         CommandScheduler.getInstance().run();
-        telemetry.addData("Motor Velocity", robotBase.launcherSubsystem.launcherMotor.getVelocity());
+        telemetry.addData("Motor Velocity", robotBase.launcherSubsystem.launcherMotorLeft.getVelocity());
     }
 }
