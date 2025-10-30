@@ -2,7 +2,13 @@ package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
@@ -10,14 +16,35 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.commandgroups.LaunchCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
+import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 
 @Autonomous(name = "Big Launch Zone Red Auto")
 public class LargeLaunchZoneRedRoute extends OpMode {
+    RobotBase robotBase;
     Follower follower;
     SequentialCommandGroup route;
-    Pose startPose;
+    TransferPatternCommandGroup patternCommandGroup;
+    Pose startPose = new Pose(111.62, 135.55, Math.toRadians(0));
+    Pose parkPose = new Pose(127, 95, Math.toRadians(0));
+    Pose launchPose = new Pose(90, 95, Math.toRadians(0));
+    Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
+    Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
+    Pose preIntakeTopRow = new Pose(104, 84, Math.toRadians(0));
+    Pose intakeTopRow = new Pose(126, 84, Math.toRadians(0));
+    Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
+    Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
+    Pose preIntakeMiddleRow = new Pose(103.000, 60, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(127.497, 60, Math.toRadians(0));
+    Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
+    Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
+    Pose preIntakeBottomRow = new Pose(104.178, 35, Math.toRadians(0));
+    Pose intakeBottomRow = new Pose(127, 35, Math.toRadians(0));
+    Pose bottomRowToLaunchControl = new Pose(99.020, 40.449);
     PathChain goesFromWallToShootPreload;
     PathChain linesUpWithFurthestRow;
     PathChain intakesArtifacts;
@@ -28,89 +55,181 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     PathChain linesUpToIntakeThirdRow;
     PathChain intakesThirdRow;
     PathChain shootsArtifacts;
+    PathChain park;
+    GamepadEx chassis;
+    DesiredRows desiredRows = DesiredRows.THREE;
+    SequentialCommandGroup routeMiddleRow;
+    SequentialCommandGroup routeBottomRow;
+    boolean middleRowDone = false;
+    boolean bottomRowDone = false;
+    int secondsToWait = 0;
+    ElapsedTime timer;
+
+    public enum DesiredRows{
+        ONE,
+        TWO,
+        THREE
+    }
+
     @Override
     public void init() {
         follower = Constants.createFollower(hardwareMap);
-        startPose = new Pose(79.000, 139.000);
         CommandScheduler.getInstance().reset();
-         goesFromWallToShootPreload = follower.pathBuilder()
+        chassis = new GamepadEx(gamepad1);
+        timer = new ElapsedTime();
+
+        chassis.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.THREE)));
+
+        chassis.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.TWO)));
+
+        chassis.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.ONE)));
+
+        chassis.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->secondsToWait = secondsToWait + 1000)));
+
+        chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->secondsToWait = secondsToWait - 1000)));
+
+        goesFromWallToShootPreload = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(79.000, 139.000), new Pose(73.000, 113.000), new Pose(100.000, 125.000)))
-                .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(24))
-                .build();
-        linesUpWithFurthestRow = follower.pathBuilder()
-                .addPath(
-                        new BezierCurve(new Pose(100.000, 125.000), new Pose(77.016, 85.753), new Pose(98.049, 38.508)))
+                        new BezierCurve(startPose, startToLaunchControl, launchPose))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
-         intakesArtifacts = follower.pathBuilder()
-                .addPath(
-                        new BezierLine(new Pose(98.049, 38.508), new Pose(124.908, 38.184)))
-                .setTangentHeadingInterpolation()
+
+        //Closest line//
+        linesUpToIntakeThirdRow = follower.pathBuilder()
+                .addPath(new BezierCurve(launchPose, launchToTopRowControl, preIntakeTopRow))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
-         goesToShoot = follower.pathBuilder()
+        intakesThirdRow = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(124.908, 38.184), new Pose(99.020, 40.449), new Pose(74.000, 106.000), new Pose(102.903, 124.261)))
-                .setTangentHeadingInterpolation()
+                        new BezierLine(preIntakeTopRow, intakeTopRow))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
-         linesUpWithMiddleRow = follower.pathBuilder()
+        shootsArtifacts = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(102.903, 124.261), new Pose(74.000, 62.000), new Pose(103.000, 62.000)))
-                .setTangentHeadingInterpolation()
+                        new BezierCurve(intakeTopRow, topRowToLaunchControl, launchPose))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
-         intakesMiddleRow = follower.pathBuilder()
+
+        //Middle line//
+        linesUpWithMiddleRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(103.000, 62.000), new Pose(127.497, 61.483)))
-                .setTangentHeadingInterpolation()
+                        new BezierCurve(launchPose, launchToMiddleRow, preIntakeMiddleRow))
+                .setConstantHeadingInterpolation(0)
                 .build();
-         goesToShootArtifacts = follower.pathBuilder()
+        intakesMiddleRow = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(127.497, 61.483), new Pose(79.604, 54.688), new Pose(88.018, 116.818), new Pose(102.903, 123.613)))
-                .setTangentHeadingInterpolation()
+                        new BezierLine(preIntakeMiddleRow, intakeMiddleRow))
+                .setConstantHeadingInterpolation(0)
                 .build();
-         linesUpToIntakeThirdRow = follower.pathBuilder()
+        goesToShootArtifacts = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(102.903, 123.613), new Pose(79.000, 84.000), new Pose(104.000, 84.000)))
-                .setTangentHeadingInterpolation()
+                        new BezierCurve(intakeMiddleRow, middleRowToLaunchControl, launchPose))
+                .setConstantHeadingInterpolation(0)
                 .build();
-         intakesThirdRow = follower.pathBuilder()
+
+        //furthest line//
+        linesUpWithFurthestRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(104.000, 84.000), new Pose(129.438, 83.811)))
-                .setTangentHeadingInterpolation()
+                        new BezierCurve(launchPose, launchToBottomRowControl, preIntakeBottomRow))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
-         shootsArtifacts = follower.pathBuilder()
+        intakesArtifacts = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(129.438, 83.811), new Pose(75.721, 98.049), new Pose(106.000, 123.000)))
-                .setTangentHeadingInterpolation()
+                        new BezierLine(preIntakeBottomRow, intakeBottomRow))
+                .setConstantHeadingInterpolation(0)
+                .build();
+        goesToShoot = follower.pathBuilder()
+                .addPath(
+                        new BezierCurve(intakeBottomRow, bottomRowToLaunchControl, launchPose))
+                .setConstantHeadingInterpolation(0)
+                .build();
+
+        park = follower.pathBuilder()
+                .addPath(new BezierLine(launchPose, parkPose))
+                .setConstantHeadingInterpolation(0)
                 .build();
 
         follower = Constants.createFollower(hardwareMap);
-        route = new SequentialCommandGroup(
-                new FollowPath(follower, goesFromWallToShootPreload, true, 1),
-                new FollowPath(follower, linesUpWithFurthestRow, true, 1),
-                new FollowPath(follower, intakesArtifacts, true, 1),
-                new FollowPath(follower, goesToShoot, true, 1),
+
+        routeMiddleRow = new SequentialCommandGroup(
+                new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, linesUpWithMiddleRow, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesMiddleRow, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new FollowPath(follower, goesToShootArtifacts, true, 1),
-                new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
-                new FollowPath(follower, intakesThirdRow, true, 1),
-                new FollowPath(follower, shootsArtifacts, true, 1)
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new LaunchCommandGroup(robotBase),
+                new InstantCommand(()->patternCommandGroup.schedule()),
+                new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                new InstantCommand(()->middleRowDone = true));
 
-
-
+        routeBottomRow = new SequentialCommandGroup(
+                new FollowPath(follower, linesUpWithFurthestRow, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower, intakesArtifacts, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                new FollowPath(follower, goesToShoot, true, 1),
+                new LaunchCommandGroup(robotBase),
+                new InstantCommand(()->patternCommandGroup.schedule()),
+                new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                new InstantCommand(()->bottomRowDone = true)
         );
+
+        route = new SequentialCommandGroup(
+                new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
+                new FollowPath(follower, goesFromWallToShootPreload, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new LaunchCommandGroup(robotBase),
+                new InstantCommand(()->patternCommandGroup.schedule()),
+                new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower, intakesThirdRow, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                new FollowPath(follower, shootsArtifacts, false, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new LaunchCommandGroup(robotBase),
+                new InstantCommand(()->patternCommandGroup.schedule()),
+                new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->follower.followPath(park)),()-> (desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE)),
+                new WaitUntilCommand(()-> middleRowDone),
+                new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new InstantCommand(()->follower.followPath(park)), ()-> (desiredRows == DesiredRows.THREE)),
+                new WaitUntilCommand(()->bottomRowDone),
+                new FollowPath(follower, park, true, 1));
+    }
+
+    @Override
+    public void init_loop(){
+        CommandScheduler.getInstance().run();
+        chassis.readButtons();
+        telemetry.addData("Rows", desiredRows);
+        telemetry.addData("Wait Time", secondsToWait);
     }
 
     @Override
     public void start() {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(route);
+        timer.reset();
     }
 
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
         follower.update();
+        telemetry.addData("Rows", desiredRows);
+        telemetry.addData("MS", secondsToWait);
     }
 }
