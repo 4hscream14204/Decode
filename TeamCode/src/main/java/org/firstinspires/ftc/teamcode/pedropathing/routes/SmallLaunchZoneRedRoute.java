@@ -68,6 +68,12 @@ public class SmallLaunchZoneRedRoute extends OpMode {
         CommandScheduler.getInstance().reset();
         follower = Constants.createFollower(hardwareMap);
 
+        PathChain launchPreload = follower.pathBuilder()
+                .addPath(
+                        new BezierCurve(new Pose(88, 8), new Pose(84.46, 11), new Pose(88.71, 16)))
+                .setConstantHeadingInterpolation(0)
+                .build();
+
         PathChain lineUpToIntake = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(new Pose(88.71, 16), new Pose(83, 80), new Pose(104, 84)))
@@ -147,7 +153,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
         );
 
         route = new SequentialCommandGroup(
-                // new FollowPath(follower, lineUpToIntake, true, 1),
+                new FollowPath(follower, launchPreload, true, 1),
                 new FollowPath(follower, lineUpToThirdRow, true, 1),
                 new FollowPath(follower, intakeThirdRow, true, 1),
                 new FollowPath(follower, firstTimeGoingToShoot, true, 1),
