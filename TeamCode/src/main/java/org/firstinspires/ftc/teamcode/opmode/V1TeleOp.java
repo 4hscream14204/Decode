@@ -9,15 +9,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commandgroups.Launch3ArtifactsNoCameraCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.PreloadThreeArtifactsCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.RGBLightLeftColorCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.RGBLightMiddleColorCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.RGBLightRightColorCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
-import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
+import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @TeleOp(name = ("V1 Teleop"))
     public class V1TeleOp extends OpMode {
@@ -33,6 +32,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             robotBase = new RobotBase(hardwareMap);
             robotBase.sorterCameraSubsystem.getAnalysis();
             robotBase.limelightSubsystem.initLimelight();
+            robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.BLUEGOAL);
 
             chassisController = new GamepadEx(gamepad1);
             armController = new GamepadEx(gamepad2);
@@ -55,15 +55,46 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             chassisController.getGamepadButton(GamepadKeys.Button.Y)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoCameraCommandGroup(robotBase)));
 
+            chassisController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                            .whenPressed(()->CommandScheduler.getInstance().schedule(
+                                    new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(robotBase.launcherSubsystem.getVelocity() + 10))
+                            ));
+
             chassisController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(
+                            new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(robotBase.launcherSubsystem.getVelocity() - 10))
+                    ));
+
+            chassisController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                            .whenPressed(()->CommandScheduler.getInstance().schedule(
+                                    new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(robotBase.launcherSubsystem.getVelocity() + 100))
+                            ));
+
+            chassisController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(
+                            new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(robotBase.launcherSubsystem.getVelocity() - 100))
+                    ));
+
+            chassisController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)));
 
-            chassisController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+            chassisController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)));
 
-            new Trigger(()->robotBase.sorterCameraSubsystem.hasThreeArtifacts())
-                    .whenActive(()->CommandScheduler.getInstance().schedule(new PreloadThreeArtifactsCommandGroup(robotBase)));
+            /*chassisController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.TESTLEFT))));
 
+
+            chassisController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.TESTLEFT))));
+*/
+            /*new Trigger(()->robotBase.sorterCameraSubsystem.hasThreeArtifacts())
+                    .whenActive(()->CommandScheduler.getInstance().schedule(new PreloadThreeArtifactsCommandGroup(robotBase)));*/
+        }
+
+        public void start(){
+            CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.TESTLEFT)));
+            CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.TESTRIGHT)));
         }
 
      @Override
@@ -73,11 +104,13 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.getPosition();
         robotBase.limelightSubsystem.updateLimelight();
-        rgbLightLeftColorCommandGroup.schedule();
-        rgbLightMiddleColorCommandGroup.schedule();
-        rgbLightRightColorCommandGroup.schedule();
-        robotBase.chassisSubsystem.drive(-chassisController.getLeftY(), -chassisController.getLeftX(), chassisController.getRightX(), false, true, robotBase.limelightSubsystem.getTargetY());
+        robotBase.chassisSubsystem.drive(-chassisController.getLeftY(), chassisController.getLeftX(), chassisController.getRightX(), false, true, robotBase.limelightSubsystem.getTargetY());
         telemetry.addData("Launcher Velocity", robotBase.launcherSubsystem.getVelocity());
         telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
+        telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
+        telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
+        telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
+        telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
+        telemetry.update();
      }
  }

@@ -34,6 +34,6 @@ public class SparkfunLightStickTest extends OpMode {
         CommandScheduler.getInstance().run();
         chassis.readButtons();
         telemetry.addData("Value", value);
-        //ledStick.setColor(0, 0);
+        //ledStick.setShade(0, 0);
     }
 }

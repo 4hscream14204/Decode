@@ -53,6 +53,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         VisionPortal portal = new VisionPortal.Builder()
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(colorSensor)
                 .addProcessor(colorSensorLeft)
                 .addProcessor(colorSensorRight)
