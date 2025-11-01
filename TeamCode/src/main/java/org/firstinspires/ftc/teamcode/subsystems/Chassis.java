@@ -25,6 +25,7 @@ public class Chassis extends SubsystemBase {
     double dblFrontRightPower;
     double dblBackLeftPower;
     double dblBackRightPower;
+    public boolean isFieldCentric;
 
     PIDController headingControl = new PIDController(0.05, 0, 0);
 
@@ -45,30 +46,31 @@ public class Chassis extends SubsystemBase {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean isFieldCentric, double m_TX) {
+    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean m_isFieldCentric, double m_TX) {
         double dblDenominator;
-        double y = (m_gamepadOneLSY * Math.abs(m_gamepadOneLSY) * -1); // Remember, Y stick is reversed!
+        double y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY); // Remember, Y stick value is reversed
         double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
         double rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
-        double botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
+        double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
+        isFieldCentric = m_isFieldCentric;
         if(isFieldCentric){
-            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
-            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
-            if (m_PIDSteering) {
+            double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
+            double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
+            /*if (m_PIDSteering) {
                 dblXOffset = 0 - m_TX;
                 dblHeadingOutput = (headingControl.calculate(dblXOffset));
                 rx = dblHeadingOutput;
             } else {
                 rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
-            }
-            dblDenominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-            dblFrontLeftPower = (rotY + rotX + rx) / dblDenominator;
-            dblBackLeftPower = (rotY - rotX + rx) / dblDenominator;
-            dblFrontRightPower = (rotY - rotX - rx) / dblDenominator;
-            dblBackRightPower = (rotY + rotX - rx) / dblDenominator;
+            }*/
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+            dblFrontLeftPower = (rotY + rotX + rx) / denominator;
+            dblBackLeftPower = (rotY - rotX + rx) / denominator;
+            dblFrontRightPower = (rotY - rotX - rx) / denominator;
+            dblBackRightPower = (rotY + rotX - rx) / denominator;
         }
         else{
-            dblDenominator = Math.max(Math.abs(x) + Math.abs(x) + Math.abs(rx), 1);
+            dblDenominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             dblFrontLeftPower = (y + x + rx) / dblDenominator;
             dblBackLeftPower = (y - x + rx) / dblDenominator;
             dblFrontRightPower = (y - x - rx) / dblDenominator;

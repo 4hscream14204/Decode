@@ -35,7 +35,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorLeft = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.9, 0.1, -0.7, -0.1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.7, 0.1, -0.5, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -44,7 +44,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorRight = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(0.7, 0.1, 0.9, -0.1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(0.6, 0.1, 0.8, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -107,7 +107,17 @@ public class SorterCamera extends SubsystemBase {
     }
 
     public boolean hasThreeArtifacts(){
-        return (resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE) && (resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE) && (resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN || resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE);
+        if((resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN ||
+                resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                && (resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN
+                || resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+                && (resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_GREEN
+                || resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 }
