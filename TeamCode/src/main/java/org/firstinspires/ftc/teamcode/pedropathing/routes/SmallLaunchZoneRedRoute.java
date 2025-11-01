@@ -31,6 +31,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
     SequentialCommandGroup routeMiddleRow;
     SequentialCommandGroup routeTopRow;
     SequentialCommandGroup routePark;
+    LaunchCommandGroup launchArtifacts;
     GamepadEx chassis;
     ElapsedTime timer;
     SmallLaunchZoneRedRoute.DesiredRows desiredRows = DesiredRows.THREE;
@@ -160,9 +161,11 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new LaunchCommandGroup(robotBase),
                 new InstantCommand(()->transferPatternCommandGroup.schedule()),
                 new WaitUntilCommand(()->transferPatternCommandGroup.isFinished()),
+                new LaunchCommandGroup(robotBase),
                 new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE),
                 new WaitUntilCommand(()->middleRowDone),
                 new ConditionalCommand(new InstantCommand(()->routeTopRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.THREE),
+                new LaunchCommandGroup(robotBase),
                 new WaitUntilCommand(()->topRowDone),
                 new InstantCommand(()->routePark.schedule())
         );
