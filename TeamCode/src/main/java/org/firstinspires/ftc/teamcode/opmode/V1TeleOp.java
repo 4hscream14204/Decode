@@ -39,6 +39,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
         RGBLightMiddleColorCommandGroup rgbLightMiddleColorCommandGroup;
         RGBLightRightColorCommandGroup rgbLightRightColorCommandGroup;
         boolean isFieldCentric = true;
+        boolean bolSnapToTarget = false;
         //Follower follower;
         @Override
         public void init() {
@@ -79,6 +80,11 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             chassisController.getGamepadButton(GamepadKeys.Button.START)
                             .whenPressed(()->CommandScheduler.getInstance().schedule(
                                     new InstantCommand(()->isFieldCentric = !isFieldCentric)
+                            ));
+
+            chassisController.getGamepadButton(GamepadKeys.Button.BACK)
+                            .whenPressed(()-> CommandScheduler.getInstance().schedule(
+                                    new InstantCommand(()->bolSnapToTarget = !bolSnapToTarget)
                             ));
 
             chassisController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
@@ -154,7 +160,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.update();
         robotBase.limelightSubsystem.updateLimelight();
-        robotBase.chassisSubsystem.drive(chassisController.getLeftY(), chassisController.getLeftX(), chassisController.getRightX(), false, isFieldCentric, robotBase.limelightSubsystem.getTargetY());
+        robotBase.chassisSubsystem.drive(chassisController.getLeftY(), chassisController.getLeftX(), chassisController.getRightX(), bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetY());
         telemetry.addData("Launcher Velocity", robotBase.launcherSubsystem.getVelocity());
         telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
         telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());

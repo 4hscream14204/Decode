@@ -56,13 +56,13 @@ public class Chassis extends SubsystemBase {
         if(isFieldCentric){
             double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
             double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
-            /*if (m_PIDSteering) {
+            if (m_PIDSteering) {
                 dblXOffset = 0 - m_TX;
                 dblHeadingOutput = (headingControl.calculate(dblXOffset));
                 rx = dblHeadingOutput;
             } else {
                 rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
-            }*/
+            }
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
             dblFrontLeftPower = (rotY + rotX + rx) / denominator;
             dblBackLeftPower = (rotY - rotX + rx) / denominator;
