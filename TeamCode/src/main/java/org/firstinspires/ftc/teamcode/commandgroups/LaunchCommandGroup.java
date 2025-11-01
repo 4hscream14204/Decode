@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 public class LaunchCommandGroup extends SequentialCommandGroup {
     public LaunchCommandGroup(RobotBase robotBase){
         addCommands(
-                new InstantCommand(()->robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0))));
+                new InstantCommand(()->robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-18.5))));
 
 
     }
