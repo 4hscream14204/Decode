@@ -6,4 +6,9 @@ public class DecodeEnums {
         PGP,
         PPG
     }
+
+    public enum Alliance{
+        BLUE,
+        RED
+    }
 }

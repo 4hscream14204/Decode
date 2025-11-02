@@ -26,5 +26,10 @@ public class SorterServo extends SubsystemBase {
 
     public void setPosition(ServoPosition m_ServoPosition){
         sorterServo.setPosition(m_ServoPosition.position);
+        enmServoPosition = m_ServoPosition;
+    }
+
+    public ServoPosition getPosition(){
+        return enmServoPosition;
     }
 }

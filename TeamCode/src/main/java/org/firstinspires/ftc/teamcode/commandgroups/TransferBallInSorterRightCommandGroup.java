@@ -7,12 +7,12 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
-public class EjectBallInSorterMiddleCommandGroup extends SequentialCommandGroup{
-    public EjectBallInSorterMiddleCommandGroup(RobotBase robotBase){
+public class TransferBallInSorterRightCommandGroup extends SequentialCommandGroup {
+    public TransferBallInSorterRightCommandGroup(RobotBase robotBase){
         addCommands(
-                new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
+                new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
                 new WaitCommand(500),
-                new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.HOME))
+                new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME))
         );
     }
 }

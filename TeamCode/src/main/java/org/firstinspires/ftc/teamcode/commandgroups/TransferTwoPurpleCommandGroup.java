@@ -8,12 +8,6 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
-    private int state;
-
-    public void setState(int m_state) {
-        state = m_state;
-    }
-
     public TransferTwoPurpleCommandGroup(RobotBase robotBase) {
         if (robotBase.sorterCameraSubsystem.hasTwoPurple() && robotBase.sorterCameraSubsystem.isMiddleAndLeftPurple) {
             addCommands(

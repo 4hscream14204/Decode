@@ -53,10 +53,10 @@ public class Limelight extends SubsystemBase {
         limelight = m_limelight;
     }
 
-    public void initLimelight() {
+    public void initLimelight(limelightPipelines m_pipeline) {
 
         limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        limelight.pipelineSwitch(3);
+        limelight.pipelineSwitch(m_pipeline.value);
         limelight.start();
 
 

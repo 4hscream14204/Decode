@@ -70,6 +70,7 @@ public class Chassis extends SubsystemBase {
             dblBackRightPower = (rotY + rotX - rx) / denominator;
         }
         else{
+            y = -m_gamepadOneLSY;
             dblDenominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             dblFrontLeftPower = (y + x + rx) / dblDenominator;
             dblBackLeftPower = (y - x + rx) / dblDenominator;

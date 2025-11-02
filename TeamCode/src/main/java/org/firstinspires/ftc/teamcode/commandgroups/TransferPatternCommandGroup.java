@@ -17,18 +17,18 @@ public class TransferPatternCommandGroup extends SequentialCommandGroup {
         if(DataStorage.pattern == DecodeEnums.Patterns.PPG){
             addCommands(
                     new TransferTwoPurpleCommandGroup(robotBase),
-                    new WaitCommand(1000),
+                    new WaitCommand(500),
                     new TransferGreenBallCommandGroup(robotBase),
-                    new WaitCommand(1000),
+                    new WaitCommand(500),
                     new TransferResetCommandGroup(robotBase)
             );
         }
         else if (DataStorage.pattern == DecodeEnums.Patterns.GPP){
             addCommands(
                 new TransferGreenBallCommandGroup(robotBase),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 new TransferTwoPurpleCommandGroup(robotBase),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 new TransferResetCommandGroup(robotBase)
             );
         }

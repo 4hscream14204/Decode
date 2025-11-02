@@ -22,7 +22,7 @@ public class LimelightTest extends OpMode {
 
         chassis = new GamepadEx(gamepad1);
 
-        robotBase.limelightSubsystem.initLimelight();
+        robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
         robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.REDGOAL);
         robotBase.chassisSubsystem.resetIMU();
 

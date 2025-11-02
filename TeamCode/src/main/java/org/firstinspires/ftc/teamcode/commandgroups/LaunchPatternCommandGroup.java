@@ -10,11 +10,12 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 public class LaunchPatternCommandGroup extends SequentialCommandGroup {
     TransferPatternCommandGroup transferPatternCommandGroup;
     public LaunchPatternCommandGroup(RobotBase robotBase){
+        transferPatternCommandGroup = new TransferPatternCommandGroup(robotBase);
         addCommands(
                 new LaunchCommandGroup(robotBase),
                 new WaitCommand(250),
                 new InstantCommand(()->transferPatternCommandGroup.schedule()),
-                new WaitUntilCommand(()->transferPatternCommandGroup.isFinished()),
+                new WaitCommand(1500),
                 new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
         );
     }

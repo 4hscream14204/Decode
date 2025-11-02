@@ -25,7 +25,7 @@ public class HoodSubsystemTest extends OpMode {
     @Override
     public void init() {
         robotBase = new RobotBase(hardwareMap);
-        robotBase.limelightSubsystem.initLimelight();
+        robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
         robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.REDGOAL);
     }
 

@@ -5,25 +5,19 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode.commandgroups.Launch3ArtifactsNoCameraCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.Launch3ArtifactsNoSortingCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.LaunchPatternCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.PreloadThreeArtifactsCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.RGBLightLeftColorCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.RGBLightMiddleColorCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.RGBLightRightColorCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.TransferGreenBallCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.TransferPatternCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.TransferResetCommandGroup;
-import org.firstinspires.ftc.teamcode.pedropathing.routes.FollowPath;
-import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
@@ -47,7 +41,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             robotBase = new RobotBase(hardwareMap);
             //follower = Constants.createFollower(hardwareMap);
             robotBase.sorterCameraSubsystem.getAnalysis();
-            robotBase.limelightSubsystem.initLimelight();
+            robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
             robotBase.limelightSubsystem.changePipeline(Limelight.limelightPipelines.BLUEGOAL);
             robotBase.chassisSubsystem.pinpoint.setPosition(new Pose2D(DistanceUnit.INCH, 56, 8, AngleUnit.RADIANS, Math.toRadians(0)));
 
@@ -70,7 +64,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             chassisController.getGamepadButton(GamepadKeys.Button.X)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferGreenBallCommandGroup(robotBase)));
             chassisController.getGamepadButton(GamepadKeys.Button.Y)
-                    .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoCameraCommandGroup(robotBase)));
+                    .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoSortingCommandGroup(robotBase)));
 
             chassisController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                             .whenPressed(()->CommandScheduler.getInstance().schedule(
@@ -108,11 +102,11 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
             chassisController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-18.5)))));
 
-            /*chassisController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+            /*mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.TESTLEFT))));
 
 
-            chassisController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+            mainController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                     .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.TESTLEFT))));
 */
             /*new Trigger(()->robotBase.sorterCameraSubsystem.hasThreeArtifacts())
@@ -149,7 +143,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
         public void start(){
             CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL)));
             CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL)));
-            //follower.setTeleOpDrive(chassisController.getLeftY(), chassisController.getLeftX(), chassisController.getRightX(), false);
+            //follower.setTeleOpDrive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), false);
             //follower.startTeleopDrive(true);
         }
 

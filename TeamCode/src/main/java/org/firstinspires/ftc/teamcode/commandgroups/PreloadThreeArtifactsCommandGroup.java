@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 public class PreloadThreeArtifactsCommandGroup extends SequentialCommandGroup {
     public PreloadThreeArtifactsCommandGroup(RobotBase robotBase){
         addCommands(
-                new WaitCommand(500),
+                new WaitCommand(1500),
                 new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.PRELOAD)),
                 new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.PRELOAD)),
                 new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.PRELOAD))

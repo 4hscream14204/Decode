@@ -46,7 +46,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
         pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
         CommandScheduler.getInstance().reset();
         chassis = new GamepadEx(gamepad1);
-        robotBase.limelightSubsystem.initLimelight();
+        robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
         /*follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
         pathHelper = new PathHelper(follower);*/
