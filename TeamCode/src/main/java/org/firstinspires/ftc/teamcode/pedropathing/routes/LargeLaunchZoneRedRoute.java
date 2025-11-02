@@ -96,13 +96,13 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         goesFromWallToShootPreload = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(startPose, startToLaunchControl, launchPose))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
                 .build();
 
         //Closest line//
         linesUpToIntakeThirdRow = follower.pathBuilder()
                 .addPath(new BezierCurve(launchPose, launchToTopRowControl, preIntakeTopRow))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(0))
                 .build();
         intakesThirdRow = follower.pathBuilder()
                 .addPath(
@@ -112,14 +112,14 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         shootsArtifacts = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(intakeTopRow, topRowToLaunchControl, launchPose))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(135))
                 .build();
 
         //Middle line//
         linesUpWithMiddleRow = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(launchPose, launchToMiddleRow, preIntakeMiddleRow))
-                .setConstantHeadingInterpolation(0)
+                .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(0))
                 .build();
         intakesMiddleRow = follower.pathBuilder()
                 .addPath(
@@ -129,14 +129,14 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         goesToShootArtifacts = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(intakeMiddleRow, middleRowToLaunchControl, launchPose))
-                .setConstantHeadingInterpolation(0)
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(135))
                 .build();
 
         //furthest line//
         linesUpWithFurthestRow = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(launchPose, launchToBottomRowControl, preIntakeBottomRow))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(0))
                 .build();
         intakesArtifacts = follower.pathBuilder()
                 .addPath(
@@ -146,12 +146,12 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         goesToShoot = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(intakeBottomRow, bottomRowToLaunchControl, launchPose))
-                .setConstantHeadingInterpolation(0)
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(135))
                 .build();
 
         park = follower.pathBuilder()
                 .addPath(new BezierLine(launchPose, parkPose))
-                .setConstantHeadingInterpolation(0)
+                .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(180))
                 .build();
 
         follower = Constants.createFollower(hardwareMap);
@@ -160,28 +160,28 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, linesUpWithMiddleRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesMiddleRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new FollowPath(follower, goesToShootArtifacts, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new LaunchCommandGroup(robotBase),
-                new InstantCommand(()->patternCommandGroup.schedule()),
-                new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                //new LaunchCommandGroup(robotBase),
+                //new InstantCommand(()->patternCommandGroup.schedule()),
+                //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
                 new InstantCommand(()->middleRowDone = true));
 
         routeBottomRow = new SequentialCommandGroup(
                 new FollowPath(follower, linesUpWithFurthestRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesArtifacts, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new FollowPath(follower, goesToShoot, true, 1),
-                new LaunchCommandGroup(robotBase),
-                new InstantCommand(()->patternCommandGroup.schedule()),
-                new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                //new LaunchCommandGroup(robotBase),
+                //new InstantCommand(()->patternCommandGroup.schedule()),
+                //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
                 new InstantCommand(()->bottomRowDone = true)
         );
 
@@ -189,20 +189,20 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new LaunchCommandGroup(robotBase),
-                new InstantCommand(()->patternCommandGroup.schedule()),
-                new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                //new LaunchCommandGroup(robotBase),
+                //new InstantCommand(()->patternCommandGroup.schedule()),
+                //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
                 new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new FollowPath(follower, shootsArtifacts, false, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new LaunchCommandGroup(robotBase),
-                new InstantCommand(()->patternCommandGroup.schedule()),
-                new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                //new LaunchCommandGroup(robotBase),
+                //new InstantCommand(()->patternCommandGroup.schedule()),
+                //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
                 new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->follower.followPath(park)),()-> (desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE)),
                 new WaitUntilCommand(()-> middleRowDone),
                 new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new InstantCommand(()->follower.followPath(park)), ()-> (desiredRows == DesiredRows.THREE)),
