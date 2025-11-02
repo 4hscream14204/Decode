@@ -169,6 +169,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
         telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
+        telemetry.addData("TX", robotBase.limelightSubsystem.getTargetX());
         telemetry.update();
      }
  }
