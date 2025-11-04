@@ -194,9 +194,9 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         route = new SequentialCommandGroup(
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
-                new WaitUntilCommand(()->!follower.isBusy()),
+                new WaitUntilCommand(()->!follower.isBusy()));
                 //new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
-                new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
+                /*new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesThirdRow, true, 1));/*,
