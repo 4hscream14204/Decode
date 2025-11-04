@@ -18,10 +18,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.commandgroups.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.LaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
+import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
+import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @Autonomous(name = "Big Launch Zone Red Auto")
 public class LargeLaunchZoneRedRoute extends OpMode {
@@ -29,7 +33,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     Follower follower;
     SequentialCommandGroup route;
     TransferPatternCommandGroup patternCommandGroup;
-    Pose startPose = new Pose(111.62, 135.55, Math.toRadians(0));
+    Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
     Pose parkPose = new Pose(127, 95, Math.toRadians(0));
     Pose launchPose = new Pose(90, 95, Math.toRadians(0));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
@@ -77,6 +81,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         CommandScheduler.getInstance().reset();
         chassis = new GamepadEx(gamepad1);
         timer = new ElapsedTime();
+        robotBase = new RobotBase(hardwareMap);
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.THREE)));
@@ -96,7 +101,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         goesFromWallToShootPreload = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(startPose, startToLaunchControl, launchPose))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(45))
                 .build();
 
         //Closest line//
@@ -189,13 +194,11 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                //new LaunchCommandGroup(robotBase),
-                //new InstantCommand(()->patternCommandGroup.schedule()),
-                //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
                 new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesThirdRow, true, 1),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower, intakesThirdRow, true, 1));/*,
                 new WaitUntilCommand(()->!follower.isBusy()),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new FollowPath(follower, shootsArtifacts, false, 1),
@@ -207,7 +210,10 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()-> middleRowDone),
                 new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new InstantCommand(()->follower.followPath(park)), ()-> (desiredRows == DesiredRows.THREE)),
                 new WaitUntilCommand(()->bottomRowDone),
-                new FollowPath(follower, park, true, 1));
+                new FollowPath(follower, park, true, 1));*/
+
+        CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
+        CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));
     }
 
     @Override
@@ -222,14 +228,30 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     public void start() {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(route);
+        robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK);
         timer.reset();
     }
 
     @Override
     public void loop() {
+        if(robotBase.limelightSubsystem.id == 23){
+            DataStorage.pattern = DecodeEnums.Patterns.PPG;
+        }
+        else if(robotBase.limelightSubsystem.id == 22){
+            DataStorage.pattern = DecodeEnums.Patterns.PGP;
+        }
+        else if (robotBase.limelightSubsystem.id == 21){
+            DataStorage.pattern = DecodeEnums.Patterns.GPP;
+        }
+        else{
+            DataStorage.pattern = DecodeEnums.Patterns.PPG;
+        }
         CommandScheduler.getInstance().run();
+        robotBase.limelightSubsystem.updateLimelight();
+        robotBase.sorterCameraSubsystem.getAnalysis();
         follower.update();
         telemetry.addData("Rows", desiredRows);
         telemetry.addData("MS", secondsToWait);
+        telemetry.addData("ID: ", robotBase.limelightSubsystem.id);
     }
 }

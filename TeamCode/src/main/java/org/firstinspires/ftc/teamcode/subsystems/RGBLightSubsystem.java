@@ -15,7 +15,7 @@ public class RGBLightSubsystem extends SubsystemBase{
 public RGBLightSubsystem.Colors enmColorHue;
     public enum Colors{
         BLUE(0.611),
-        RED(0.277),
+        RED(0.2877777),
         PURPLE(.7183),
         GREEN(.4944);
         public final double value;

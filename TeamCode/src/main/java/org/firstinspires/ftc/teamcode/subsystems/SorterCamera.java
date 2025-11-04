@@ -84,19 +84,19 @@ public class SorterCamera extends SubsystemBase {
            isMiddleAndLeftPurple = true;
            isMiddleAndRightPurple = false;
            isRightAndLeftPurple = false;
-           return isMiddleAndLeftPurple;
+           return true;
         }
         else if(resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             isMiddleAndRightPurple = true;
             isMiddleAndLeftPurple = false;
             isRightAndLeftPurple = false;
-            return isMiddleAndRightPurple;
+            return true;
         }
         else if(resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             isRightAndLeftPurple = true;
             isMiddleAndLeftPurple = false;
             isMiddleAndRightPurple = false;
-            return isRightAndLeftPurple;
+            return true;
         }
         else{
             isMiddleAndRightPurple = false;
