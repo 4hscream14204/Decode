@@ -59,12 +59,12 @@ public class ThwompTeleOp extends OpMode {
 
         //Main Driver keybinds
 
-        mainController.getGamepadButton(GamepadKeys.Button.BACK)
+        mainController.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->isFieldCentric = !isFieldCentric)
                 ));
 
-        mainController.getGamepadButton(GamepadKeys.Button.START)
+        mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->bolSnapToTarget = !bolSnapToTarget)
                 ));
@@ -109,6 +109,11 @@ public class ThwompTeleOp extends OpMode {
 
         backupController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)));
+
+        backupController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(750))
+                ));
 
         //Custom Triggers for Sorter and such
 
