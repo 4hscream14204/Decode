@@ -14,7 +14,8 @@ public class Launch3ArtifactsNoSortingCommandGroup extends SequentialCommandGrou
                 new WaitUntilCommand(()->robotBase.launcherSubsystem.getVelocity() >= robotBase.launcherSubsystem.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-18.5))),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new WaitCommand(1000),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new InstantCommand(()->robotBase.chassisSubsystem.bolSnapToTarget = false)
         );
     }
 }

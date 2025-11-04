@@ -40,7 +40,6 @@ public class ThwompTeleOp extends OpMode {
     GamepadEx backupController;
     GamepadEx mainController;
     boolean isFieldCentric = true;
-    boolean bolSnapToTarget = false;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -66,7 +65,7 @@ public class ThwompTeleOp extends OpMode {
 
         mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()->bolSnapToTarget = !bolSnapToTarget)
+                        new InstantCommand(()->robotBase.chassisSubsystem.bolSnapToTarget = !robotBase.chassisSubsystem.bolSnapToTarget)
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.A)
@@ -167,7 +166,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.update();
         robotBase.limelightSubsystem.updateLimelight();
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);

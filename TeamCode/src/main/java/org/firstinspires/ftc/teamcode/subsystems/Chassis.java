@@ -31,6 +31,7 @@ public class Chassis extends SubsystemBase {
 
     double dblXOffset;
     public double dblHeadingOutput;
+    public boolean bolSnapToTarget = false;
 
     public Chassis(DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor, GoBildaPinpointDriver m_pinpoint) {
         frontLeftMotor = m_frontLeftMotor;
