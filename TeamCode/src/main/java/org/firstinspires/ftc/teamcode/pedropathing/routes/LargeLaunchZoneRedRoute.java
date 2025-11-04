@@ -83,6 +83,8 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         timer = new ElapsedTime();
         robotBase = new RobotBase(hardwareMap);
 
+        robotBase.sorterCameraSubsystem.getAnalysis();
+
         chassis.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.THREE)));
 
@@ -99,8 +101,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->secondsToWait = secondsToWait - 1000)));
 
         goesFromWallToShootPreload = follower.pathBuilder()
-                .addPath(
-                        new BezierCurve(startPose, startToLaunchControl, launchPose))
+                .addPath(new BezierCurve(startPose, startToLaunchControl, launchPose))
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(45))
                 .build();
 
@@ -194,10 +195,10 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                //new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
                 new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesThirdRow, true, 1));/*,
                 new WaitUntilCommand(()->!follower.isBusy()),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
@@ -212,16 +213,20 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->bottomRowDone),
                 new FollowPath(follower, park, true, 1));*/
 
-        CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
-        CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));
+        /*CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
+        CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));*/
     }
 
     @Override
     public void init_loop(){
         CommandScheduler.getInstance().run();
+        robotBase.sorterCameraSubsystem.getAnalysis();
         chassis.readButtons();
         telemetry.addData("Rows", desiredRows);
         telemetry.addData("Wait Time", secondsToWait);
+        telemetry.addData("X", follower.getPose().getX());
+        telemetry.addData("Y: ", follower.getPose().getY());
+        telemetry.addData("Heading: ", Math.toDegrees(follower.getPose().getHeading()));
     }
 
     @Override
@@ -234,6 +239,10 @@ public class LargeLaunchZoneRedRoute extends OpMode {
 
     @Override
     public void loop() {
+        CommandScheduler.getInstance().run();
+        robotBase.limelightSubsystem.updateLimelight();
+        robotBase.sorterCameraSubsystem.getAnalysis();
+        follower.update();
         if(robotBase.limelightSubsystem.id == 23){
             DataStorage.pattern = DecodeEnums.Patterns.PPG;
         }
@@ -246,10 +255,10 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         else{
             DataStorage.pattern = DecodeEnums.Patterns.PPG;
         }
-        CommandScheduler.getInstance().run();
-        robotBase.limelightSubsystem.updateLimelight();
-        robotBase.sorterCameraSubsystem.getAnalysis();
-        follower.update();
+        telemetry.addData("X", follower.getPose().getX());
+        telemetry.addData("Y: ", follower.getPose().getY());
+        telemetry.addData("Heading: ", Math.toDegrees(follower.getPose().getHeading()));
+        telemetry.addData("Is busy", follower.isBusy());
         telemetry.addData("Rows", desiredRows);
         telemetry.addData("MS", secondsToWait);
         telemetry.addData("ID: ", robotBase.limelightSubsystem.id);
