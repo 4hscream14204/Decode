@@ -32,7 +32,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     RobotBase robotBase;
     Follower follower;
     SequentialCommandGroup route;
-    TransferPatternCommandGroup patternCommandGroup;
+    AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
     Pose parkPose = new Pose(127, 95, Math.toRadians(0));
     Pose launchPose = new Pose(90, 95, Math.toRadians(0));
@@ -82,8 +82,8 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         chassis = new GamepadEx(gamepad1);
         timer = new ElapsedTime();
         robotBase = new RobotBase(hardwareMap);
-
-        robotBase.sorterCameraSubsystem.getAnalysis();
+        CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
+        autoTransferAndLaunchCommandGroup = new AutoTransferAndLaunchCommandGroup(robotBase, 1750);
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.THREE)));
@@ -101,7 +101,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->secondsToWait = secondsToWait - 1000)));
 
         goesFromWallToShootPreload = follower.pathBuilder()
-                .addPath(new BezierCurve(startPose, startToLaunchControl, launchPose))
+                .addPath(new BezierLine(startPose, launchPose))
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(45))
                 .build();
 
@@ -194,11 +194,12 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         route = new SequentialCommandGroup(
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
-                new WaitUntilCommand(()->!follower.isBusy()));
-                //new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
-                /*new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new InstantCommand(()->autoTransferAndLaunchCommandGroup.schedule()),
+                new WaitUntilCommand(()->autoTransferAndLaunchCommandGroup.isFinished()),
+                new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesThirdRow, true, 1));/*,
                 new WaitUntilCommand(()->!follower.isBusy()),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
@@ -262,5 +263,6 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         telemetry.addData("Rows", desiredRows);
         telemetry.addData("MS", secondsToWait);
         telemetry.addData("ID: ", robotBase.limelightSubsystem.id);
+        telemetry.addData("Pattern ", DataStorage.pattern);
     }
 }
