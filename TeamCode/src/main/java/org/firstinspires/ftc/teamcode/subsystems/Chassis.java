@@ -88,6 +88,6 @@ public class Chassis extends SubsystemBase {
     }
 
     public void resetIMU(){
-        pinpoint.recalibrateIMU();
+        pinpoint.setHeading(0, AngleUnit.DEGREES);
     }
 }

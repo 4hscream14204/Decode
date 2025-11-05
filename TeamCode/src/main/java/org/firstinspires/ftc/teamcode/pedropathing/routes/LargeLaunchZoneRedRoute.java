@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @Autonomous(name = "Big Launch Zone Red Auto")
@@ -236,6 +237,8 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(route);
         robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK);
+        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL);
+        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL);
         timer.reset();
     }
 
@@ -265,5 +268,8 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         telemetry.addData("MS", secondsToWait);
         telemetry.addData("ID: ", robotBase.limelightSubsystem.id);
         telemetry.addData("Pattern ", DataStorage.pattern);
+        telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
+        telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
+        telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
     }
 }
