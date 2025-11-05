@@ -10,6 +10,11 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 public class TransferPurpleBallCommandGroup extends SequentialCommandGroup {
     public TransferPurpleBallCommandGroup(RobotBase robotBase){
+        addCommands(
+                new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
+                new WaitCommand(1000),
+                new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME))
+        );
         if(robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             addCommands(
                    new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),

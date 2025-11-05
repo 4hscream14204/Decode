@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commandgroups;
 
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -15,7 +16,7 @@ public class AutoTransferAndLaunchCommandGroup extends SequentialCommandGroup {
         addCommands(
                 new LaunchNoLimelightCommandGroup(robotBase, m_velocity),
                 new WaitCommand(1000),
-                new TransferPatternCommandGroup(robotBase)
+                new InstantCommand(()->CommandScheduler.getInstance().schedule(new TransferPatternCommandGroup(robotBase)))
         );
     }
 }

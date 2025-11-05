@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.commandgroups;
 
 import android.provider.ContactsContract;
 
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
@@ -25,11 +27,11 @@ public class TransferPatternCommandGroup extends SequentialCommandGroup {
         }
         else if (DataStorage.pattern == DecodeEnums.Patterns.GPP){
             addCommands(
-                new TransferGreenBallCommandGroup(robotBase),
+                new InstantCommand(()->CommandScheduler.getInstance().schedule(new TransferGreenBallCommandGroup(robotBase))),
                 new WaitCommand(500),
-                new TransferTwoPurpleCommandGroup(robotBase),
+                new InstantCommand(()->CommandScheduler.getInstance().schedule(new TransferTwoPurpleCommandGroup(robotBase))),
                 new WaitCommand(500),
-                new TransferResetCommandGroup(robotBase)
+                new InstantCommand(()->CommandScheduler.getInstance().schedule( new TransferResetCommandGroup(robotBase)))
             );
         }
         else if(DataStorage.pattern == DecodeEnums.Patterns.PGP){
