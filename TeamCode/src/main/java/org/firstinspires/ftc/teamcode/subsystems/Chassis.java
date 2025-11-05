@@ -27,7 +27,7 @@ public class Chassis extends SubsystemBase {
     double dblBackRightPower;
     public boolean isFieldCentric;
 
-    PIDController headingControl = new PIDController(0.04, 0, 0);
+    PIDController headingControl = new PIDController(0.025, 0, 0.001);
 
     double dblXOffset;
     public double dblHeadingOutput;
