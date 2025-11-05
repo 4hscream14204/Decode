@@ -83,7 +83,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         timer = new ElapsedTime();
         robotBase = new RobotBase(hardwareMap);
         CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
-        autoTransferAndLaunchCommandGroup = new AutoTransferAndLaunchCommandGroup(robotBase, 1750);
+        //autoTransferAndLaunchCommandGroup = new AutoTransferAndLaunchCommandGroup(robotBase, 1750);
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.THREE)));
@@ -195,9 +195,10 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->autoTransferAndLaunchCommandGroup.schedule()),
-                new WaitUntilCommand(()->autoTransferAndLaunchCommandGroup.isFinished()),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new WaitCommand(3000),
                 new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
+                //new WaitUntilCommand(()->autoTransferAndLaunchCommandGroup.isFinished()),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesThirdRow, true, 1));/*,

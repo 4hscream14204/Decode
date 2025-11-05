@@ -61,7 +61,7 @@ public class Chassis extends SubsystemBase {
                 dblXOffset = 0 - m_TX;
                 dblHeadingOutput = (headingControl.calculate(dblXOffset));
                 rx = dblHeadingOutput;
-                if(m_gamepadOneRSX < 0 || m_gamepadOneRSX > 0){
+                if(m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5){
                     bolSnapToTarget = false;
                 }
             } else {
