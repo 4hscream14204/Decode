@@ -272,4 +272,8 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
         telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
     }
+    @Override
+    public void stop(){
+        robotBase.limelightSubsystem.limelight.stop();
+    }
 }
