@@ -8,6 +8,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 import java.util.function.Supplier;
 
+@Disabled
 @TeleOp(name = "Pedro Launch TeleOp")
 public class PedroLaunchTeleOpTest extends OpMode {
     GamepadEx chassis;

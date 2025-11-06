@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
+@Disabled
 @TeleOp(name = "SorterSubsystemTest")
 public class SorterSubsystemTest extends OpMode {
     SorterServo sorterServoLeft;
