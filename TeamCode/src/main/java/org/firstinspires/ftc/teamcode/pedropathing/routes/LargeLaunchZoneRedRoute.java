@@ -39,12 +39,12 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     Pose launchPose = new Pose(90, 100, Math.toRadians(45));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
-    Pose preIntakeTopRow = new Pose(104, 84, Math.toRadians(0));
-    Pose intakeTopRow = new Pose(126, 84, Math.toRadians(0));
+    Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
+    Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0));
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
-    Pose preIntakeMiddleRow = new Pose(103.000, 60, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(127.497, 60, Math.toRadians(0));
+    Pose preIntakeMiddleRow = new Pose(94, 60, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(130, 60, Math.toRadians(0));
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
     Pose preIntakeBottomRow = new Pose(104.178, 35, Math.toRadians(0));
@@ -56,6 +56,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     PathChain goesToShoot;
     PathChain linesUpWithMiddleRow;
     PathChain intakesMiddleRow;
+    PathChain backUpFromMiddleRow;
     PathChain goesToShootArtifacts;
     PathChain linesUpToIntakeThirdRow;
     PathChain intakesThirdRow;
@@ -108,35 +109,42 @@ public class LargeLaunchZoneRedRoute extends OpMode {
 
         //Closest line//
         linesUpToIntakeThirdRow = follower.pathBuilder()
-                .addPath(new BezierCurve(launchPose, launchToTopRowControl, preIntakeTopRow))
-                .setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(0))
+                .addPath(new BezierLine(launchPose, preIntakeTopRow))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), preIntakeTopRow.getHeading())
+
                 .build();
         intakesThirdRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(preIntakeTopRow, intakeTopRow))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(preIntakeTopRow.getHeading())
                 .build();
         shootsArtifacts = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(intakeTopRow, topRowToLaunchControl, launchPose))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(135))
+                        new BezierLine(intakeTopRow, launchPose))
+                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose.getHeading())
                 .build();
 
         //Middle line//
         linesUpWithMiddleRow = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(launchPose, launchToMiddleRow, preIntakeMiddleRow))
-                .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(0))
+                        new BezierLine(launchPose, preIntakeMiddleRow))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), preIntakeMiddleRow.getHeading())
                 .build();
         intakesMiddleRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(preIntakeMiddleRow, intakeMiddleRow))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(preIntakeMiddleRow.getHeading())
                 .build();
+        backUpFromMiddleRow= follower.pathBuilder()
+                .addPath(
+                        new BezierLine( intakeMiddleRow,preIntakeMiddleRow))
+                .setConstantHeadingInterpolation(preIntakeMiddleRow.getHeading())
+                .build();
+
         goesToShootArtifacts = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(intakeMiddleRow, middleRowToLaunchControl, launchPose))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(135))
+                        new BezierLine(preIntakeMiddleRow, launchPose))
+                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose.getHeading())
                 .build();
 
         //furthest line//
@@ -197,16 +205,36 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
-                new WaitCommand(3000),
-                new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
-                //new WaitUntilCommand(()->autoTransferAndLaunchCommandGroup.isFinished()),
+                //new WaitCommand(3000),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new FollowPath(follower, linesUpToIntakeThirdRow, false, 1),
+               //new WaitUntilCommand(()->autoTransferAndLaunchCommandGroup.isFinished()),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesThirdRow, true, 1));/*,
+                new FollowPath(follower, intakesThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+               // new WaitCommand(1000),
+               // new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new FollowPath(follower, shootsArtifacts, false, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new FollowPath(follower, linesUpWithMiddleRow),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower, intakesMiddleRow),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPath(follower, backUpFromMiddleRow),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPath(follower, goesToShootArtifacts),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)));
+
+
+        /*
                 //new LaunchCommandGroup(robotBase),
                 //new InstantCommand(()->patternCommandGroup.schedule()),
                 //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
@@ -215,7 +243,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new InstantCommand(()->follower.followPath(park)), ()-> (desiredRows == DesiredRows.THREE)),
                 new WaitUntilCommand(()->bottomRowDone),
                 new FollowPath(follower, park, true, 1));*/
-
+/*
         /*CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
         CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));*/
     }
