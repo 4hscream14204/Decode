@@ -231,7 +231,8 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)));
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+        new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)));
 
 
         /*
