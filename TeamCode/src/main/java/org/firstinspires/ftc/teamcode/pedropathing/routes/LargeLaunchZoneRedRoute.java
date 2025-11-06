@@ -121,7 +121,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         shootsArtifacts = follower.pathBuilder()
                 .addPath(
                         new BezierLine(intakeTopRow, launchPose))
-                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose.getHeading())
+                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose.getHeading()-Math.toRadians(5))
                 .build();
 
         //Middle line//
@@ -144,7 +144,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         goesToShootArtifacts = follower.pathBuilder()
                 .addPath(
                         new BezierLine(preIntakeMiddleRow, launchPose))
-                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose.getHeading())
+                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose.getHeading()-Math.toRadians(5))
                 .build();
 
         //furthest line//
