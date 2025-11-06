@@ -156,7 +156,6 @@ public class ThwompTeleOp extends OpMode {
     public void start(){
         CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL)));
         CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL)));
-        robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
     }
 
     @Override
