@@ -10,13 +10,24 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class AutoTransferAndLaunchCommandGroup extends SequentialCommandGroup {
-    TransferPatternCommandGroup transferPatternCommandGroup;
-    public AutoTransferAndLaunchCommandGroup(RobotBase robotBase, double m_velocity){
+    RobotBase robotBase;
+    double velocity;
+
+    public AutoTransferAndLaunchCommandGroup(RobotBase m_robotBase, double m_velocity){
         //transferPatternCommandGroup = new TransferPatternCommandGroup(robotBase);
+       robotBase = m_robotBase;
+       velocity = m_velocity;
+
+    }
+    @Override
+    public void initialize() {
         addCommands(
-                new LaunchNoLimelightCommandGroup(robotBase, m_velocity),
+                new LaunchNoLimelightCommandGroup(robotBase, velocity),
                 new WaitCommand(1000),
-                new InstantCommand(()->CommandScheduler.getInstance().schedule(new TransferPatternCommandGroup(robotBase)))
+                new TransferPatternCommandGroup(robotBase)
         );
+
+        //Have to call the super classes initalize as that is what tells the scheduler to run them
+        super.initialize();
     }
 }

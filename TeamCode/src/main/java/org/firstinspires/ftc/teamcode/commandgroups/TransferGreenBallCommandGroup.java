@@ -9,7 +9,13 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 public class TransferGreenBallCommandGroup extends SequentialCommandGroup {
-    public TransferGreenBallCommandGroup(RobotBase robotBase){
+    RobotBase robotBase;
+
+    public TransferGreenBallCommandGroup(RobotBase m_robotBase) {
+        robotBase = m_robotBase;
+    }
+    @Override
+    public void initialize() {
         if(robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_GREEN){
             addCommands(
                     new InstantCommand(()-> robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
@@ -31,6 +37,10 @@ public class TransferGreenBallCommandGroup extends SequentialCommandGroup {
                     new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME))
 
             );
+        //Have to call the super classes initalize as that is what tells the scheduler to run them
+        super.initialize();
+    }
+
         }
     }
-}
+

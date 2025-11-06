@@ -36,7 +36,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
     Pose parkPose = new Pose(127, 95, Math.toRadians(0));
-    Pose launchPose = new Pose(90, 95, Math.toRadians(0));
+    Pose launchPose = new Pose(90, 100, Math.toRadians(45));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
     Pose preIntakeTopRow = new Pose(104, 84, Math.toRadians(0));
@@ -103,7 +103,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
 
         goesFromWallToShootPreload = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, launchPose))
-                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(45))
+                .setLinearHeadingInterpolation(startPose.getHeading(), launchPose.getHeading())
                 .build();
 
         //Closest line//

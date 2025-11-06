@@ -14,32 +14,44 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
+
 public class TransferPatternCommandGroup extends SequentialCommandGroup {
-    public TransferPatternCommandGroup(RobotBase robotBase){
-        if(DataStorage.pattern == DecodeEnums.Patterns.PPG){
-            addCommands(
-                    new TransferTwoPurpleCommandGroup(robotBase),
-                    new WaitCommand(500),
-                    new TransferGreenBallCommandGroup(robotBase),
-                    new WaitCommand(500),
-                    new TransferResetCommandGroup(robotBase)
-            );
-        }
-        else if (DataStorage.pattern == DecodeEnums.Patterns.GPP){
-            addCommands(
-                new InstantCommand(()->CommandScheduler.getInstance().schedule(new TransferGreenBallCommandGroup(robotBase))),
-                new WaitCommand(500),
-                new InstantCommand(()->CommandScheduler.getInstance().schedule(new TransferTwoPurpleCommandGroup(robotBase))),
-                new WaitCommand(500),
-                new InstantCommand(()->CommandScheduler.getInstance().schedule( new TransferResetCommandGroup(robotBase)))
-            );
-        }
-        else if(DataStorage.pattern == DecodeEnums.Patterns.PGP){
-            addCommands(
-                    new TransferPurpleBallCommandGroup(robotBase),
-                    new TransferGreenBallCommandGroup(robotBase),
-                    new TransferPurpleBallCommandGroup(robotBase)
-            );
-        }
+    RobotBase robotBase;
+
+
+    public TransferPatternCommandGroup(RobotBase m_robotBase) {
+        robotBase = m_robotBase;
     }
-}
+        @Override
+        public void initialize() {
+            if (DataStorage.pattern == DecodeEnums.Patterns.PPG) {
+                addCommands(
+                        new TransferTwoPurpleCommandGroup(robotBase),
+                        new WaitCommand(500),
+                        new TransferGreenBallCommandGroup(robotBase),
+                        new WaitCommand(500),
+                        new TransferResetCommandGroup(robotBase)
+                );
+            } else if (DataStorage.pattern == DecodeEnums.Patterns.GPP) {
+                addCommands(
+                        new TransferGreenBallCommandGroup(robotBase),
+                        new WaitCommand(500),
+                        new TransferTwoPurpleCommandGroup(robotBase),
+                        new WaitCommand(500),
+                       new TransferResetCommandGroup(robotBase)
+                );
+            } else if (DataStorage.pattern == DecodeEnums.Patterns.PGP) {
+                addCommands(
+                        new TransferPurpleBallCommandGroup(robotBase),
+                        new TransferGreenBallCommandGroup(robotBase),
+                        new TransferPurpleBallCommandGroup(robotBase)
+                );
+            }
+
+            //Have to call the super classes initalize as that is what tells the scheduler to run them
+            super.initialize();
+        }
+
+    }
+
+

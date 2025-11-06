@@ -8,7 +8,14 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
-    public TransferTwoPurpleCommandGroup(RobotBase robotBase) {
+    RobotBase robotBase;
+
+    public TransferTwoPurpleCommandGroup(RobotBase m_robotBase) {
+        robotBase = m_robotBase;
+    }
+
+    @Override
+    public void initialize() {
         if (robotBase.sorterCameraSubsystem.hasTwoPurple() && robotBase.sorterCameraSubsystem.isMiddleAndLeftPurple) {
             addCommands(
                     new InstantCommand(() -> robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
@@ -36,6 +43,8 @@ public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
                     new WaitCommand(1000),
                     new InstantCommand(() -> robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME))
             );
-        }
+            //Have to call the super classes initalize as that is what tells the scheduler to run them
+            super.initialize();
         }
     }
+}
