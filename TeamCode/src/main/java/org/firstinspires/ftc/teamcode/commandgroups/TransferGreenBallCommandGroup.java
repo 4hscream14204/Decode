@@ -38,9 +38,9 @@ public class TransferGreenBallCommandGroup extends SequentialCommandGroup {
 
             );
         //Have to call the super classes initalize as that is what tells the scheduler to run them
-        super.initialize();
-    }
 
+    }
+        super.initialize();
         }
     }
 

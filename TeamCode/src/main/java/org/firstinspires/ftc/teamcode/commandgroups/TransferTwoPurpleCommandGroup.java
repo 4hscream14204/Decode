@@ -44,7 +44,7 @@ public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
                     new InstantCommand(() -> robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME))
             );
             //Have to call the super classes initalize as that is what tells the scheduler to run them
-            super.initialize();
         }
+        super.initialize();
     }
 }
