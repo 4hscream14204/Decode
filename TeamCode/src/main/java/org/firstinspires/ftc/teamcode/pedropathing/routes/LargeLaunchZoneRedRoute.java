@@ -304,5 +304,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     @Override
     public void stop(){
         robotBase.limelightSubsystem.limelight.stop();
+        DataStorage.endPosition = follower.getPose();
+        DataStorage.alliance = DecodeEnums.Alliance.RED;
     }
 }
