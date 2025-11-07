@@ -28,28 +28,28 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
-@Autonomous(name = "Big Launch Zone Red Auto")
-public class LargeLaunchZoneRedRoute extends OpMode {
+@Autonomous(name = "Big Launch Zone Blue Auto")
+public class LargeLaunchZoneBlueRoute extends OpMode {
     RobotBase robotBase;
     Follower follower;
     SequentialCommandGroup route;
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
-    Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
-    Pose parkPose = new Pose(127, 95, Math.toRadians(0));
-    Pose launchPose = new Pose(88, 98, Math.toRadians(45));
-    Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
-    Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
-    Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
-    Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0));
-    Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
-    Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
-    Pose preIntakeMiddleRow = new Pose(94, 60, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(130, 60, Math.toRadians(0));
-    Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
-    Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
-    Pose preIntakeBottomRow = new Pose(104.178, 35, Math.toRadians(0));
-    Pose intakeBottomRow = new Pose(127, 35, Math.toRadians(0));
-    Pose bottomRowToLaunchControl = new Pose(99.020, 40.449);
+    Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180)).mirror();
+    Pose parkPose = new Pose(127, 95, Math.toRadians(0)).mirror();
+    Pose launchPose = new Pose(87, 97, Math.toRadians(45)).mirror();
+    Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0)).mirror();
+    Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0)).mirror();
+    Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0)).mirror();
+    Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0)).mirror();
+    Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0)).mirror();
+    Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0)).mirror();
+    Pose preIntakeMiddleRow = new Pose(94, 60, Math.toRadians(0)).mirror();
+    Pose intakeMiddleRow = new Pose(130, 60, Math.toRadians(0)).mirror();
+    Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0)).mirror();
+    Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0)).mirror();
+    Pose preIntakeBottomRow = new Pose(104.178, 35, Math.toRadians(0)).mirror();
+    Pose intakeBottomRow = new Pose(127, 35, Math.toRadians(0)).mirror();
+    Pose bottomRowToLaunchControl = new Pose(99.020, 40.449).mirror();
     PathChain goesFromWallToShootPreload;
     PathChain linesUpWithFurthestRow;
     PathChain intakesArtifacts;
@@ -121,7 +121,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         shootsArtifacts = follower.pathBuilder()
                 .addPath(
                         new BezierLine(intakeTopRow, launchPose))
-                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose.getHeading()-Math.toRadians(5))
+                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose.getHeading()+Math.toRadians(5))
                 .build();
 
         //Middle line//
@@ -144,7 +144,7 @@ public class LargeLaunchZoneRedRoute extends OpMode {
         goesToShootArtifacts = follower.pathBuilder()
                 .addPath(
                         new BezierLine(preIntakeMiddleRow, launchPose))
-                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose.getHeading()-Math.toRadians(5))
+                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose.getHeading()+Math.toRadians(5))
                 .build();
 
         //furthest line//
@@ -208,13 +208,13 @@ public class LargeLaunchZoneRedRoute extends OpMode {
                 //new WaitCommand(3000),
                 new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower, linesUpToIntakeThirdRow, false, 1),
-               //new WaitUntilCommand(()->autoTransferAndLaunchCommandGroup.isFinished()),
+                //new WaitUntilCommand(()->autoTransferAndLaunchCommandGroup.isFinished()),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-               // new WaitCommand(1000),
-               // new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                // new WaitCommand(1000),
+                // new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new FollowPath(follower, shootsArtifacts, false, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
@@ -308,6 +308,6 @@ public class LargeLaunchZoneRedRoute extends OpMode {
     public void stop(){
         robotBase.limelightSubsystem.limelight.stop();
         DataStorage.endPosition = follower.getPose();
-        DataStorage.alliance = DecodeEnums.Alliance.RED;
+        DataStorage.alliance = DecodeEnums.Alliance.BLUE;
     }
 }

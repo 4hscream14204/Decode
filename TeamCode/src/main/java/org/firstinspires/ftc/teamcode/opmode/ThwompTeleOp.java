@@ -156,6 +156,13 @@ public class ThwompTeleOp extends OpMode {
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.BLUE))));
     }
 
+    @Override
+    public void init_loop(){
+        telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
+        telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());
+    }
+
+    @Override
     public void start(){
         CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL)));
         CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL)));
@@ -172,15 +179,14 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
-        telemetry.addData("Launcher Velocity", robotBase.launcherSubsystem.getVelocity());
         //telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
         telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
         telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
         telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
-        telemetry.addData("TX", robotBase.limelightSubsystem.getTargetX());
-        telemetry.addData("Has Three", robotBase.sorterCameraSubsystem.hasThreeArtifacts());
         telemetry.addData("Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
+        telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
+        telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());
         telemetry.update();
     }
 

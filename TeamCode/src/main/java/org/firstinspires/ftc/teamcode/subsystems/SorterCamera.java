@@ -35,7 +35,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorLeft = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.7, 0.1, -0.4, -0.1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.7, 0.1, -0.35, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -44,7 +44,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorRight = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(0.5, 0.1, 0.8, -0.1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(0.4, 0.1, 0.8, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
