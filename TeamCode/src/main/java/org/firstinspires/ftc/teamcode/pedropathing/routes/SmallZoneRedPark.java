@@ -24,14 +24,18 @@ public class SmallZoneRedPark extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         Path1 = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(startPose, new Pose(115.643, 7.754)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(startPose, new Pose(115.643, 10)))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
+
+        route = new SequentialCommandGroup(
+                new FollowPath(follower, Path1, true, 1)
+        );
     }
 
     @Override
     public void start() {
-        follower.followPath(Path1);
+        follower.setStartingPose(startPose);
     }
 
     @Override
@@ -42,6 +46,6 @@ public class SmallZoneRedPark extends OpMode {
     @Override
     public void stop() {
         DataStorage.endPosition = follower.getPose();
-        DataStorage.alliance = DecodeEnums.Alliance.BLUE;
+        DataStorage.alliance = DecodeEnums.Alliance.RED;
     }
 }

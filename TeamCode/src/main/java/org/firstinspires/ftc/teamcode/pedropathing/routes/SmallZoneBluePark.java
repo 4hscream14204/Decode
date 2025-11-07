@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -25,18 +27,24 @@ public class SmallZoneBluePark extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         Path1 = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(startPose, new Pose(115.643, 7.754).mirror()))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(startPose, new Pose(115.643, 11).mirror()))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
+
+        route = new SequentialCommandGroup(
+                new FollowPath(follower, Path1, true, 1)
+        );
     }
 
     @Override
     public void start() {
-        follower.followPath(Path1);
+        follower.setStartingPose(startPose);
+        CommandScheduler.getInstance().schedule(route);
     }
 
     @Override
     public void loop() {
+        CommandScheduler.getInstance().run();
         follower.update();
     }
 
