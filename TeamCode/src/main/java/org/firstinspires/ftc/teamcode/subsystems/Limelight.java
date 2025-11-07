@@ -98,7 +98,7 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getHorizontalDistance(double m_Offset){ //X
-        return getTargetZ() + m_Offset/*(((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset)*/;
+        return getTargetZ()/* + m_Offset(((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset)*/;
     }
 
     public double getVerticalDistance(double m_Offset){ //Y
