@@ -17,7 +17,7 @@ public class TutorialOpMode extends OpMode {
     public void init() {
         CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
-        player1 = new GamepadEx(gamepad1);\
+        player1 = new GamepadEx(gamepad1);
 
         player1.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000))));
