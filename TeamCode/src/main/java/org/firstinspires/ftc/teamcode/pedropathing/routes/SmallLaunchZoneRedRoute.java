@@ -15,11 +15,10 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.commandgroups.LaunchCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.TransferPatternCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 

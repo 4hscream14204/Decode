@@ -9,15 +9,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.commandgroups.TransferPatternCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.TransferPurpleBallCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.TransferTwoPurpleCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPurpleBallCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferTwoPurpleCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
-import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 @Disabled
 @TeleOp(name = "SorterSubsystemTest")

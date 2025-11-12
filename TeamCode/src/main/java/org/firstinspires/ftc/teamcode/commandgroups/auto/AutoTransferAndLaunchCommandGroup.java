@@ -1,13 +1,11 @@
-package org.firstinspires.ftc.teamcode.commandgroups;
+package org.firstinspires.ftc.teamcode.commandgroups.auto;
 
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
+import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchNoLimelightCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
 public class AutoTransferAndLaunchCommandGroup extends SequentialCommandGroup {
     RobotBase robotBase;

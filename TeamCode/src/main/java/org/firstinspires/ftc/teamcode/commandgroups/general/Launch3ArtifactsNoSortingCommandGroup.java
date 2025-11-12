@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commandgroups;
+package org.firstinspires.ftc.teamcode.commandgroups.general;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
@@ -7,12 +7,15 @@ import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 
-public class LaunchOnePurple extends SequentialCommandGroup {
-    public LaunchOnePurple(RobotBase robotBase){
+public class Launch3ArtifactsNoSortingCommandGroup extends SequentialCommandGroup {
+    public Launch3ArtifactsNoSortingCommandGroup(RobotBase robotBase){
         addCommands(
                 new LaunchCommandGroup(robotBase),
                 new WaitUntilCommand(()->robotBase.launcherSubsystem.getVelocity() >= robotBase.launcherSubsystem.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-18.5))),
-                new TransferPurpleBallCommandGroup(robotBase)
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                new WaitCommand(1000),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new InstantCommand(()->robotBase.chassisSubsystem.bolSnapToTarget = false)
         );
     }
 }

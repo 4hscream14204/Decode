@@ -1,13 +1,9 @@
-package org.firstinspires.ftc.teamcode.commandgroups;
+package org.firstinspires.ftc.teamcode.commandgroups.general;
 
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 
 
 public class LaunchCommandGroup extends SequentialCommandGroup {
