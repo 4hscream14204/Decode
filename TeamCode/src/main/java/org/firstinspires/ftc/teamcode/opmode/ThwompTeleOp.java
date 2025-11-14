@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsNoSortingCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
@@ -59,7 +60,7 @@ public class ThwompTeleOp extends OpMode {
 
         mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()->robotBase.chassisSubsystem.bolSnapToTarget = !robotBase.chassisSubsystem.bolSnapToTarget)
+                        new ChangeHeadingLockCommandGroup(robotBase)
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.A)
@@ -116,6 +117,11 @@ public class ThwompTeleOp extends OpMode {
         backupController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000))))
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))));
+
+        backupController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()-> robotBase.launcherSubsystem.setVelocity(1500))
+                ));
 
         //Custom Triggers for Sorter and such
 
