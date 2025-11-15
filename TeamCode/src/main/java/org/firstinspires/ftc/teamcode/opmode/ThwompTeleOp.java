@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
@@ -47,6 +48,9 @@ public class ThwompTeleOp extends OpMode {
         }
 
         robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(DataStorage.endPosition, PedroCoordinates.INSTANCE));
+
+        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL);
+        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL);
 
         mainController = new GamepadEx(gamepad1);
         backupController = new GamepadEx(gamepad2);
@@ -157,6 +161,9 @@ public class ThwompTeleOp extends OpMode {
     public void init_loop(){
         telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
         telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());
+        telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
+        telemetry.addData("Hue M", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.MIDDLE));
+        telemetry.addData("Hue R", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.RIGHT));
     }
 
     @Override
@@ -184,6 +191,9 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
         telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
         telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());
+        telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
+        telemetry.addData("Hue M", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.MIDDLE));
+        telemetry.addData("Hue R", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.RIGHT));
         telemetry.update();
     }
 
