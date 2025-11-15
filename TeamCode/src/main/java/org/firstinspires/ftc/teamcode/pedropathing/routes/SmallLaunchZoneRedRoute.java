@@ -210,7 +210,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
     @Override
     public void start() {
-        follower.setStartingPose(new Pose(83, 1, Math.toRadians(0)));
+        follower.setStartingPose(new Pose(88, 8, Math.toRadians(0)));
         CommandScheduler.getInstance().schedule(route);
         robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL);
         robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL);
