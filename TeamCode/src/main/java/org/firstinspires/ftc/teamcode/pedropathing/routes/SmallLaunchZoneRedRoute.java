@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
@@ -17,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
@@ -88,7 +88,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 .setConstantHeadingInterpolation(0)
                 .build();
 
-        PathChain goingToShoot = follower.pathBuilder()
+        PathChain thirdTimeGoingToShoot = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(new Pose(126, 84), new Pose(80, 80), new Pose(88.71, 16)))
                 .setConstantHeadingInterpolation(0)
@@ -107,7 +107,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 .setConstantHeadingInterpolation(0)
                 .build();
 
-        PathChain goToShoot = follower.pathBuilder()
+        PathChain secondTimeGoingToShoot = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(new Pose(129, 59), new Pose(76, 58), new Pose(88.71, 16)))
                 .setConstantHeadingInterpolation(0)
@@ -139,14 +139,14 @@ public class SmallLaunchZoneRedRoute extends OpMode {
         routeMiddleRow = new SequentialCommandGroup(
                 new FollowPath(follower, lineUpToIntakeSecondRow, true, 1),
                 new FollowPath(follower, intakeMiddleRow, true, 1),
-                new FollowPath(follower, goToShoot, true, 1),
+                new FollowPath(follower, secondTimeGoingToShoot, true, 1),
                 new InstantCommand(()->middleRowDone = true)
         );
 
         routeTopRow = new SequentialCommandGroup(
                 new FollowPath(follower, lineUpToIntake, true, 1),
                 new FollowPath(follower, intakeFurthestRow, true, 1),
-                new FollowPath(follower, goingToShoot, true, 1),
+                new FollowPath(follower, thirdTimeGoingToShoot,true, 1),
                 new InstantCommand(()->topRowDone = true)
         );
 
@@ -156,18 +156,47 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         route = new SequentialCommandGroup(
                 new FollowPath(follower, launchPreload, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower, lineUpToThirdRow, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakeThirdRow, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, firstTimeGoingToShoot, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new FollowPath(follower,lineUpToIntakeSecondRow, true,1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower,intakeMiddleRow, true,1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPath(follower,secondTimeGoingToShoot,true,1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new FollowPath(follower,lineUpToThirdRow,true,1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower,intakeThirdRow,true,1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPath(follower,thirdTimeGoingToShoot,true,1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new FollowPath(follower,park,true,1)
+
                 //new LaunchCommandGroup(robotBase),
                 //new InstantCommand(()->transferPatternCommandGroup.schedule()),
                 //new WaitUntilCommand(()->transferPatternCommandGroup.isFinished()),
-                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE),
-                new WaitUntilCommand(()->middleRowDone),
-                new ConditionalCommand(new InstantCommand(()->routeTopRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.THREE),
-                new LaunchCommandGroup(robotBase),
-                new WaitUntilCommand(()->topRowDone),
-                new InstantCommand(()->routePark.schedule())
+               // new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE),
+                //new WaitUntilCommand(()->middleRowDone),
+                //new ConditionalCommand(new InstantCommand(()->routeTopRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.THREE),
+                //new LaunchCommandGroup(robotBase),
+                //new WaitUntilCommand(()->topRowDone),
+                //new InstantCommand(()->routePark.schedule())
         );
     }
 
