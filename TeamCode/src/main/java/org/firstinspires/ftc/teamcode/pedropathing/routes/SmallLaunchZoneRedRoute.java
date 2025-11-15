@@ -21,8 +21,9 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
+import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
-@Disabled
 @Autonomous(name = "SmallRedAuto")
 public class SmallLaunchZoneRedRoute extends OpMode {
     Follower follower;
@@ -51,6 +52,8 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         chassis = new GamepadEx(gamepad1);
         timer = new ElapsedTime();
+        robotBase = new RobotBase(hardwareMap);
+        robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK);
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.THREE)));
@@ -72,14 +75,14 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain launchPreload = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(88, 8), new Pose(84.46, 11), new Pose(88.71, 16)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(new Pose(88, 8), new Pose(88.5, 10.45)))
+                .setLinearHeadingInterpolation(0, Math.toRadians(70))
                 .build();
 
         PathChain lineUpToIntake = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(88.71, 16), new Pose(83, 80), new Pose(104, 84)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(new Pose(88.71, 16), new Pose(104, 84)))
+                .setLinearHeadingInterpolation(Math.toRadians(70), 0)
                 .build();
 
         PathChain intakeFurthestRow = follower.pathBuilder()
@@ -90,15 +93,14 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain thirdTimeGoingToShoot = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(126, 84), new Pose(80, 80), new Pose(88.71, 16)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(new Pose(126, 84), new Pose(88.5, 10.45)))
+                .setLinearHeadingInterpolation(0, Math.toRadians(70))
                 .build();
 
         PathChain lineUpToIntakeSecondRow = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(
-                                new Pose(88.71, 16), new Pose(74, 63), new Pose(105, 59)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(new Pose(88.71, 16),  new Pose(105, 59)))
+                .setLinearHeadingInterpolation(Math.toRadians(70), 0)
                 .build();
 
         PathChain intakeMiddleRow = follower.pathBuilder()
@@ -109,31 +111,29 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain secondTimeGoingToShoot = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(new Pose(129, 59), new Pose(76, 58), new Pose(88.71, 16)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(new Pose(129, 59), new Pose(88.5, 10.45)))
+                .setLinearHeadingInterpolation(0, Math.toRadians(70))
                 .build();
 
         PathChain lineUpToThirdRow = follower.pathBuilder()
                 .addPath(
-                        new BezierCurve(
-                                new Pose(88.71, 16), new Pose(82, 40), new Pose(104, 36)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(new Pose(88.71, 16), new Pose(104, 34)))
+                .setLinearHeadingInterpolation(Math.toRadians(70), 0)
                 .build();
 
         PathChain intakeThirdRow = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(104, 36), new Pose(130, 36)))
+                .addPath(new BezierLine(new Pose(104, 34), new Pose(130, 34)))
                 .setConstantHeadingInterpolation(0)
                 .build();
 
         PathChain firstTimeGoingToShoot = follower.pathBuilder()
-                .addPath(new BezierCurve(
-                        new Pose(130, 36), new Pose(76, 32), new Pose(88.71, 16)))
-                .setConstantHeadingInterpolation(0)
+                .addPath(new BezierLine(new Pose(130, 34), new Pose(88.5, 10.45)))
+                .setLinearHeadingInterpolation(0, Math.toRadians(70))
                 .build();
 
         PathChain park = follower.pathBuilder()
-                .addPath(new BezierCurve(new Pose(88.17, 16), new Pose(100, 19), new Pose(112, 8)))
-                .setConstantHeadingInterpolation(0)
+                .addPath(new BezierLine(new Pose(88.17, 16), new Pose(112, 8)))
+                .setLinearHeadingInterpolation(Math.toRadians(70), 0)
                 .build();
 
         routeMiddleRow = new SequentialCommandGroup(
@@ -212,13 +212,22 @@ public class SmallLaunchZoneRedRoute extends OpMode {
     public void start() {
         follower.setStartingPose(new Pose(83, 1, Math.toRadians(0)));
         CommandScheduler.getInstance().schedule(route);
+        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL);
+        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL);
     }
 
     @Override
     public void loop() {
+        robotBase.sorterCameraSubsystem.getAnalysis();
+        robotBase.limelightSubsystem.updateLimelight();
         CommandScheduler.getInstance().run();
         follower.update();
         telemetry.addData("Rows", desiredRows);
         telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        robotBase.limelightSubsystem.limelight.stop();
     }
 }
