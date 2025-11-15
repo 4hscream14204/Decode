@@ -16,17 +16,33 @@ public class SorterCamera extends SubsystemBase {
     PredominantColorProcessor colorSensor;
     PredominantColorProcessor colorSensorLeft;
     PredominantColorProcessor colorSensorRight;
-    PredominantColorProcessor.Result resultMiddle;
-    PredominantColorProcessor.Result resultLeft;
-    PredominantColorProcessor.Result resultRight;
+    public PredominantColorProcessor.Result resultMiddle;
+    public PredominantColorProcessor.Result resultLeft;
+    public PredominantColorProcessor.Result resultRight;
     public int intPurple = 0;
     public boolean isMiddleAndLeftPurple = false;
     public boolean isRightAndLeftPurple = false;
     public boolean isMiddleAndRightPurple = false;
+
+    public enum Colors{
+        GREENHIGH (109),
+        GREENLOW (80),
+        PURPLEHIGH (138),
+        PURPLELOW (109);
+        public final double value;
+        Colors(double m_colorAmounts){this.value = m_colorAmounts;}
+    }
+
+    public enum ArtifactSlot{
+        LEFT,
+        RIGHT,
+        MIDDLE;
+    }
+
     public SorterCamera(WebcamName m_webcam){
         webcam = m_webcam;
         colorSensor = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.15, 0.15, 0.3, -0.1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.15, 0.1, 0.3, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -67,16 +83,38 @@ public class SorterCamera extends SubsystemBase {
         resultRight = colorSensorRight.getAnalysis();
     }
 
+    public int getHue(ArtifactSlot m_slot){
+        if(m_slot == ArtifactSlot.LEFT){
+            return resultLeft.HSV[0];
+        }
+
+        if(m_slot == ArtifactSlot.MIDDLE){
+            return resultMiddle.HSV[0];
+        }
+
+        return resultRight.HSV[0];
+    }
+
+    public PredominantColorProcessor.Swatch getColor(ArtifactSlot m_slot){
+        if((getHue(m_slot) > Colors.GREENLOW.value) && (getHue(m_slot) < Colors.GREENHIGH.value)){
+            return PredominantColorProcessor.Swatch.ARTIFACT_GREEN;
+        } else if((getHue(m_slot) > Colors.PURPLELOW.value) && (getHue(m_slot) < Colors.PURPLEHIGH.value)) {
+            return PredominantColorProcessor.Swatch.ARTIFACT_PURPLE;
+        }
+
+        return PredominantColorProcessor.Swatch.BLACK;
+    }
+
     public PredominantColorProcessor.Swatch getClosestSwatchMiddle(){
-        return resultMiddle.closestSwatch;
+        return getColor(ArtifactSlot.MIDDLE);
     }
 
     public PredominantColorProcessor.Swatch getClosestSwatchLeft(){
-        return resultLeft.closestSwatch;
+        return getColor(ArtifactSlot.LEFT);
     }
 
     public PredominantColorProcessor.Swatch getClosestSwatchRight(){
-        return resultRight.closestSwatch;
+        return getColor(ArtifactSlot.RIGHT);
     }
 
     public boolean hasTwoPurple(){
