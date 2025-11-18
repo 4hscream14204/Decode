@@ -108,10 +108,13 @@ public class SorterCamera extends SubsystemBase {
     }
 
     public PredominantColorProcessor.Swatch getColor(ArtifactSlot m_slot){
-        if((getHue(m_slot) > Colors.GREENLOW.value) && (getHue(m_slot) < Colors.GREENHIGH.value)){
-            return PredominantColorProcessor.Swatch.ARTIFACT_GREEN;
-        } else if((getHue(m_slot) > Colors.PURPLELOW.value) && (getHue(m_slot) < Colors.PURPLEHIGH.value)) {
-            return PredominantColorProcessor.Swatch.ARTIFACT_PURPLE;
+
+        if(getSaturation(m_slot) > 75) {
+            if ((getHue(m_slot) > Colors.GREENLOW.value) && (getHue(m_slot) < Colors.GREENHIGH.value)) {
+                return PredominantColorProcessor.Swatch.ARTIFACT_GREEN;
+            } else if ((getHue(m_slot) > Colors.PURPLELOW.value) && (getHue(m_slot) < Colors.PURPLEHIGH.value)) {
+                return PredominantColorProcessor.Swatch.ARTIFACT_PURPLE;
+            }
         }
 
         return PredominantColorProcessor.Swatch.BLACK;
