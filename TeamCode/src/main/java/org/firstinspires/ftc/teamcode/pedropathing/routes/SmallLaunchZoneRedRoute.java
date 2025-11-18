@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.pedropathing.routes;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -75,7 +76,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain launchPreload = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 8), new Pose(88.5, 10.45)))
+                        new BezierLine(new Pose(88, 8), new Pose(89, 11)))
                 .setLinearHeadingInterpolation(0, Math.toRadians(70))
                 .build();
 
@@ -87,13 +88,13 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain intakeFurthestRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(104, 84), new Pose(126, 84)))
+                        new BezierLine(new Pose(108, 84), new Pose(126, 84)))
                 .setConstantHeadingInterpolation(0)
                 .build();
 
         PathChain thirdTimeGoingToShoot = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(126, 84), new Pose(88.5, 10.45)))
+                        new BezierLine(new Pose(126, 84), new Pose(88.5, 11)))
                 .setLinearHeadingInterpolation(0, Math.toRadians(70))
                 .build();
 
@@ -105,13 +106,13 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain intakeMiddleRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(105, 59), new Pose(129, 59)))
+                        new BezierLine(new Pose(108, 59), new Pose(129, 59)))
                 .setConstantHeadingInterpolation(0)
                 .build();
 
         PathChain secondTimeGoingToShoot = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(129, 59), new Pose(88.5, 10.45)))
+                        new BezierLine(new Pose(129, 59), new Pose(88.5, 11)))
                 .setLinearHeadingInterpolation(0, Math.toRadians(70))
                 .build();
 
@@ -122,7 +123,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 .build();
 
         PathChain intakeThirdRow = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(104, 34), new Pose(130, 34)))
+                .addPath(new BezierLine(new Pose(108, 34), new Pose(130, 34)))
                 .setConstantHeadingInterpolation(0)
                 .build();
 
@@ -158,6 +159,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new FollowPath(follower, launchPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new WaitCommand(3000),
                 new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower, lineUpToThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
@@ -167,6 +169,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new FollowPath(follower, firstTimeGoingToShoot, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new WaitCommand(3000),
                 new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower,lineUpToIntakeSecondRow, true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
