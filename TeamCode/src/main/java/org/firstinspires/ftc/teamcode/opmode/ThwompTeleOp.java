@@ -194,6 +194,9 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
         telemetry.addData("Hue M", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.MIDDLE));
         telemetry.addData("Hue R", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.RIGHT));
+        telemetry.addData("Sat L", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.LEFT));
+        telemetry.addData("Sat M", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.MIDDLE));
+        telemetry.addData("Sat R", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.RIGHT));
         telemetry.update();
     }
 

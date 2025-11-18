@@ -95,6 +95,18 @@ public class SorterCamera extends SubsystemBase {
         return resultRight.HSV[0];
     }
 
+    public int getSaturation(ArtifactSlot m_slot){
+        if(m_slot == ArtifactSlot.LEFT){
+            return resultLeft.HSV[1];
+        }
+
+        if(m_slot == ArtifactSlot.MIDDLE){
+            return resultMiddle.HSV[1];
+        }
+
+        return resultRight.HSV[1];
+    }
+
     public PredominantColorProcessor.Swatch getColor(ArtifactSlot m_slot){
         if((getHue(m_slot) > Colors.GREENLOW.value) && (getHue(m_slot) < Colors.GREENHIGH.value)){
             return PredominantColorProcessor.Swatch.ARTIFACT_GREEN;
