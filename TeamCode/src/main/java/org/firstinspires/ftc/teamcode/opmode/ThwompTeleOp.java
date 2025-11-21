@@ -49,8 +49,8 @@ public class ThwompTeleOp extends OpMode {
 
         robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(DataStorage.endPosition, PedroCoordinates.INSTANCE));
 
-        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL);
-        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL);
+        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.HALF);
+        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF);
 
         mainController = new GamepadEx(gamepad1);
         backupController = new GamepadEx(gamepad2);
@@ -168,8 +168,8 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL)));
-        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL)));
+        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.HALF)));
+        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF)));
     }
 
     @Override
