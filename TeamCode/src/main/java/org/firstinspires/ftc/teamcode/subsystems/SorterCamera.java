@@ -26,7 +26,7 @@ public class SorterCamera extends SubsystemBase {
 
     public enum Colors{
         GREENHIGH (109),
-        GREENLOW (80),
+        GREENLOW (65),
         PURPLEHIGH (138),
         PURPLELOW (109);
         public final double value;
@@ -60,7 +60,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorRight = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(0.4, 0.1, 0.8, -0.1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(0.6, 0.1, 0.8, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -108,11 +108,14 @@ public class SorterCamera extends SubsystemBase {
     }
 
     public PredominantColorProcessor.Swatch getColor(ArtifactSlot m_slot){
-        if((getHue(m_slot) > Colors.GREENLOW.value) && (getHue(m_slot) < Colors.GREENHIGH.value)){
-            return PredominantColorProcessor.Swatch.ARTIFACT_GREEN;
-        } else if((getHue(m_slot) > Colors.PURPLELOW.value) && (getHue(m_slot) < Colors.PURPLEHIGH.value)) {
-            return PredominantColorProcessor.Swatch.ARTIFACT_PURPLE;
-        }
+
+        //if(getSaturation(m_slot) > 75) {
+            if ((getHue(m_slot) > Colors.GREENLOW.value) && (getHue(m_slot) < Colors.GREENHIGH.value)) {
+                return PredominantColorProcessor.Swatch.ARTIFACT_GREEN;
+            } else if ((getHue(m_slot) > Colors.PURPLELOW.value) && (getHue(m_slot) < Colors.PURPLEHIGH.value)) {
+                return PredominantColorProcessor.Swatch.ARTIFACT_PURPLE;
+            }
+        //}
 
         return PredominantColorProcessor.Swatch.BLACK;
     }
