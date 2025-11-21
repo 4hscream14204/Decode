@@ -25,7 +25,9 @@ public class RobotBase {
         public RGBLightSubsystem RGBLightRightSubsystem;
         public RGBLightSubsystem RGBLightMiddleSubsystem;
         public RGBLightSubsystem RGBLightLeftSubsystem;
-        public Launcher launcherSubsystem;
+        public Launcher launcherSubsystemLeft;
+        public Launcher launcherSubsystemMiddle;
+        public Launcher launcherSubsystemRight;
         public Chassis chassisSubsystem;
         public Limelight limelightSubsystem;
         public SorterServo ejectorMiddleSubsystem;
@@ -38,8 +40,14 @@ public class RobotBase {
 
         public RobotBase(HardwareMap hwMap) {
             intakeSubsystem = new Intake(hwMap.dcMotor.get("intake_motor"));
-            launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotorLeft"), hwMap.get(DcMotorEx.class, "launcherMotorRight"));
-           chassisSubsystem = new Chassis(hwMap.dcMotor.get("rf"), hwMap.dcMotor.get("lf"), hwMap.dcMotor.get("rr"), hwMap.dcMotor.get("lr"), hwMap.get(GoBildaPinpointDriver.class, "pinpoint"));
+            launcherSubsystemLeft = new Launcher(hwMap.get(DcMotorEx.class,
+                    "launcherMotorLeft"));
+            launcherSubsystemMiddle = new Launcher(hwMap.get(DcMotorEx.class,
+                    "launcherMotorMiddle"));
+            launcherSubsystemRight = new Launcher(hwMap.get(DcMotorEx.class,
+                    "launcherMotorRight"));
+           chassisSubsystem = new Chassis(hwMap.dcMotor.get("rf"), hwMap.dcMotor.get("lf"),
+                   hwMap.dcMotor.get("rr"), hwMap.dcMotor.get("lr"), hwMap.get(GoBildaPinpointDriver.class, "pinpoint"));
            limelightSubsystem = new Limelight(hwMap.get(Limelight3A.class, "limelight"));
            ejectorMiddleSubsystem = new SorterServo(hwMap.servo.get("transferMiddle"));
            ejectorLeftSubsystem = new SorterServo(hwMap.servo.get("transferLeft"));

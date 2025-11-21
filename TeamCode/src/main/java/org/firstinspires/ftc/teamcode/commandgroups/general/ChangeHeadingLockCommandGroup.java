@@ -10,7 +10,7 @@ public class ChangeHeadingLockCommandGroup extends SequentialCommandGroup {
     public ChangeHeadingLockCommandGroup(RobotBase robotBase) {
         addCommands(
                 new InstantCommand(()-> robotBase.chassisSubsystem.bolSnapToTarget = !robotBase.chassisSubsystem.bolSnapToTarget),
-                new InstantCommand(()-> robotBase.launcherSubsystem.setVelocity(1500))
+                new SetAllVelocityCommandGroup(robotBase, 1500)
         );
     }
 
