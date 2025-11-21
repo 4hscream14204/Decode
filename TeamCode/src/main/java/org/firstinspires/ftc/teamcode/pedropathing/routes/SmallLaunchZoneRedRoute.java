@@ -88,7 +88,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain intakeFurthestRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(108, 84), new Pose(126, 84)))
+                        new BezierLine(new Pose(118, 84), new Pose(126, 84)))
                 .setConstantHeadingInterpolation(0)
                 .build();
 
@@ -106,7 +106,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain intakeMiddleRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(108, 59), new Pose(129, 59)))
+                        new BezierLine(new Pose(118, 59), new Pose(129, 59)))
                 .setConstantHeadingInterpolation(0)
                 .build();
 
@@ -123,7 +123,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 .build();
 
         PathChain intakeThirdRow = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(108, 34), new Pose(130, 34)))
+                .addPath(new BezierLine(new Pose(118, 34), new Pose(130, 34)))
                 .setConstantHeadingInterpolation(0)
                 .build();
 
@@ -179,6 +179,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new FollowPath(follower,secondTimeGoingToShoot,true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new WaitCommand(3000),
                 new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower,lineUpToThirdRow,true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
