@@ -9,6 +9,7 @@ import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
@@ -36,6 +37,7 @@ public class ThwompTeleOp extends OpMode {
     GamepadEx backupController;
     GamepadEx mainController;
     boolean isFieldCentric = true;
+    ElapsedTime timer;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -47,6 +49,8 @@ public class ThwompTeleOp extends OpMode {
         else{
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
         }
+
+        timer = new ElapsedTime();
 
         robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(DataStorage.endPosition, PedroCoordinates.INSTANCE));
 
@@ -155,6 +159,9 @@ public class ThwompTeleOp extends OpMode {
 
         new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN && robotBase.ejectorRightSubsystem.getPosition() != SorterServo.ServoPosition.LAUNCH)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.BLUE))));
+
+        new Trigger(()-> timer.seconds() < 21)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(500))));
     }
 
     @Override
@@ -169,6 +176,7 @@ public class ThwompTeleOp extends OpMode {
     @Override
     public void start(){
         new InitSorterLightsCommandGroup(robotBase);
+        timer.reset();
     }
 
     @Override
