@@ -37,16 +37,17 @@ public class LargeLaunchZone12Artifacts extends OpMode {
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
     Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
     Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0));
+    Pose moveBackFromFirstRow = new Pose(92,84);
     Pose lineUpToOpenRamp = new Pose(125, 72, Math.toRadians(0));
     Pose openRamp = new Pose(131, 72, Math.toRadians(0));
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
     Pose preIntakeMiddleRow = new Pose(94, 60, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(130, 60, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(140, 60, Math.toRadians(0));
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
     Pose preIntakeBottomRow = new Pose(104.178, 35, Math.toRadians(0));
-    Pose intakeBottomRow = new Pose(127, 35, Math.toRadians(0));
+    Pose intakeBottomRow = new Pose(140, 35, Math.toRadians(0));
     Pose backsUpFromBottomRow = new Pose(104,35,Math.toRadians(0));
     Pose bottomRowToLaunchControl = new Pose(99.020, 40.449);
     PathChain goesFromWallToShootPreload;
@@ -61,6 +62,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
     PathChain linesUpToIntakeFirstRow;
     PathChain intakesFirstRow;
     PathChain shootsFirstRow;
+    PathChain movesBackFromIntaking;
     PathChain linesUpToOpenRamp;
     PathChain opensRamp;
     PathChain park;
@@ -223,10 +225,10 @@ public class LargeLaunchZone12Artifacts extends OpMode {
 
         route = new SequentialCommandGroup(
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
-                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+               // new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-               // new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
                 //new WaitCommand(3000),
                 new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower, linesUpToIntakeFirstRow, false, 1),
