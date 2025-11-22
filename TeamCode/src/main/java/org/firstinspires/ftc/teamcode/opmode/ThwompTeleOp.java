@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.InitSorterLightsCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsNoSortingCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
@@ -49,8 +50,7 @@ public class ThwompTeleOp extends OpMode {
 
         robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(DataStorage.endPosition, PedroCoordinates.INSTANCE));
 
-        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.HALF);
-        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF);
+        new InitSorterLightsCommandGroup(robotBase);
 
         mainController = new GamepadEx(gamepad1);
         backupController = new GamepadEx(gamepad2);
@@ -168,8 +168,7 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.HALF)));
-        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF)));
+        new InitSorterLightsCommandGroup(robotBase);
     }
 
     @Override
