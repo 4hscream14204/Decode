@@ -21,7 +21,7 @@ public class AutoTransferAndLaunchCommandGroup extends SequentialCommandGroup {
     public void initialize() {
         addCommands(
                 new LaunchNoLimelightCommandGroup(robotBase, velocity),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 new TransferPatternCommandGroup(robotBase)
         );
 
