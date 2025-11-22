@@ -31,7 +31,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
     SequentialCommandGroup route;
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
-    Pose parkPose = new Pose(127, 95, Math.toRadians(0));
+    Pose parkPose = new Pose(127, 81, Math.toRadians(270));
     Pose launchPose = new Pose(88, 98, Math.toRadians(45));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
@@ -187,7 +187,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
 
         park = follower.pathBuilder()
                 .addPath(new BezierLine(launchPose, parkPose))
-                .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(270))
                 .build();
 
         follower = Constants.createFollower(hardwareMap);
