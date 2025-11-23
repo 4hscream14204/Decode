@@ -11,10 +11,18 @@ public class Launch3ArtifactsNoSortingCommandGroup extends SequentialCommandGrou
     public Launch3ArtifactsNoSortingCommandGroup(RobotBase robotBase){
         addCommands(
                 new LaunchCommandGroup(robotBase),
-                new WaitUntilCommand(()->robotBase.launcherSubsystem.getVelocity() >= robotBase.launcherSubsystem.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-18.5))),
+                new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.getVelocity() >=
+                        robotBase.launcherSubsystemLeft.getLaunchVelocity
+                        (robotBase.limelightSubsystem.getHorizontalDistance(-18.5))&&
+                        robotBase.launcherSubsystemMiddle.getVelocity() >=
+                        robotBase.launcherSubsystemRight.getLaunchVelocity
+                        (robotBase.limelightSubsystem.getHorizontalDistance(-18.5))&&
+                        robotBase.launcherSubsystemRight.getVelocity() >=
+                        (robotBase.limelightSubsystem.getHorizontalDistance(-18.5))
+                ),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new WaitCommand(1000),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(()->robotBase.chassisSubsystem.bolSnapToTarget = false)
         );
     }

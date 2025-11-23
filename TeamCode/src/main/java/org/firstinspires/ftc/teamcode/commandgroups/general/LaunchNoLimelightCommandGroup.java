@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 public class LaunchNoLimelightCommandGroup extends SequentialCommandGroup {
     public LaunchNoLimelightCommandGroup(RobotBase robotBase, double m_velocity){
         addCommands(
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(m_velocity))
+                new SetAllVelocityCommandGroup(robotBase, m_velocity)
         );
     }
 }

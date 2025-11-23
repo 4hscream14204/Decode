@@ -3,34 +3,26 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class Launcher extends SubsystemBase {
-    public DcMotorEx launcherMotorLeft;
-    public DcMotorEx launcherMotorRight;
+    public DcMotorEx launcherMotor;
 
     public final double dblLaunchWheelRadius = 1.375;
     public final double launchVar1 = 2.2787;
     public final double launchVar2 = 1770.4;
 
-    public Launcher(DcMotorEx m_Launcher, DcMotorEx m_launcherRight){
-        launcherMotorLeft = m_Launcher;
-        launcherMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        launcherMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        launcherMotorRight = m_launcherRight;
-        launcherMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        launcherMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        launcherMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+    public Launcher(DcMotorEx m_Launcher){
+        launcherMotor = m_Launcher;
+        launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void setPower(double power){
-        launcherMotorLeft.setPower(power);
-        launcherMotorRight.setPower(power);
+        launcherMotor.setPower(power);
     }
 
     public void setVelocity(double m_velocity) {
-        launcherMotorLeft.setVelocity(m_velocity);
-        launcherMotorRight.setVelocity(m_velocity);
+        launcherMotor.setVelocity(m_velocity);
     }
 
     /*public void setRPM(double m_RPM) {
@@ -39,7 +31,7 @@ public class Launcher extends SubsystemBase {
     }*/
 
     public double getVelocity(){
-        return launcherMotorLeft.getVelocity();
+        return launcherMotor.getVelocity();
     }
 
     /*public double getRPM() {

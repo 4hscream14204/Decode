@@ -202,7 +202,7 @@ public class LargeLaunchZoneBlueRoute extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
                 //new WaitCommand(3000),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower, linesUpToIntakeThirdRow, false, 1),
                 //new WaitUntilCommand(()->autoTransferAndLaunchCommandGroup.isFinished()),
                 new WaitUntilCommand(()->!follower.isBusy()),
@@ -215,7 +215,7 @@ public class LargeLaunchZoneBlueRoute extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower, linesUpWithMiddleRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
@@ -228,7 +228,7 @@ public class LargeLaunchZoneBlueRoute extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
                 new FollowPath(follower, park, true, 1));
 
 

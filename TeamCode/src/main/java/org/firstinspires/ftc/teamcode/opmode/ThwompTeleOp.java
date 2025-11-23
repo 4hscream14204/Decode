@@ -115,7 +115,7 @@ public class ThwompTeleOp extends OpMode {
 
         backupController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)));
-
+/*
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(750))
@@ -134,7 +134,7 @@ public class ThwompTeleOp extends OpMode {
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
                         new InstantCommand(()-> robotBase.launcherSubsystem.setVelocity(1500))
                 ));
-
+*/
         //Custom Triggers for Sorter and such
 
         new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
