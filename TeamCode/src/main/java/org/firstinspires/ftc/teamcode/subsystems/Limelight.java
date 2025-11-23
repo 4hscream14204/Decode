@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -99,6 +100,14 @@ public class Limelight extends SubsystemBase {
 
     public double getHorizontalDistance(double m_Offset){ //X
         return getTargetZ()/* + m_Offset(((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset)*/;
+    }
+    public double getHorizontalDistance(double m_Offset, Follower follower){ //X
+        if(getTargetZ() != 0) {
+            return getTargetZ();
+        }
+        else{
+            return Math.sqrt(Math.pow((127.7-follower.getPose().getX()), 2) + Math.pow((131.7-follower.getPose().getY()), 2));
+        }
     }
 
     public double getVerticalDistance(double m_Offset){ //Y

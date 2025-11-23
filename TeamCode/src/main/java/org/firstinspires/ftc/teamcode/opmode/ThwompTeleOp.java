@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommand
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchTwoPurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
+import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
@@ -38,10 +40,12 @@ public class ThwompTeleOp extends OpMode {
     GamepadEx mainController;
     boolean isFieldCentric = true;
     ElapsedTime timer;
+    Follower follower;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
+        follower = Constants.createFollower(hardwareMap);
         robotBase.sorterCameraSubsystem.getAnalysis();
         if(DataStorage.alliance == DecodeEnums.Alliance.BLUE){
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
@@ -176,6 +180,7 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
+        follower.setStartingPose(DataStorage.endPosition);
         new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
     }
@@ -183,6 +188,7 @@ public class ThwompTeleOp extends OpMode {
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
+        follower.update();
         mainController.readButtons();
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.update();
@@ -196,6 +202,7 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
         telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
         telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
+        telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(0, follower));
         telemetry.addData("Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
         telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
         telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());

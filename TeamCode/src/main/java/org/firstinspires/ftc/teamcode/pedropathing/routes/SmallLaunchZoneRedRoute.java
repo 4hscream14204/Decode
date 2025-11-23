@@ -268,5 +268,6 @@ public class SmallLaunchZoneRedRoute extends OpMode {
     @Override
     public void stop() {
         robotBase.limelightSubsystem.limelight.stop();
+        DataStorage.endPosition = follower.getPose();
     }
 }
