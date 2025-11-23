@@ -19,6 +19,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllLaunchVelocityCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
@@ -158,34 +160,34 @@ public class SmallLaunchZoneRedRoute extends OpMode {
         );
 
         route = new SequentialCommandGroup(
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000)),
+                new SetAllVelocityCommandGroup(robotBase, 2000),
                 new FollowPath(follower, launchPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
                 new WaitCommand(1000),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, lineUpToThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, intakeThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000)),
+                new SetAllVelocityCommandGroup(robotBase, 2000),
                 new FollowPath(follower, firstTimeGoingToShoot, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
                 new WaitCommand(1000),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower,lineUpToIntakeSecondRow, true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower,intakeMiddleRow, true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000)),
+                new SetAllVelocityCommandGroup(robotBase, 2000),
                 new FollowPath(follower,secondTimeGoingToShoot,true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
                 new WaitCommand(1000),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0)),
+                new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower,lineUpToIntake,true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
