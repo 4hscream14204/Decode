@@ -97,7 +97,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
         robotBase.limelightSubsystem.updateLimelight();
         CommandScheduler.getInstance().run();
         chassis.readButtons();
-        robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-15.625));
+        robotBase.launcherSubsystemLeft.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-15.625));
         //robotBase.chassisSubsystem.drive(chassis.getLeftY(), chassis.getLeftX(), chassis.getRightX(), bolLockToBlue, robotBase.limelightSubsystem.getTargetX());
         //follower.update();
         //pinpoint.setPosX(follower.getPose().getX(), DistanceUnit.INCH);
@@ -118,7 +118,7 @@ public class PedroLaunchTeleOpTest extends OpMode {
         telemetry.addData("Pinpoint X", pinpoint.getPosition().getX(DistanceUnit.INCH));
         telemetry.addData("Pinpoint Y", pinpoint.getPosition().getY(DistanceUnit.INCH));
         telemetry.addData("automatedDrive", automatedDrive);
-        telemetry.addData("Velocity", robotBase.launcherSubsystem.getVelocity());
+        telemetry.addData("Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-15.625));
         telemetry.addData("Intended Velocity", 0 - ((2.2787 * robotBase.limelightSubsystem.getHorizontalDistance(-15.625)) + 1770.4));
         telemetry.addData("TY", robotBase.limelightSubsystem.getTargetY());

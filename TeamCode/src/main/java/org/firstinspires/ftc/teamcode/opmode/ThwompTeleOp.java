@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchTwoPurple;
+import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
@@ -115,26 +116,26 @@ public class ThwompTeleOp extends OpMode {
 
         backupController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)));
-/*
+
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(750))
+                        new SetAllVelocityCommandGroup(robotBase, 750)
                 ));
 
         backupController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1700))))
-                .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 1700)))
+                .whenInactive(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
 
 
         backupController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000))))
-                .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(0))));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 2000)))
+                .whenInactive(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
 
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()-> robotBase.launcherSubsystem.setVelocity(1500))
+                        new SetAllVelocityCommandGroup(robotBase, 1500)
                 ));
-*/
+
         //Custom Triggers for Sorter and such
 
         new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
@@ -190,6 +191,7 @@ public class ThwompTeleOp extends OpMode {
         CommandScheduler.getInstance().run();
         follower.update();
         mainController.readButtons();
+        backupController.readButtons();
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.update();
         robotBase.limelightSubsystem.updateLimelight();

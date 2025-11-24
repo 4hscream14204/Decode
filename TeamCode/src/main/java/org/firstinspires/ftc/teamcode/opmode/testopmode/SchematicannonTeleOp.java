@@ -67,8 +67,8 @@ chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 ));
 
         chassis.getGamepadButton(GamepadKeys.Button.B)
-                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-1))
-                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystemLeft.setPower(-1))
+                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystemLeft.setPower(0))
                         ))));
 
         //chassis.getGamepadButton(GamepadKeys.Button.A)
@@ -77,13 +77,13 @@ chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
               //          ))));
 
         chassis.getGamepadButton(GamepadKeys.Button.X)
-                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.5))
-                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystemLeft.setPower(-0.5))
+                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystemLeft.setPower(0))
                         ))));
 
         chassis.getGamepadButton(GamepadKeys.Button.Y)
-                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(-0.2))
-                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystemLeft.setPower(-0.2))
+                        .whenFinished(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystemLeft.setPower(0))
                         ))));
         /*chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchCommandGroup(launcher1, launcher2,launcher3)));*/
@@ -98,7 +98,7 @@ chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
     @Override
     public void loop() {
         chassis.readButtons();
-        robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
+        robotBase.launcherSubsystemLeft.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
 
        // intake.intake(gamepad1.left_trigger / 2 + -1 * gamepad1.right_trigger / 2 );
        // robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
