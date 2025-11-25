@@ -16,10 +16,10 @@ import java.util.List;
 
 public class Chassis extends SubsystemBase {
 
-    DcMotor frontLeftMotor;
-    DcMotor frontRightMotor;
-    DcMotor backLeftMotor;
-    DcMotor backRightMotor;
+    public DcMotor frontLeftMotor;
+    public DcMotor frontRightMotor;
+    public DcMotor backLeftMotor;
+    public DcMotor backRightMotor;
     public GoBildaPinpointDriver pinpoint;
     double dblFrontLeftPower;
     double dblFrontRightPower;

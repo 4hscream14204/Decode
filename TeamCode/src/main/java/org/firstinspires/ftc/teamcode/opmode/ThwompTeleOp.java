@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommand
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchTwoPurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
+import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
@@ -42,6 +43,7 @@ public class ThwompTeleOp extends OpMode {
     boolean isFieldCentric = true;
     ElapsedTime timer;
     Follower follower;
+    double velocity;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -71,7 +73,20 @@ public class ThwompTeleOp extends OpMode {
                         new InstantCommand(()->isFieldCentric = !isFieldCentric)
                 ));
 
-        mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+        mainController.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.resetIMU())));
+
+        mainController.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(
+                        new ChangeHeadingLockCommandGroup(robotBase)
+                ));
+
+        mainController.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(
+                        new Transfer3BallsNoCameraCommandGroup(robotBase)
+                ));
+
+        /*mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
                         new ChangeHeadingLockCommandGroup(robotBase)
                 ));
@@ -88,7 +103,22 @@ public class ThwompTeleOp extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchTwoPurple(robotBase)));
 
         mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchPatternCommandGroup(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchPatternCommandGroup(robotBase)));*/
+
+        mainController.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
+
+        mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity = velocity + 10))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity = velocity - 10))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity = velocity + 100))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity = velocity - 100))));
 
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -101,9 +131,6 @@ public class ThwompTeleOp extends OpMode {
 
         backupController.getGamepadButton(GamepadKeys.Button.START)
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAlliance(robotBase)));
-
-        backupController.getGamepadButton(GamepadKeys.Button.BACK)
-                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.resetIMU())));
 
         backupController.getGamepadButton(GamepadKeys.Button.X)
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
@@ -204,10 +231,14 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
         telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
         telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
-        telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(0, follower));
+        telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
         telemetry.addData("Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
-        telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
-        telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());
+        telemetry.addData("Left", robotBase.launcherSubsystemLeft.getVelocity());
+        telemetry.addData("Middle", robotBase.launcherSubsystemMiddle.getVelocity());
+        telemetry.addData("Right", robotBase.launcherSubsystemRight.getVelocity());
+        telemetry.addData("Front Left Motor Mode", robotBase.chassisSubsystem.frontLeftMotor.getMode());
+        //telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
+        //telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());
         /*telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
         telemetry.addData("Hue M", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.MIDDLE));
         telemetry.addData("Hue R", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.RIGHT));
