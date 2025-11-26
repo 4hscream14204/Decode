@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchTwoPurple;
+import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllLaunchVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
@@ -80,6 +81,11 @@ public class ThwompTeleOp extends OpMode {
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
                         new ChangeHeadingLockCommandGroup(robotBase)
                 ));
+
+        mainController.getGamepadButton(GamepadKeys.Button.Y)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(
+                                new SetAllLaunchVelocityCommandGroup(robotBase, robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)))
+                        ));
 
         mainController.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
