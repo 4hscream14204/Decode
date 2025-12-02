@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.pedropathing.routes;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -17,6 +18,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchNoPatternCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
@@ -38,9 +40,9 @@ public class LargeLaunchZone12Artifacts extends OpMode {
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
     Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
     Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0));
-    Pose moveBackFromFirstRow = new Pose(92,84);
-    Pose lineUpToOpenRamp = new Pose(125, 72, Math.toRadians(0));
-    Pose openRamp = new Pose(131, 72, Math.toRadians(0));
+    Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90));
+    Pose lineUpToOpenRamp = new Pose(125, 72, Math.toRadians(90));
+    Pose openRamp = new Pose(126, 72, Math.toRadians(90));
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
     Pose preIntakeMiddleRow = new Pose(94, 60, Math.toRadians(0));
@@ -130,15 +132,20 @@ public class LargeLaunchZone12Artifacts extends OpMode {
                 .build();
         //Opens Classifier Ramp//
 
+        /*movesBackFromIntaking = follower.pathBuilder()
+                .addPath(new BezierLine(intakeTopRow, moveBackFromFirstRow))
+                .setConstantHeadingInterpolation(moveBackFromFirstRow.getHeading())
+                .build();*/
+
         linesUpToOpenRamp = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(intakeTopRow,lineUpToOpenRamp))
-                .setConstantHeadingInterpolation(intakeTopRow.getHeading())
+                        new BezierLine(intakeTopRow, lineUpToOpenRamp))
+                .setConstantHeadingInterpolation(lineUpToOpenRamp.getHeading())
                 .build();
         opensRamp = follower.pathBuilder()
                 .addPath(
                         new BezierLine(lineUpToOpenRamp,openRamp))
-                .setConstantHeadingInterpolation(lineUpToOpenRamp.getHeading())
+                .setLinearHeadingInterpolation(lineUpToOpenRamp.getHeading(), openRamp.getHeading())
                 .build();
 
 
@@ -226,10 +233,10 @@ public class LargeLaunchZone12Artifacts extends OpMode {
 
         route = new SequentialCommandGroup(
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
-               // new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new SetAllVelocityCommandGroup(robotBase, 2200),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new AutoTransferAndLaunchNoPatternCG(robotBase, 2200),
                 //new WaitCommand(3000),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, linesUpToIntakeFirstRow, false, 1),
@@ -238,29 +245,32 @@ public class LargeLaunchZone12Artifacts extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesFirstRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
+                /*new FollowPath(follower, movesBackFromIntaking, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),*/
                 new FollowPath(follower,linesUpToOpenRamp,true,1 ),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower,opensRamp,true,1),
+                new FollowPath(follower,opensRamp,true,1).setCompletionThreshold(0.5),
                 new WaitUntilCommand(()->!follower.isBusy()),
+                new SetAllVelocityCommandGroup(robotBase, 2220),
                 // new WaitCommand(1000),
                 // new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
-                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
                 new FollowPath(follower, shootsFirstRow, false, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                //new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 2220),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, linesUpWithSecondRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesSecondRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower, backUpFromSecondRow),
+                new FollowPath(follower, backUpFromSecondRow, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new SetAllVelocityCommandGroup(robotBase, 2220),
                 new FollowPath(follower, goesToShootSecondRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 2220),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, linesUpToIntakeThirdRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
@@ -269,7 +279,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, backsUpFromThirdRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase, 1750),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 1220),
                 new FollowPath(follower,goesToShootThirdRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
@@ -344,6 +354,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
         telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
         telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
+        telemetry.addData("Is Stuck", follower.isRobotStuck());
     }
     @Override
     public void stop(){
