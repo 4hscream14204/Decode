@@ -61,9 +61,6 @@ public class RobotBase {
            cameraLightSubsystemRight = new CameraLight(hwMap.servo.get("cameraLightRight"));
            sorterCameraSubsystem = new SorterCamera(hwMap.get(WebcamName.class, "SorterCamera"));
             launcherSubsystemLeft.launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            chassisSubsystem.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            chassisSubsystem.frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            chassisSubsystem.backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         }
 }

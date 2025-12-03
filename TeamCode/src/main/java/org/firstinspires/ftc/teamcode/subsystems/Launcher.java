@@ -45,6 +45,6 @@ public class Launcher extends SubsystemBase {
     }
 
     public double getLaunchVelocity(double m_Distance){
-        return ((0.0073*(Math.pow(m_Distance, 2))) - (1.0906 * m_Distance) + 2290.3);
+        return ((0.0098*(Math.pow(m_Distance, 2))) - (2.7572 * m_Distance) + 1938.2);
     }
 }

@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 public class ChangeHeadingLockCommandGroup extends SequentialCommandGroup {
     public ChangeHeadingLockCommandGroup(RobotBase robotBase) {
         addCommands(
-                new InstantCommand(()-> robotBase.chassisSubsystem.bolSnapToTarget = !robotBase.chassisSubsystem.bolSnapToTarget),
-                new SetAllVelocityCommandGroup(robotBase, 1500)
+                new InstantCommand(()-> robotBase.chassisSubsystem.bolSnapToTarget = !robotBase.chassisSubsystem.bolSnapToTarget)
+                //new SetAllVelocityCommandGroup(robotBase, 1500)
         );
     }
 
