@@ -8,18 +8,15 @@ import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllLaunchVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
@@ -45,6 +42,17 @@ public class SmallLaunchZoneRedRoute extends OpMode {
     boolean middleRowDone = false;
     boolean topRowDone = false;
     int secondsToWait = 0;
+
+
+    Pose startPose = new Pose(88, 8, Math.toRadians(90));
+    Pose launchPose = new Pose(87, 14, Math.toRadians(65));
+    Pose nextToFirstRow = new Pose(104, 34, Math.toRadians(0));
+    Pose intakeFirstRow = new Pose(135, 34, Math.toRadians(0));
+    Pose nextToSecondRow = new Pose(105, 59, Math.toRadians(0));
+    Pose intakeSecondRow = new Pose(135, 59, Math.toRadians(0));
+    Pose nextToThirdRow = new Pose(104, 84, Math.toRadians(0));
+    Pose intakeThirdRow = new Pose(130, 84, Math.toRadians(0));
+    Pose parkPose = new Pose(112, 8, Math.toRadians(0));
 
     public enum DesiredRows{
         ONE,
@@ -80,65 +88,65 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain launchPreload = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88, 8), new Pose(87, 14)))
-                .setLinearHeadingInterpolation(90, Math.toRadians(65))
+                        new BezierLine(startPose, launchPose))
+                .setLinearHeadingInterpolation(startPose.getHeading(), launchPose.getHeading())
                 .build();
 
         PathChain lineUpToIntake = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88.71, 16), new Pose(104, 84)))
-                .setLinearHeadingInterpolation(Math.toRadians(70), 0)
+                        new BezierLine(launchPose, nextToThirdRow))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), nextToThirdRow.getHeading())
                 .build();
 
         PathChain intakeFurthestRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(104, 84), new Pose(130, 84)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(nextToThirdRow, intakeThirdRow))
+                .setConstantHeadingInterpolation(nextToThirdRow.getHeading())
                 .build();
 
         PathChain thirdTimeGoingToShoot = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(126, 84), new Pose(87, 14)))
-                .setLinearHeadingInterpolation(0, Math.toRadians(65))
+                        new BezierLine(intakeThirdRow, launchPose))
+                .setLinearHeadingInterpolation(intakeThirdRow.getHeading(), launchPose.getHeading())
                 .build();
 
         PathChain lineUpToIntakeSecondRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88.71, 16),  new Pose(105, 59)))
-                .setLinearHeadingInterpolation(Math.toRadians(70), 0)
+                        new BezierLine(launchPose,  nextToSecondRow))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), nextToSecondRow.getHeading())
                 .build();
 
         PathChain intakeMiddleRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(105, 59), new Pose(135, 59)))
-                .setConstantHeadingInterpolation(0)
+                        new BezierLine(nextToSecondRow, intakeSecondRow))
+                .setConstantHeadingInterpolation(nextToSecondRow.getHeading())
                 .build();
 
         PathChain secondTimeGoingToShoot = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(129, 59), new Pose(87, 14)))
-                .setLinearHeadingInterpolation(0, Math.toRadians(65))
+                        new BezierLine(intakeSecondRow, launchPose))
+                .setLinearHeadingInterpolation(intakeSecondRow.getHeading(), launchPose.getHeading())
                 .build();
 
         PathChain lineUpToThirdRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(new Pose(88.71, 16), new Pose(104, 34)))
-                .setLinearHeadingInterpolation(Math.toRadians(70), 0)
+                        new BezierLine(launchPose, nextToFirstRow))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), nextToFirstRow.getHeading())
                 .build();
 
         PathChain intakeThirdRow = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(104, 34), new Pose(135, 34)))
-                .setConstantHeadingInterpolation(0)
+                .addPath(new BezierLine(nextToFirstRow, intakeFirstRow))
+                .setConstantHeadingInterpolation(intakeFirstRow.getHeading())
                 .build();
 
         PathChain firstTimeGoingToShoot = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(140, 34), new Pose(87, 14)))
-                .setLinearHeadingInterpolation(0, Math.toRadians(65))
+                .addPath(new BezierLine(intakeFirstRow, launchPose))
+                .setLinearHeadingInterpolation(intakeFirstRow.getHeading(), launchPose.getHeading())
                 .build();
 
         PathChain park = follower.pathBuilder()
-                .addPath(new BezierLine(new Pose(88.17, 16), new Pose(112, 8)))
-                .setLinearHeadingInterpolation(Math.toRadians(70), 0)
+                .addPath(new BezierLine(launchPose, parkPose))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), parkPose.getHeading())
                 .build();
 
         routeMiddleRow = new SequentialCommandGroup(
