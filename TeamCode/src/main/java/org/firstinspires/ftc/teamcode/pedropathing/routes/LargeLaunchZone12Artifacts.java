@@ -180,7 +180,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
         linesUpToIntakeThirdRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(launchPose, preIntakeBottomRow))
-                .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(0))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), preIntakeBottomRow.getHeading())
                 .build();
         intakesThirdRow = follower.pathBuilder()
                 .addPath(
@@ -195,13 +195,13 @@ public class LargeLaunchZone12Artifacts extends OpMode {
         goesToShootThirdRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(intakeBottomRow, launchPose))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(135))
+                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose.getHeading())
                 .build();
         //park//
 
         park = follower.pathBuilder()
                 .addPath(new BezierLine(launchPose, parkPose))
-                .setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(270))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), parkPose.getHeading())
                 .build();
 
         follower = Constants.createFollower(hardwareMap);
