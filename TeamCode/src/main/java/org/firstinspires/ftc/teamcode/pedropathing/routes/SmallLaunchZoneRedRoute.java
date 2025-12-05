@@ -45,7 +45,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
 
     Pose startPose = new Pose(88, 8, Math.toRadians(90));
-    Pose launchPose = new Pose(87, 14, Math.toRadians(65));
+    Pose launchPose = new Pose(87, 14, Math.toRadians(68));
     Pose nextToFirstRow = new Pose(104, 34, Math.toRadians(0));
     Pose intakeFirstRow = new Pose(135, 34, Math.toRadians(0));
     Pose nextToSecondRow = new Pose(105, 59, Math.toRadians(0));
@@ -168,10 +168,10 @@ public class SmallLaunchZoneRedRoute extends OpMode {
         );
 
         route = new SequentialCommandGroup(
-                new SetAllVelocityCommandGroup(robotBase, 2000),
+                new SetAllVelocityCommandGroup(robotBase, 2050),
                 new FollowPath(follower, launchPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new AutoTransferAndLaunchCommandGroup(robotBase,2050),
                 new WaitCommand(1000),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
@@ -179,7 +179,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, intakeThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new SetAllVelocityCommandGroup(robotBase, 2000),
+                new SetAllVelocityCommandGroup(robotBase, 2050),
                 new FollowPath(follower, firstTimeGoingToShoot, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
@@ -190,7 +190,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower,intakeMiddleRow, true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new SetAllVelocityCommandGroup(robotBase, 2000),
+                //new SetAllVelocityCommandGroup(robotBase, 1900),
                 new FollowPath(follower,secondTimeGoingToShoot,true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
