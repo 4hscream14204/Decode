@@ -234,7 +234,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.update();
         robotBase.limelightSubsystem.updateLimelight();
-        new UpdateLightsCommandGroup(robotBase);
+        //new UpdateLightsCommandGroup(robotBase);
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
