@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
+import static com.arcrobotics.ftclib.kotlin.extensions.gamepad.GamepadExExtKt.whileActiveContinuous;
+
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.Trigger;
@@ -7,12 +9,19 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.PoseConverter;
+import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.PedroCoordinates;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.HeadingInterpolator;
+import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.InitSorterLightsCommandGroup;
@@ -47,6 +56,8 @@ public class ThwompTeleOp extends OpMode {
     ElapsedTime timer;
     Follower follower;
     double velocity;
+    Supplier<PathChain> pathChain;
+    boolean automatedDrive;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -64,9 +75,14 @@ public class ThwompTeleOp extends OpMode {
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
         }
 
+        pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
+                .addPath(new Path(new BezierLine(follower::getPose, new Pose(126, 73, Math.toRadians(0)))))
+                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(0), 1))
+                .build();
+
         timer = new ElapsedTime();
 
-        robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(DataStorage.endPosition, PedroCoordinates.INSTANCE));
+        robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(88, 8, Math.toRadians(90)) /*DataStorage.endPosition*/, PedroCoordinates.INSTANCE));
 
         new InitSorterLightsCommandGroup(robotBase);
 
@@ -74,6 +90,9 @@ public class ThwompTeleOp extends OpMode {
         backupController = new GamepadEx(gamepad2);
 
         //Main Driver keybinds
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.followPath(pathChain.get())), new InstantCommand(()->automatedDrive = true)));
 
         mainController.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
@@ -206,6 +225,9 @@ public class ThwompTeleOp extends OpMode {
 
         new Trigger(()-> timer.seconds() > 129)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(500))));
+
+        new Trigger(()->automatedDrive || !follower.isBusy())
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));
     }
 
     @Override
@@ -260,6 +282,8 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Sat R", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.RIGHT));
         telemetry.addData("Time", timer.seconds());
         telemetry.addData("Limelight Z", robotBase.limelightSubsystem.getTargetZ());
+        telemetry.addData("Follower Pose", follower.getPose());
+        telemetry.addData("Automated drive", automatedDrive);
         telemetry.update();
     }
 
