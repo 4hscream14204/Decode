@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
-import static com.arcrobotics.ftclib.kotlin.extensions.gamepad.GamepadExExtKt.whileActiveContinuous;
-
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.button.Trigger;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.button.Trigger;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
+import com.seattlesolvers.solverslib.gamepad.GamepadExExtKt;
+import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.geometry.BezierCurve;
@@ -91,7 +90,7 @@ public class ThwompTeleOp extends OpMode {
 
         //Main Driver keybinds
 
-        mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+        mainController.getGamepadButton(GamepadKeys.Button.PS)
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.followPath(pathChain.get())), new InstantCommand(()->automatedDrive = true)));
 
         mainController.getGamepadButton(GamepadKeys.Button.START)
@@ -226,7 +225,7 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()-> timer.seconds() > 129)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(500))));
 
-        new Trigger(()->automatedDrive || !follower.isBusy())
+        new Trigger(()->automatedDrive && mainController.wasJustPressed(GamepadKeys.Button.PS) || !follower.isBusy())
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));
     }
 
