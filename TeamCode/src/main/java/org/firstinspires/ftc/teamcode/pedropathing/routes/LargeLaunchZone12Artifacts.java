@@ -19,6 +19,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchNoPatternCG;
+import org.firstinspires.ftc.teamcode.commandgroups.general.InitSorterLightsCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
@@ -34,7 +35,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
     SequentialCommandGroup route;
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
-    Pose parkPose = new Pose(127, 81, Math.toRadians(270));
+    Pose parkPose = new Pose(100, 74, Math.toRadians(270));
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
     Pose launchPose = new Pose(86, 90, Math.toRadians(47));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
@@ -47,12 +48,12 @@ public class LargeLaunchZone12Artifacts extends OpMode {
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
     Pose preIntakeMiddleRow = new Pose(94, 60, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(128, 60, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(132, 60, Math.toRadians(0));
     Pose backupMiddleRow = new Pose(95, 60, Math.toRadians(0));
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
-    Pose preIntakeBottomRow = new Pose(101, 35, Math.toRadians(0));
-    Pose intakeBottomRow = new Pose(128, 35, Math.toRadians(0));
+    Pose preIntakeBottomRow = new Pose(100, 35, Math.toRadians(0));
+    Pose intakeBottomRow = new Pose(132, 35, Math.toRadians(0));
     Pose backsUpFromBottomRow = new Pose(104,35,Math.toRadians(0));
     Pose bottomRowToLaunchControl = new Pose(99.020, 40.449);
     PathChain goesFromWallToShootPreload;
@@ -253,6 +254,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
                 new FollowPath(follower,linesUpToOpenRamp,true,1 ),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower,opensRamp,true,1).withTimeout(500),
+                new WaitCommand(500),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new SetAllVelocityCommandGroup(robotBase, 1800),
                 // new WaitCommand(1000),
@@ -279,12 +281,16 @@ public class LargeLaunchZone12Artifacts extends OpMode {
                 new FollowPath(follower, linesUpToIntakeThirdRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+             //   new SetAllVelocityCommandGroup(robotBase,1800),
                 new FollowPath(follower,intakesThirdRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase, 1800),
+                new SetAllVelocityCommandGroup(robotBase, 1800),
                 new FollowPath(follower,goesToShootThirdRow),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 1800),
+               // new FollowPath(follower,goesToShootThirdRow),
+               // new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, park, true, 1));
 
@@ -322,8 +328,9 @@ public class LargeLaunchZone12Artifacts extends OpMode {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(route);
         robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK);
-        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.FULL);
-        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.FULL);
+        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF);
+        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.HALF);
+       // new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
     }
 
