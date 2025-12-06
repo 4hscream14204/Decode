@@ -15,6 +15,7 @@ public class RGBLightSubsystem extends SubsystemBase{
 public RGBLightSubsystem.Colors enmColorHue;
     public enum Colors{
         BLUE(0.611),
+        NO(0.0001),
         RED(0.2877777),
         PURPLE(.7183),
         GREEN(.4944);
@@ -26,12 +27,11 @@ public RGBLightSubsystem.Colors enmColorHue;
         if (enmTargetColor != enmColorHue ){
             RGBLightServo.setPosition(enmTargetColor.value);
             enmColorHue = enmTargetColor;
-
         }
 
     }
 
-        }
+}
 
 
 
