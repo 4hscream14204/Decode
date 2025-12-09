@@ -35,7 +35,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
     SequentialCommandGroup route;
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
-    Pose parkPose = new Pose(100, 74, Math.toRadians(270));
+    Pose parkPose = new Pose(106, 74, Math.toRadians(270));
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
     Pose launchPose = new Pose(86, 90, Math.toRadians(47));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
@@ -79,8 +79,8 @@ public class LargeLaunchZone12Artifacts extends OpMode {
     boolean middleRowDone = false;
     boolean bottomRowDone = false;
     int secondsToWait = 0;
-    double dblLaucnhVel = 1850;
-    double dblPreLaucnhVel = 1850;
+    double dblLaucnhVel = 1845;
+    double dblPreLaucnhVel = 1845;
     ElapsedTime timer;
 
     public enum DesiredRows{
@@ -289,10 +289,10 @@ public class LargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower,goesToShootThirdRow),
                 //new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                // new FollowPath(follower,goesToShootThirdRow),
                // new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, park, true, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(0)));

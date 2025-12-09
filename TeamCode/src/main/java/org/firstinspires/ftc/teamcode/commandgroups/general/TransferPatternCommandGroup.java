@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commandgroups.general;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
@@ -19,7 +20,7 @@ public class TransferPatternCommandGroup extends SequentialCommandGroup {
             if (DataStorage.pattern == DecodeEnums.Patterns.PPG) {
                 addCommands(
                         new TransferTwoPurpleCommandGroup(robotBase),
-                        //new WaitCommand(500),
+                        new WaitCommand(500),
                         new TransferGreenBallCommandGroup(robotBase),
                         //new WaitCommand(500),
                         new TransferResetCommandGroup(robotBase)
@@ -27,7 +28,7 @@ public class TransferPatternCommandGroup extends SequentialCommandGroup {
             } else if (DataStorage.pattern == DecodeEnums.Patterns.GPP) {
                 addCommands(
                         new TransferGreenBallCommandGroup(robotBase),
-                        //new WaitCommand(500),
+                        new WaitCommand(500),
                         new TransferTwoPurpleCommandGroup(robotBase),
                         //new WaitCommand(500),
                        new TransferResetCommandGroup(robotBase)
