@@ -10,6 +10,7 @@ public class RGBLightSubsystem extends SubsystemBase{
 
     public RGBLightSubsystem (Servo m_RGBLightServo){
         RGBLightServo = m_RGBLightServo;
+        enmColorHue = Colors.NO;
     }
 
 public RGBLightSubsystem.Colors enmColorHue;

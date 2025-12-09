@@ -9,6 +9,7 @@ public class CameraLight extends SubsystemBase{
 
     public CameraLight(Servo m_cameraLightServo){
         cameraLightServo = m_cameraLightServo;
+        setShade(Shades.HALF);
     }
 
     public Shades enmColorHue;
