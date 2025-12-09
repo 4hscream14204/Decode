@@ -58,6 +58,7 @@ public class ThwompTeleOp extends OpMode {
     Follower follower;
     double velocity;
     Supplier<PathChain> pathChain;
+    Pose gatePose = new Pose(126, 73, Math.toRadians(0));
     boolean automatedDrive;
     @Override
     public void init() {
@@ -71,15 +72,18 @@ public class ThwompTeleOp extends OpMode {
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if(DataStorage.alliance == DecodeEnums.Alliance.BLUE){
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
+            pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
+                    .addPath(new Path(new BezierLine(follower::getPose, gatePose.mirror())))
+                    .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
+                    .build();
         }
         else{
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
+            pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
+                    .addPath(new Path(new BezierLine(follower::getPose, gatePose)))
+                    .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
+                    .build();
         }
-
-        pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
-                .addPath(new Path(new BezierLine(follower::getPose, new Pose(126, 73, Math.toRadians(0)))))
-                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(0), 1))
-                .build();
 
         timer = new ElapsedTime();
 
@@ -227,7 +231,7 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()-> timer.seconds() > 129)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(500))));
 
-        new Trigger(()->automatedDrive || !follower.isBusy())
+        new Trigger(()->automatedDrive && mainController.wasJustPressed(GamepadKeys.Button.DPAD_UP) || !follower.isBusy())
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));
     }
 
