@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.commandgroups.auto;
 
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
+import com.arcrobotics.ftclib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchNoLimelightCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
@@ -21,8 +22,8 @@ public class AutoTransferAndLaunchNoPatternCG extends SequentialCommandGroup {
     @Override
     public void initialize() {
         addCommands(
+                new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.getVelocity() >= velocity),
                 new LaunchNoLimelightCommandGroup(robotBase, velocity),
-                new WaitCommand(500),
                 new Transfer3BallsNoCameraCommandGroup(robotBase)
         );
 

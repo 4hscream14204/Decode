@@ -20,7 +20,7 @@ public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
             addCommands(
                     new InstantCommand(() -> robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
                     new InstantCommand(() -> robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
-                    new WaitCommand(1000),
+                    new WaitCommand(500),
                     new InstantCommand(() -> robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.HOME)),
                     new InstantCommand(() -> robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME))
             );
@@ -28,7 +28,7 @@ public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
             addCommands(
                     new InstantCommand(() -> robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
                     new InstantCommand(() -> robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
-                    new WaitCommand(1000),
+                    new WaitCommand(500),
                     new InstantCommand(() -> robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.HOME)),
                     new InstantCommand(() -> robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME))
             );
@@ -36,7 +36,7 @@ public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
             addCommands(
                     new InstantCommand(() -> robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
                     new InstantCommand(() -> robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
-                    new WaitCommand(1000),
+                    new WaitCommand(500),
                     new InstantCommand(() -> robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME)),
                     new InstantCommand(() -> robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME))
             );
