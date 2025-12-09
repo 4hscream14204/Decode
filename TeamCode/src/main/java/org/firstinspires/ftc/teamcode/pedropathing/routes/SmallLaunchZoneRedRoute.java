@@ -168,10 +168,10 @@ public class SmallLaunchZoneRedRoute extends OpMode {
         );
 
         route = new SequentialCommandGroup(
-                new SetAllVelocityCommandGroup(robotBase, 2050),
+                new SetAllVelocityCommandGroup(robotBase, 2150),
                 new FollowPath(follower, launchPreload, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase,2050),
+                new AutoTransferAndLaunchCommandGroup(robotBase,2150),
                 new WaitCommand(1000),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
@@ -179,10 +179,10 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, intakeThirdRow, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new SetAllVelocityCommandGroup(robotBase, 2050),
+                new SetAllVelocityCommandGroup(robotBase, 2150),
                 new FollowPath(follower, firstTimeGoingToShoot, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase,2000),
+                new AutoTransferAndLaunchCommandGroup(robotBase,2150),
                 new WaitCommand(1000),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),

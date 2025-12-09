@@ -186,13 +186,11 @@ public class ThwompTeleOp extends OpMode {
                 ));
 
         backupController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 1700)))
-                .whenInactive(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 1950)));
 
 
         backupController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 1900)))
-                .whenInactive(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 2200)));
 
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
@@ -266,7 +264,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
-        telemetry.addData("This is new code 7", true);
+        //telemetry.addData("This is new code 7", true);
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
@@ -291,8 +289,10 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Sat R", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.RIGHT));
         telemetry.addData("Time", timer.seconds());
         telemetry.addData("Limelight Z", robotBase.limelightSubsystem.getTargetZ());
-        telemetry.addData("Follower Pose", follower.getPose());
+        //telemetry.addData("Follower Pose", follower.getPose());
         telemetry.addData("Automated drive", automatedDrive);
+        telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
+        telemetry.addData("Real Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.update();
     }
 
