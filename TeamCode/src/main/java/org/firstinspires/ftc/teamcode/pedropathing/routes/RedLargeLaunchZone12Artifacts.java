@@ -9,7 +9,6 @@ import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -19,7 +18,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchNoPatternCG;
-import org.firstinspires.ftc.teamcode.commandgroups.general.InitSorterLightsCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
@@ -28,8 +26,8 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
-@Autonomous(name = "12 Artifact Big Launch Zone Red Auto")
-public class LargeLaunchZone12Artifacts extends OpMode {
+@Autonomous(name = "Red 12 Artifact Big Launch Zone Auto")
+public class RedLargeLaunchZone12Artifacts extends OpMode {
     RobotBase robotBase;
     Follower follower;
     SequentialCommandGroup route;
@@ -91,6 +89,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
 
     @Override
     public void init() {
+        DataStorage.alliance = DecodeEnums.Alliance.RED;
         follower = Constants.createFollower(hardwareMap);
         CommandScheduler.getInstance().reset();
         chassis = new GamepadEx(gamepad1);
@@ -188,12 +187,12 @@ public class LargeLaunchZone12Artifacts extends OpMode {
         intakesThirdRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(preIntakeBottomRow, intakeBottomRow))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(preIntakeBottomRow.getHeading())
                 .build();
         backsUpFromThirdRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(intakeBottomRow, backsUpFromBottomRow))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(intakeBottomRow.getHeading())
                 .build();
         goesToShootThirdRow = follower.pathBuilder()
                 .addPath(
@@ -209,34 +208,7 @@ public class LargeLaunchZone12Artifacts extends OpMode {
 
         follower = Constants.createFollower(hardwareMap);
 
-        routeMiddleRow = new SequentialCommandGroup(
-                new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower, linesUpWithSecondRow, true, 1),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesSecondRow, true, 1),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
-                new FollowPath(follower, goesToShootSecondRow, true, 1),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                //new LaunchCommandGroup(robotBase),
-                //new InstantCommand(()->patternCommandGroup.schedule()),
-                //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
-                new InstantCommand(()->middleRowDone = true));
 
-        routeBottomRow = new SequentialCommandGroup(
-                new FollowPath(follower, linesUpToIntakeThirdRow, true, 1),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesThirdRow, true, 1),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                //new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
-                new FollowPath(follower, goesToShootThirdRow, true, 1),
-                //new LaunchCommandGroup(robotBase),
-                //new InstantCommand(()->patternCommandGroup.schedule()),
-                //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
-                new InstantCommand(()->bottomRowDone = true)
-        );
 
         route = new SequentialCommandGroup(
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
