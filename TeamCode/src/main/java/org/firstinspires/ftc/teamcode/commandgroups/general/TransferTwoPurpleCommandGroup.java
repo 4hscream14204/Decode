@@ -13,11 +13,11 @@ public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
 
     public TransferTwoPurpleCommandGroup(RobotBase m_robotBase) {
         robotBase = m_robotBase;
-        hasTwoPurple = robotBase.sorterCameraSubsystem.hasTwoPurple();
     }
 
     @Override
     public void initialize() {
+        hasTwoPurple = robotBase.sorterCameraSubsystem.hasTwoPurple();
         if (hasTwoPurple && robotBase.sorterCameraSubsystem.isMiddleAndLeftPurple) {
             addCommands(
                     new InstantCommand(() -> robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
