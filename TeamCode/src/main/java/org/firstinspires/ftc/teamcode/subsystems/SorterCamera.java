@@ -26,8 +26,8 @@ public class SorterCamera extends SubsystemBase {
 
     public enum Colors{
         GREENHIGH (109),
-        GREENLOW (65),
-        PURPLEHIGH (138),
+        GREENLOW (55),
+        PURPLEHIGH (160),
         PURPLELOW (109);
         public final double value;
         Colors(double m_colorAmounts){this.value = m_colorAmounts;}
@@ -60,7 +60,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorRight = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(0.6, 0.1, 0.8, -0.1))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(0.5, 0.1, 0.8, -0.1))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
