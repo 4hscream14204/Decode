@@ -6,12 +6,14 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 
+@Disabled
 @Autonomous(name = "Small Zone Red Park")
 public class SmallZoneRedPark extends OpMode {
     Follower follower;

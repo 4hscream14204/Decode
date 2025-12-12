@@ -46,11 +46,9 @@ public class TransferTwoPurpleCommandGroup extends SequentialCommandGroup {
         }
         else{
             addCommands(
-                    new InstantCommand(() -> robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
-                    new InstantCommand(() -> robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),
+                    new TransferPurpleBallCommandGroup(robotBase),
                     new WaitCommand(500),
-                    new InstantCommand(() -> robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME)),
-                    new InstantCommand(() -> robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
+                    new TransferPurpleBallCommandGroup(robotBase));
         }
         super.initialize();
     }
