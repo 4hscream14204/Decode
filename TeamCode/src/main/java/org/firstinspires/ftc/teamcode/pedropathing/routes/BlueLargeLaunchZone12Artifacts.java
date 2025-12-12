@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchNoPatternCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
@@ -196,7 +197,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
         goesToShootThirdRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(intakeBottomRow, launchPose))
-                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose.getHeading()+Math.toRadians(7))
+                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose.getHeading()+Math.toRadians(6))
                 .build();
         //park//
 
@@ -216,6 +217,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchNoPatternCG(robotBase, dblLaucnhVel),
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
                 //new WaitCommand(3000),
                 //new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, linesUpToIntakeFirstRow, false, 1),
@@ -237,6 +239,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
                 //new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, linesUpWithSecondRow),
                 //new WaitUntilCommand(()->!follower.isBusy()),
@@ -251,6 +254,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
                 //new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, linesUpToIntakeThirdRow),
                 //new WaitUntilCommand(()->!follower.isBusy()),
@@ -263,6 +267,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
                 // new FollowPath(follower,goesToShootThirdRow),
                 // new WaitUntilCommand(()->!follower.isBusy()),
                 new SetAllVelocityCommandGroup(robotBase, 0),

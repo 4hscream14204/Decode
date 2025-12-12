@@ -13,6 +13,7 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -24,7 +25,7 @@ import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
-
+@Disabled
 @Autonomous(name = "Big Launch Zone Blue Auto")
 public class LargeLaunchZoneBlueRoute extends OpMode {
     RobotBase robotBase;

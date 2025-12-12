@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.pedropathing.routes;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -28,8 +27,9 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
-@Autonomous(name = "SmallRedAuto")
-public class SmallLaunchZoneRedRoute extends OpMode {
+
+@Autonomous(name = "SmallBlueAuto")
+public class SmallLaunchZoneBlueRoute extends OpMode {
     Follower follower;
     RobotBase robotBase;
     TransferPatternCommandGroup transferPatternCommandGroup;
@@ -40,21 +40,21 @@ public class SmallLaunchZoneRedRoute extends OpMode {
     LaunchCommandGroup launchArtifacts;
     GamepadEx chassis;
     ElapsedTime timer;
-    SmallLaunchZoneRedRoute.DesiredRows desiredRows = DesiredRows.THREE;
+    DesiredRows desiredRows = DesiredRows.THREE;
     boolean middleRowDone = false;
     boolean topRowDone = false;
     int secondsToWait = 0;
 
 
-    Pose startPose = new Pose(88, 8, Math.toRadians(90));
-    Pose launchPose = new Pose(87, 14, Math.toRadians(66));
-    Pose nextToFirstRow = new Pose(104, 34, Math.toRadians(0));
-    Pose intakeFirstRow = new Pose(135, 34, Math.toRadians(0));
-    Pose nextToSecondRow = new Pose(105, 59, Math.toRadians(0));
-    Pose intakeSecondRow = new Pose(135, 59, Math.toRadians(0));
-    Pose nextToThirdRow = new Pose(104, 84, Math.toRadians(0));
-    Pose intakeThirdRow = new Pose(130, 84, Math.toRadians(0));
-    Pose parkPose = new Pose(106, 74, Math.toRadians(270));
+    Pose startPose = new Pose(88, 8, Math.toRadians(90)).mirror();
+    Pose launchPose = new Pose(87, 14, Math.toRadians(65)).mirror();
+    Pose nextToFirstRow = new Pose(104, 34, Math.toRadians(0)).mirror();
+    Pose intakeFirstRow = new Pose(135, 34, Math.toRadians(0)).mirror();
+    Pose nextToSecondRow = new Pose(105, 59, Math.toRadians(0)).mirror();
+    Pose intakeSecondRow = new Pose(135, 59, Math.toRadians(0)).mirror();
+    Pose nextToThirdRow = new Pose(104, 84, Math.toRadians(0)).mirror();
+    Pose intakeThirdRow = new Pose(130, 84, Math.toRadians(0)).mirror();
+    Pose parkPose = new Pose(106, 74, Math.toRadians(270)).mirror();
 
     public enum DesiredRows{
         ONE,
@@ -175,23 +175,23 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new FollowPath(follower, launchPreload, true, 1),
                 new WaitUntilCommand(() -> !follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase, 2065),
-               // new WaitCommand(1000),
+                // new WaitCommand(1000),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-              //  new SetAllVelocityCommandGroup(robotBase, 0),
+                //  new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(() -> robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, lineUpToThirdRow, true, 1),
                 new WaitUntilCommand(() -> !follower.isBusy()),
                 new FollowPath(follower, intakeThirdRow, true, 1),
                 new WaitUntilCommand(() -> !follower.isBusy()),
-               // new WaitCommand(1000),
+                // new WaitCommand(1000),
                 new SetAllVelocityCommandGroup(robotBase, 2065),
                 new FollowPath(follower, firstTimeGoingToShoot, true, 1),
                 new WaitUntilCommand(() -> !follower.isBusy()),
                 new InstantCommand(() -> robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, 2050),
-              //  new WaitCommand(1000),
+                //  new WaitCommand(1000),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-               // new SetAllVelocityCommandGroup(robotBase, 0),
+                // new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(() -> robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, lineUpToIntakeSecondRow, true, 1),
                 new WaitUntilCommand(() -> !follower.isBusy()),
@@ -202,7 +202,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy()),
                 new InstantCommand(() -> robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, 2065),
-               // new WaitCommand(1000),
+                // new WaitCommand(1000),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new InstantCommand(() -> robotBase.intakeSubsystem.intake(-1)),
@@ -237,7 +237,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 //new LaunchCommandGroup(robotBase),
                 //new WaitUntilCommand(()->topRowDone),
                 //new InstantCommand(()->routePark.schedule())
-                );
+        );
     }
 
     @Override
@@ -263,7 +263,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
     @Override
     public void start() {
-        follower.setStartingPose(new Pose(88, 8, Math.toRadians(90)));
+        follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(route);
         robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF);
         robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.HALF);
@@ -287,7 +287,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
         }
         CommandScheduler.getInstance().run();
         follower.update();
-        telemetry.addData("Rows", desiredRows);
+      telemetry.addData("Rows", desiredRows);
         telemetry.addData("Left", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
         telemetry.addData("Middle", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
         telemetry.addData("Right", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
