@@ -165,9 +165,9 @@ public class ThwompTeleOp extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 2200)));
 
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new SetAllVelocityCommandGroup(robotBase, 1500)
-                ));
+                .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),  new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME)))
+                .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.HOME)))
+                .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
 
         //Custom Triggers for Sorter and such
 
