@@ -72,22 +72,24 @@ public class ThwompTeleOp extends OpMode {
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if(DataStorage.alliance == DecodeEnums.Alliance.BLUE){
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
-            pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
+            /*pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose.mirror())))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
-                    .build();
+                    .build();*/
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading() + Math.toRadians(180))), PedroCoordinates.INSTANCE));
         }
         else{
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
-            pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
+            /*pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose)))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
-                    .build();
+                    .build();*/
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), DataStorage.endPosition.getHeading()), PedroCoordinates.INSTANCE));
         }
 
         timer = new ElapsedTime();
 
-        robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(88, 8, Math.toRadians(90)) /*DataStorage.endPosition*/, PedroCoordinates.INSTANCE));
+
 
         //new InitSorterLightsCommandGroup(robotBase);
 
@@ -96,8 +98,8 @@ public class ThwompTeleOp extends OpMode {
 
         //Main Driver keybinds
 
-        mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
-                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.followPath(pathChain.get())), new InstantCommand(()->automatedDrive = true)));
+        /*mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.followPath(pathChain.get())), new InstantCommand(()->automatedDrive = true)));*/
 
         mainController.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
@@ -106,21 +108,6 @@ public class ThwompTeleOp extends OpMode {
 
         mainController.getGamepadButton(GamepadKeys.Button.BACK)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.resetIMU())));
-
-       /* mainController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new ChangeHeadingLockCommandGroup(robotBase)
-                ));
-
-        mainController.getGamepadButton(GamepadKeys.Button.Y)
-                        .whenPressed(()->CommandScheduler.getInstance().schedule(
-                                new SetAllLaunchVelocityCommandGroup(robotBase, robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)))
-                        ));
-
-        mainController.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new Transfer3BallsNoCameraCommandGroup(robotBase)
-                ));*/
 
         mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(
@@ -140,21 +127,6 @@ public class ThwompTeleOp extends OpMode {
 
         mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchPatternCommandGroup(robotBase)));
-
-        /*mainController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
-
-        mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity = velocity + 10))));
-
-        mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity = velocity - 10))));
-
-        mainController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity = velocity + 100))));
-
-        mainController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity = velocity - 100))));*/
 
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -227,10 +199,10 @@ public class ThwompTeleOp extends OpMode {
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.BLUE))));
 
         new Trigger(()-> timer.seconds() > 129)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(500))));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(1000)), new InstantCommand(()->backupController.gamepad.rumble(1000))));
 
-        new Trigger(()->automatedDrive && mainController.wasJustPressed(GamepadKeys.Button.DPAD_UP) || !follower.isBusy())
-                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));
+        /*new Trigger(()->automatedDrive && mainController.wasJustPressed(GamepadKeys.Button.DPAD_UP) || !follower.isBusy())
+                .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));*/
     }
 
     @Override

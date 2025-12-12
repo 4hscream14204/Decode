@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCo
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
@@ -45,14 +46,14 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
 
     Pose startPose = new Pose(88, 8, Math.toRadians(90));
-    Pose launchPose = new Pose(87, 14, Math.toRadians(68));
+    Pose launchPose = new Pose(87, 14, Math.toRadians(66));
     Pose nextToFirstRow = new Pose(104, 34, Math.toRadians(0));
     Pose intakeFirstRow = new Pose(135, 34, Math.toRadians(0));
     Pose nextToSecondRow = new Pose(105, 59, Math.toRadians(0));
     Pose intakeSecondRow = new Pose(135, 59, Math.toRadians(0));
     Pose nextToThirdRow = new Pose(104, 84, Math.toRadians(0));
     Pose intakeThirdRow = new Pose(130, 84, Math.toRadians(0));
-    Pose parkPose = new Pose(112, 8, Math.toRadians(0));
+    Pose parkPose = new Pose(106, 74, Math.toRadians(270));
 
     public enum DesiredRows{
         ONE,
@@ -62,26 +63,26 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
     @Override
     public void init() {
-
+        DataStorage.alliance = DecodeEnums.Alliance.RED;
         chassis = new GamepadEx(gamepad1);
         timer = new ElapsedTime();
         robotBase = new RobotBase(hardwareMap);
         robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK);
 
         chassis.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.THREE)));
+                .whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> desiredRows = DesiredRows.THREE)));
 
         chassis.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.TWO)));
+                .whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> desiredRows = DesiredRows.TWO)));
 
         chassis.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->desiredRows = DesiredRows.ONE)));
+                .whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> desiredRows = DesiredRows.ONE)));
 
         chassis.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->secondsToWait = secondsToWait + 1000)));
+                .whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> secondsToWait = secondsToWait + 1000)));
 
         chassis.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->secondsToWait = secondsToWait - 1000)));
+                .whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> secondsToWait = secondsToWait - 1000)));
 
         CommandScheduler.getInstance().reset();
         follower = Constants.createFollower(hardwareMap);
@@ -112,7 +113,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
         PathChain lineUpToIntakeSecondRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(launchPose,  nextToSecondRow))
+                        new BezierLine(launchPose, nextToSecondRow))
                 .setLinearHeadingInterpolation(launchPose.getHeading(), nextToSecondRow.getHeading())
                 .build();
 
@@ -153,14 +154,14 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 new FollowPath(follower, lineUpToIntakeSecondRow, true, 1),
                 new FollowPath(follower, intakeMiddleRow, true, 1),
                 new FollowPath(follower, secondTimeGoingToShoot, true, 1),
-                new InstantCommand(()->middleRowDone = true)
+                new InstantCommand(() -> middleRowDone = true)
         );
 
         routeTopRow = new SequentialCommandGroup(
                 new FollowPath(follower, lineUpToIntake, true, 1),
                 new FollowPath(follower, intakeFurthestRow, true, 1),
-                new FollowPath(follower, thirdTimeGoingToShoot,true, 1),
-                new InstantCommand(()->topRowDone = true)
+                new FollowPath(follower, thirdTimeGoingToShoot, true, 1),
+                new InstantCommand(() -> topRowDone = true)
         );
 
         routePark = new SequentialCommandGroup(
@@ -168,38 +169,52 @@ public class SmallLaunchZoneRedRoute extends OpMode {
         );
 
         route = new SequentialCommandGroup(
-                new SetAllVelocityCommandGroup(robotBase, 2150),
+                new TransferResetCommandGroup(robotBase),
+                new SetAllVelocityCommandGroup(robotBase, 2050),
                 new FollowPath(follower, launchPreload, true, 1),
-                new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase,2150),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 2050),
                 new WaitCommand(1000),
-                new SetAllVelocityCommandGroup(robotBase, 0),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+              //  new SetAllVelocityCommandGroup(robotBase, 0),
+                new InstantCommand(() -> robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, lineUpToThirdRow, true, 1),
-                new WaitUntilCommand(()->!follower.isBusy()),
+                new WaitUntilCommand(() -> !follower.isBusy()),
                 new FollowPath(follower, intakeThirdRow, true, 1),
-                new WaitUntilCommand(()->!follower.isBusy()),
-                new SetAllVelocityCommandGroup(robotBase, 2150),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new WaitCommand(1000),
+                new SetAllVelocityCommandGroup(robotBase, 2050),
                 new FollowPath(follower, firstTimeGoingToShoot, true, 1),
-                new WaitUntilCommand(()->!follower.isBusy()),
-                new AutoTransferAndLaunchCommandGroup(robotBase,2150),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new InstantCommand(() -> robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 2050),
+                new WaitCommand(1000),
+               // new SetAllVelocityCommandGroup(robotBase, 0),
+                new InstantCommand(() -> robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower, lineUpToIntakeSecondRow, true, 1),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new FollowPath(follower, intakeMiddleRow, true, 1),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                //new SetAllVelocityCommandGroup(robotBase, 1900),
+                new FollowPath(follower, secondTimeGoingToShoot, true, 1),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new InstantCommand(() -> robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, 2050),
                 new WaitCommand(1000),
                 new SetAllVelocityCommandGroup(robotBase, 0),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower,lineUpToIntakeSecondRow, true,1),
+                new InstantCommand(() -> robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower, lineUpToIntake, true, 1),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new FollowPath(follower, intakeFurthestRow).withTimeout(1500),
+                new FollowPath(follower,park),
+                new InstantCommand(()-> robotBase.intakeSubsystem.intake(1))
+               /*
+               intaking last row and shooting
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower,intakeMiddleRow, true,1),
-                new WaitUntilCommand(()->!follower.isBusy()),
-                //new SetAllVelocityCommandGroup(robotBase, 1900),
-                new FollowPath(follower,secondTimeGoingToShoot,true,1),
+                new FollowPath(follower,thirdTimeGoingToShoot,true,1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchCommandGroup(robotBase,2000),
-                new WaitCommand(1000),
-                new SetAllVelocityCommandGroup(robotBase, 0),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower,lineUpToIntake,true,1),
-                new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower,intakeFurthestRow,true,1)
+                 */
+
                 /*new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(2000)),
                 new FollowPath(follower,thirdTimeGoingToShoot,true,1),
@@ -212,13 +227,13 @@ public class SmallLaunchZoneRedRoute extends OpMode {
                 //new LaunchCommandGroup(robotBase),
                 //new InstantCommand(()->transferPatternCommandGroup.schedule()),
                 //new WaitUntilCommand(()->transferPatternCommandGroup.isFinished()),
-               // new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE),
+                // new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE),
                 //new WaitUntilCommand(()->middleRowDone),
                 //new ConditionalCommand(new InstantCommand(()->routeTopRow.schedule()), new InstantCommand(()->routePark.schedule()), ()->desiredRows == DesiredRows.THREE),
                 //new LaunchCommandGroup(robotBase),
                 //new WaitUntilCommand(()->topRowDone),
                 //new InstantCommand(()->routePark.schedule())
-        );
+                );
     }
 
     @Override
@@ -277,6 +292,7 @@ public class SmallLaunchZoneRedRoute extends OpMode {
 
     @Override
     public void stop() {
+        DataStorage.alliance = DecodeEnums.Alliance.RED;
         robotBase.limelightSubsystem.limelight.stop();
         DataStorage.endPosition = follower.getPose();
     }
