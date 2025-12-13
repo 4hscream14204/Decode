@@ -217,7 +217,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchNoPatternCG(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 //new WaitCommand(3000),
                 //new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, linesUpToIntakeFirstRow, false, 1),
