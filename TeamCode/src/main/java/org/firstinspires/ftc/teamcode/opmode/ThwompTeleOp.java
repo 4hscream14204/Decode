@@ -264,6 +264,8 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Automated drive", automatedDrive);
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
         telemetry.addData("Real Velocity", robotBase.launcherSubsystemLeft.getVelocity());
+        telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
+        telemetry.addData("Staleness", robotBase.limelightSubsystem.limelight.getLatestResult().getStaleness());
         telemetry.update();
     }
 
