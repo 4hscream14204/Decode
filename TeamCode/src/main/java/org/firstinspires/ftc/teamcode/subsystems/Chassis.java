@@ -1,18 +1,12 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
-import java.util.List;
 
 public class Chassis extends SubsystemBase {
 
@@ -26,12 +20,25 @@ public class Chassis extends SubsystemBase {
     double dblBackLeftPower;
     double dblBackRightPower;
     public boolean isFieldCentric;
+    double dblLastStickTime;
+    double dblCurrentTime;
+    double dblDelayTime = 200;
+    double dblTargetHeading;
 
     PIDController headingControl = new PIDController(0.025, 0, 0.001);
 
     double dblXOffset;
     public double dblHeadingOutput;
     public boolean bolSnapToTarget = false;
+    public boolean bolLimelightSteering = true;
+
+    public PIDSteeringMode PIDMode = PIDSteeringMode.OFF;
+    public enum PIDSteeringMode {
+        OFF,
+        GOAL,
+        HOLD
+    }
+    ElapsedTime timer;
 
     public Chassis(DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor, GoBildaPinpointDriver m_pinpoint) {
         frontLeftMotor = m_frontLeftMotor;
@@ -45,9 +52,12 @@ public class Chassis extends SubsystemBase {
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        headingControl.reset();
     }
 
-    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean m_isFieldCentric, double m_TX) {
+    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean m_isFieldCentric, double m_TX, ElapsedTime timer) {
+        dblCurrentTime = timer.milliseconds();
+        dblLastStickTime = timer.milliseconds();
         double dblDenominator;
         double y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY); // Remember, Y stick value is reversed
         double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
@@ -57,15 +67,33 @@ public class Chassis extends SubsystemBase {
         if(isFieldCentric){
             double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
             double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
-            if (m_PIDSteering) {
+
+            if(bolLimelightSteering){
                 dblXOffset = 0 - m_TX;
+            } else {
+                dblXOffset = AngleUnit.normalizeRadians(botHeading - dblTargetHeading);
+            }
+
+            /*if(Math.abs(rx) > 0.01) {
+                dblLastStickTime = dblCurrentTime;
+                rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
+            }*/
+         /*   else if((dblCurrentTime - dblLastStickTime) < dblDelayTime){
+                dblTargetHeading = dblCurrentTime;
+                dblTargetHeading = botHeading;
+            }*/
+            if (m_PIDSteering /*&& !noLimelightSteering*/) {
+                //dblXOffset = 0 - m_TX;
                 dblHeadingOutput = (headingControl.calculate(dblXOffset));
                 rx = dblHeadingOutput;
-                if(m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5){
+                /*if (m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5) {
                     bolSnapToTarget = false;
-                }
-            } else {
-                rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
+                }*/
+            /*} else if (!m_PIDSteering && noLimelightSteering) {
+                dblXOffset = botHeading - dblTargetHeading;
+                dblXOffset = AngleUnit.normalizeRadians(dblXOffset);
+                dblHeadingOutput = (headingControl.calculate(dblXOffset));
+                rx = dblHeadingOutput;*/
             }
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
             dblFrontLeftPower = (rotY + rotX + rx) / denominator;

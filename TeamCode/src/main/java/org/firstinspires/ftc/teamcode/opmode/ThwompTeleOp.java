@@ -3,18 +3,13 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
-import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.PoseConverter;
-import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.HeadingInterpolator;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,23 +19,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.InitSorterLightsCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsNoSortingCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchTwoPurple;
-import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllLaunchVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
-import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.UpdateLightsCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
+import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
@@ -200,6 +191,10 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()-> timer.seconds() > 129)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(1000)), new InstantCommand(()->backupController.gamepad.rumble(1000))));
 
+        /**new Trigger(()-> Math.abs(mainController.getLeftX()) < 0.1 && Math.abs(mainController.getRightX()) < 0.1 && !robotBase.chassisSubsystem.PIDMode.equals(Chassis.PIDSteeringMode.GOAL))
+                .whenActive(()-> robotBase.chassisSubsystem.PIDMode = Chassis.PIDSteeringMode.HOLD)
+                .whenInactive(new Trigger(()->robotBase.chassisSubsystem.PIDMode != Chassis.PIDSteeringMode.GOAL));**/
+
         /*new Trigger(()->automatedDrive && mainController.wasJustPressed(GamepadKeys.Button.DPAD_UP) || !follower.isBusy())
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));*/
     }
@@ -234,7 +229,7 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX(), timer);
         //telemetry.addData("This is new code 7", true);
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
@@ -245,7 +240,8 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
         //telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
         //telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
-        telemetry.addData("Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
+        telemetry.addData("Limelight Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
+        telemetry.addData("Normal Heading Lock", robotBase.chassisSubsystem.bolLimelightSteering);
         //telemetry.addData("Left", robotBase.launcherSubsystemLeft.getVelocity());
         //telemetry.addData("Middle", robotBase.launcherSubsystemMiddle.getVelocity());
         //telemetry.addData("Right", robotBase.launcherSubsystemRight.getVelocity());
