@@ -100,12 +100,12 @@ public class ThwompTeleOp extends OpMode {
         /*mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.followPath(pathChain.get())), new InstantCommand(()->automatedDrive = true)));*/
 
-        mainController.getGamepadButton(GamepadKeys.Button.START)
+        mainController.getGamepadButton(GamepadKeys.Button.OPTIONS)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->isFieldCentric = !isFieldCentric)
                 ));
 
-        mainController.getGamepadButton(GamepadKeys.Button.BACK)
+        mainController.getGamepadButton(GamepadKeys.Button.SHARE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.resetIMU())));
 
         mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
@@ -113,15 +113,15 @@ public class ThwompTeleOp extends OpMode {
                         new ChangeHeadingLockCommandGroup(robotBase)
                 ));
 
-        mainController.getGamepadButton(GamepadKeys.Button.A)
+        mainController.getGamepadButton(GamepadKeys.Button.CROSS)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoSortingCommandGroup(robotBase)));
 
-        mainController.getGamepadButton(GamepadKeys.Button.B)
+        mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOnePurple(robotBase)));
 
-        mainController.getGamepadButton(GamepadKeys.Button.X)
+        mainController.getGamepadButton(GamepadKeys.Button.SQUARE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOneGreen(robotBase)));
-        mainController.getGamepadButton(GamepadKeys.Button.Y)
+        mainController.getGamepadButton(GamepadKeys.Button.TRIANGLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchTwoPurple(robotBase)));
 
         mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
@@ -136,19 +136,19 @@ public class ThwompTeleOp extends OpMode {
 
         //Backup Driver Keybinds
 
-        backupController.getGamepadButton(GamepadKeys.Button.START)
+        backupController.getGamepadButton(GamepadKeys.Button.OPTIONS)
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAlliance(robotBase)));
 
-        backupController.getGamepadButton(GamepadKeys.Button.X)
+        backupController.getGamepadButton(GamepadKeys.Button.SQUARE)
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
 
-        backupController.getGamepadButton(GamepadKeys.Button.A)
+        backupController.getGamepadButton(GamepadKeys.Button.CROSS)
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
 
-        backupController.getGamepadButton(GamepadKeys.Button.B)
+        backupController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
 
-        backupController.getGamepadButton(GamepadKeys.Button.Y)
+        backupController.getGamepadButton(GamepadKeys.Button.TRIANGLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)));
 
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
