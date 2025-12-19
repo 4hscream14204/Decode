@@ -102,7 +102,7 @@ public class Limelight extends SubsystemBase {
         return getTargetZ()/* + m_Offset(((goalAprilTagHeight - limelightHeight) / Math.tan(Math.toRadians(getAngleToGoal()))) + m_Offset)*/;
     }
     public double getHorizontalDistance(Follower follower){ //X
-        if(limelight.getLatestResult().getStaleness() == 0) {
+        if(limelight.getLatestResult().getStaleness() <= 0) {
             return getTargetZ();
         }
         else{
@@ -155,7 +155,7 @@ public class Limelight extends SubsystemBase {
         limelightTZ = distance;
         limelightPiplineType = result.getPipelineType();
         limelightTa = result.getTa();
-
+        getTargetZ();
     }
 
     public void changePipeline(limelightPipelines m_pipline){
