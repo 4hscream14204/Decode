@@ -36,7 +36,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
     Pose parkPose = new Pose(106, 74, Math.toRadians(270));
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
-    Pose launchPose = new Pose(86, 90, Math.toRadians(47));
+    Pose launchPose = new Pose(86, 90, Math.toRadians(50));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
     Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
