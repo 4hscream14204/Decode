@@ -229,7 +229,7 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX(), timer);
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         //telemetry.addData("This is new code 7", true);
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
@@ -241,7 +241,6 @@ public class ThwompTeleOp extends OpMode {
         //telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
         //telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
         telemetry.addData("Limelight Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
-        telemetry.addData("Normal Heading Lock", robotBase.chassisSubsystem.bolLimelightSteering);
         //telemetry.addData("Left", robotBase.launcherSubsystemLeft.getVelocity());
         //telemetry.addData("Middle", robotBase.launcherSubsystemMiddle.getVelocity());
         //telemetry.addData("Right", robotBase.launcherSubsystemRight.getVelocity());

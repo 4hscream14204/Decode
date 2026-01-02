@@ -4,18 +4,30 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.seattlesolvers.solverslib.util.InterpLUT;
 
 public class Launcher extends SubsystemBase {
     public DcMotorEx launcherMotor;
     public final double dblLaunchWheelRadius = 1.375;
     public final double launchVar1 = 2.2787;
     public final double launchVar2 = 1770.4;
+    private InterpLUT launcherLUT;
 
     public Launcher(DcMotorEx m_Launcher){
         launcherMotor = m_Launcher;
         launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launcherMotor.setVelocityPIDFCoefficients(9, 0.8, 0, 0.7);
+        launcherLUT = new InterpLUT();
+        launcherLUT.add(128, 1730);
+        launcherLUT.add(168, 1770);
+        launcherLUT.add(188, 1780);
+        launcherLUT.add(208, 1800);
+        launcherLUT.add(248, 1820);
+        launcherLUT.add(248, 1820);
+        launcherLUT.add(280, 1940);
+        launcherLUT.add(326, 2090);
+        launcherLUT.createLUT();
     }
 
     public void setPower(double power){
@@ -46,7 +58,7 @@ public class Launcher extends SubsystemBase {
     }
 
     public double getLaunchVelocity(double m_Distance){
-        return ((0.0098*(Math.pow(m_Distance, 2))) - (2.7572 * m_Distance) + 2088.2/*1938.2*/);
+        return launcherLUT.get(m_Distance);
     }
 
     public boolean isAtSpeed(double velocity){
