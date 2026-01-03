@@ -16,11 +16,13 @@ import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeBlocker;
 import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
+import org.firstinspires.ftc.teamcode.subsystems.Tilt;
 
 public class RobotBase {
 
@@ -39,6 +41,10 @@ public class RobotBase {
         public Intake intakeSubsystem;
         public CameraLight cameraLightSubsystemLeft;
         public CameraLight cameraLightSubsystemRight;
+        public Tilt tiltSubsystem;
+        public IntakeBlocker intakeBlockerSubsystem;
+        public Hood hoodSubsystem;
+
 
         public RobotBase(HardwareMap hwMap) {
             intakeSubsystem = new Intake(hwMap.dcMotor.get("intake_motor"));
@@ -61,6 +67,11 @@ public class RobotBase {
            cameraLightSubsystemRight = new CameraLight(hwMap.servo.get("cameraLightRight"));
            sorterCameraSubsystem = new SorterCamera(hwMap.get(WebcamName.class, "SorterCamera"));
             launcherSubsystemLeft.launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            tiltSubsystem= new Tilt(hwMap.servo.get("TiltServo"));
+            intakeBlockerSubsystem= new IntakeBlocker(hwMap.servo.get("IntakeBlockerServo"));
+            hoodSubsystem = new Hood(hwMap.servo.get("hoodServo"));
+
+
 
         }
 }
