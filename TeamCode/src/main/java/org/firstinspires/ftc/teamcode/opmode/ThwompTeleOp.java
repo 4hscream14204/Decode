@@ -21,10 +21,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.skeletonarmy.marrow.zones.Point;
+import com.skeletonarmy.marrow.zones.PolygonZone;
 
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicLaunchVelCommand;
 import org.firstinspires.ftc.teamcode.commandgroups.general.InitSorterLightsCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsNoSortingCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
@@ -60,6 +63,9 @@ public class ThwompTeleOp extends OpMode {
     Supplier<PathChain> pathChain;
     Pose gatePose = new Pose(126, 73, Math.toRadians(0));
     boolean automatedDrive;
+    private final PolygonZone robotZone = new PolygonZone(18, 18);
+    private final PolygonZone closeLaunchZone = new PolygonZone(new Point(144, 144), new Point(72, 72), new Point(0, 144));
+    private final PolygonZone farLaunchZone = new PolygonZone(new Point(48, 0), new Point(72, 24), new Point(96, 0));
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -76,7 +82,7 @@ public class ThwompTeleOp extends OpMode {
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose.mirror())))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
                     .build();*/
-            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading() + Math.toRadians(180))), PedroCoordinates.INSTANCE));
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(88/*DataStorage.endPosition.getX()*/, 8/*DataStorage.endPosition.getY()*/, (DataStorage.endPosition.getHeading() + Math.toRadians(180))), PedroCoordinates.INSTANCE));
         }
         else{
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
@@ -115,7 +121,7 @@ public class ThwompTeleOp extends OpMode {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoSortingCommandGroup(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoSortingCommandGroup(robotBase, robotZone, closeLaunchZone, farLaunchZone)));
 
         mainController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOnePurple(robotBase)));
@@ -217,7 +223,7 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        follower.setStartingPose(DataStorage.endPosition);
+        follower.setStartingPose(new Pose(88, 8, 0)/*DataStorage.endPosition*/);
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
     }
@@ -225,6 +231,7 @@ public class ThwompTeleOp extends OpMode {
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
+        CommandScheduler.getInstance().schedule(new DynamicLaunchVelCommand(robotBase, follower));
         follower.update();
         mainController.readButtons();
         backupController.readButtons();
@@ -237,6 +244,8 @@ public class ThwompTeleOp extends OpMode {
         //new UpdateLightsCommandGroup(robotBase);
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         //telemetry.addData("This is new code 7", true);
+        robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
+        robotZone.setRotation(follower.getPose().getHeading());
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
@@ -262,9 +271,12 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Time", timer.seconds());
         telemetry.addData("Limelight Z", robotBase.limelightSubsystem.getTargetZ());
         //telemetry.addData("Follower Pose", follower.getPose());
-        telemetry.addData("Automated drive", automatedDrive);
-        telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
-        telemetry.addData("Real Velocity", robotBase.launcherSubsystemLeft.getVelocity());
+        telemetry.addData("X: ", follower.getPose().getX());
+        telemetry.addData("Y: ", follower.getPose().getX());
+        telemetry.addData("Large Zone Partial", robotZone.isInside(closeLaunchZone));
+        telemetry.addData("Large Zone Fully", robotZone.isFullyInside(closeLaunchZone));
+        telemetry.addData("Small Zone Partial", robotZone.isInside(farLaunchZone));
+        telemetry.addData("Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.update();
     }
 
