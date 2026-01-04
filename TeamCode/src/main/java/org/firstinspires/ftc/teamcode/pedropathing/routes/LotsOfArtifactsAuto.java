@@ -37,6 +37,7 @@ public class LotsOfArtifactsAuto extends OpMode {
     PathChain intakeMiddleRowPath;
     PathChain middleRowToLaunch;
     PathChain launchMiddleToIntake;
+    PathChain intakeFromGateToLaunch;
 
     SequentialCommandGroup route;
     @Override
