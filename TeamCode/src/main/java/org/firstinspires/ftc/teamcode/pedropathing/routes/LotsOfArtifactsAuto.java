@@ -5,10 +5,8 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -27,15 +25,18 @@ public class LotsOfArtifactsAuto extends OpMode {
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
     Pose beginLaunch = new Pose(95, 92, Math.toRadians(47));
     Pose launchPose = new Pose(82, 78, Math.toRadians(47));
-    Pose launchAftPreloadPose = new Pose(88, 85, Math.toRadians(45));
+    Pose launchAftPreloadPose = new Pose(85, 85, Math.toRadians(45));
     Pose intakeMiddleLineUp = new Pose(98, 60, Math.toRadians(0));
     Pose intakeMiddleRow = new Pose(130, 60, Math.toRadians(0));
+    Pose intakeArtifactsFromGate = new Pose(129, 61, Math.toRadians(34.59));
+    Pose launchAftIntakeFromGate = new Pose(85,85,Math.toRadians(45));
 
     PathChain startPath;
     PathChain launchPath;
     PathChain intakeMiddleRowPathLineUp;
     PathChain intakeMiddleRowPath;
     PathChain middleRowToLaunch;
+    PathChain launchMiddleToIntake;
 
     SequentialCommandGroup route;
     @Override
@@ -73,6 +74,16 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .addPath(new BezierLine(intakeMiddleRow, launchAftPreloadPose))
                 .setLinearHeadingInterpolation(intakeMiddleRow.getHeading(), launchAftPreloadPose.getHeading())
                 .build();
+        launchMiddleToIntake = follower.pathBuilder()
+                .addPath(new BezierLine(launchAftPreloadPose, intakeArtifactsFromGate))
+                .setConstantHeadingInterpolation(intakeArtifactsFromGate.getHeading())
+                .build();
+        intakeFromGateToLaunch = follower.pathBuilder()
+                .addPath(new BezierLine(intakeArtifactsFromGate,launchAftIntakeFromGate))
+                .setLinearHeadingInterpolation(intakeArtifactsFromGate.getHeading(),launchAftIntakeFromGate.getHeading())
+                .build();
+
+
 
         route = new SequentialCommandGroup(
                 new FollowPath(follower, startPath, true, 1),
@@ -84,10 +95,13 @@ public class LotsOfArtifactsAuto extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, intakeMiddleRowPath, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower, middleRowToLaunch, true, 1),
+                new FollowPath(follower, middleRowToLaunch, false, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new WaitCommand(500),
-                new Transfer3BallsNoCameraCommandGroup(robotBase)
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPath(follower, launchMiddleToIntake,false,1)
         );
     }
 
@@ -111,6 +125,9 @@ public class LotsOfArtifactsAuto extends OpMode {
         robotBase.launcherSubsystemRight.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower));
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Limelight Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
+        telemetry.addData("X", follower.getPose().getX());
+        telemetry.addData("Y: ", follower.getPose().getY());
+        telemetry.addData("Heading: ", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.update();
     }
 }
