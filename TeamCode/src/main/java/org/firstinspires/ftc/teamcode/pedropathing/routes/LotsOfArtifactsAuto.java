@@ -74,6 +74,9 @@ public class LotsOfArtifactsAuto extends OpMode {
         middleRowToLaunch = follower.pathBuilder()
                 .addPath(new BezierLine(intakeMiddleRow, launchAftPreloadPose))
                 .setLinearHeadingInterpolation(intakeMiddleRow.getHeading(), launchAftPreloadPose.getHeading())
+                .addParametricCallback(1, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(1, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(1, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .build();
         launchMiddleToIntake = follower.pathBuilder()
                 .addPath(new BezierLine(launchAftPreloadPose, intakeArtifactsFromGate))
@@ -82,6 +85,9 @@ public class LotsOfArtifactsAuto extends OpMode {
         intakeFromGateToLaunch = follower.pathBuilder()
                 .addPath(new BezierLine(intakeArtifactsFromGate,launchAftIntakeFromGate))
                 .setLinearHeadingInterpolation(intakeArtifactsFromGate.getHeading(),launchAftIntakeFromGate.getHeading())
+                .addParametricCallback(1, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(1, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(1, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .build();
 
 
@@ -89,20 +95,22 @@ public class LotsOfArtifactsAuto extends OpMode {
         route = new SequentialCommandGroup(
                 new FollowPath(follower, startPath, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new WaitCommand(1000),
+                new WaitCommand(250),
                 new FollowPath(follower, launchPath, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, intakeMiddleRowPathLineUp, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPath(follower, intakeMiddleRowPath, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower, middleRowToLaunch, false, 1),
+                new FollowPath(follower, middleRowToLaunch, true, 1),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new WaitCommand(500),
                 new WaitUntilCommand(()->!follower.isBusy()),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower, launchMiddleToIntake,false,1)
+                new FollowPath(follower, launchMiddleToIntake,true,1).withTimeout(5000),
+                new FollowPath(follower, intakeFromGateToLaunch, true, 1),
+                new FollowPath(follower, launchMiddleToIntake, true, 1)
         );
     }
 

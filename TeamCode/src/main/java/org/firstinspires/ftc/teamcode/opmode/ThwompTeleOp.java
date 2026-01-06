@@ -62,6 +62,8 @@ public class ThwompTeleOp extends OpMode {
     double velocity;
     Supplier<PathChain> pathChain;
     Pose gatePose = new Pose(126, 73, Math.toRadians(0));
+    Pose goalPose;
+    double distance;
     boolean automatedDrive;
     private final PolygonZone robotZone = new PolygonZone(18, 18);
     private final PolygonZone closeLaunchZone = new PolygonZone(new Point(144, 144), new Point(72, 72), new Point(0, 144));
@@ -90,7 +92,7 @@ public class ThwompTeleOp extends OpMode {
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose)))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
                     .build();*/
-            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), DataStorage.endPosition.getHeading()), PedroCoordinates.INSTANCE));
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(88/*DataStorage.endPosition.getX()*/, 8/*DataStorage.endPosition.getY()*/, 0/*DataStorage.endPosition.getHeading()*/), PedroCoordinates.INSTANCE));
         }
 
         timer = new ElapsedTime();
@@ -121,7 +123,7 @@ public class ThwompTeleOp extends OpMode {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoSortingCommandGroup(robotBase, robotZone, closeLaunchZone, farLaunchZone)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)));
 
         mainController.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOnePurple(robotBase)));
@@ -224,6 +226,7 @@ public class ThwompTeleOp extends OpMode {
     @Override
     public void start(){
         follower.setStartingPose(new Pose(88, 8, 0)/*DataStorage.endPosition*/);
+        goalPose = new Pose(127.7, 131.7);
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
     }
@@ -236,14 +239,21 @@ public class ThwompTeleOp extends OpMode {
         mainController.readButtons();
         backupController.readButtons();
         robotBase.sorterCameraSubsystem.getAnalysis();
-        robotBase.chassisSubsystem.pinpoint.update();
+        //robotBase.chassisSubsystem.pinpoint.update();
         robotBase.limelightSubsystem.updateLimelight();
+        /*if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+            goalPose = new Pose(127.7, 131.7);
+            distance = follower.getPose().distanceFrom(goalPose);
+        }
+        else{
+            goalPose = new Pose(127.7, 131.7).mirror();
+            distance = follower.getPose().distanceFrom(goalPose);
+        }*/
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
-        //telemetry.addData("This is new code 7", true);
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getPose().getHeading());
         telemetry.addData("Alliance", DataStorage.alliance);
@@ -277,6 +287,7 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Large Zone Fully", robotZone.isFullyInside(closeLaunchZone));
         telemetry.addData("Small Zone Partial", robotZone.isInside(farLaunchZone));
         telemetry.addData("Velocity", robotBase.launcherSubsystemLeft.getVelocity());
+        telemetry.addData("Distance", follower.getPose().distanceFrom(goalPose) * 2.54);
         telemetry.update();
     }
 
