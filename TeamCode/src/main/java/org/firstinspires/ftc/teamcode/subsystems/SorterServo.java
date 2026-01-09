@@ -6,12 +6,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class SorterServo extends SubsystemBase {
     public Servo sorterServo;
     public enum ServoPosition {
-        LAUNCH(0.222),
-        HOME(0.027),
-        PRELOAD(0.1388),
-        TEST1(0),
-        TEST2(0.5),
-        TEST3(1);
+        LAUNCH(0.88),
+        HOME(1),
+        PRELOAD(0.1388);
         public final double position;
 
         ServoPosition(double high) {

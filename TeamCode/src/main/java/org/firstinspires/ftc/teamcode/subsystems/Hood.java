@@ -4,17 +4,36 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Hood extends SubsystemBase {
-    Servo hoodServo;
+    Servo hoodServoL;
+    Servo hoodServoR;
     double rangeOfMotion = 300;
-    public Hood(Servo m_hoodServo){
-        hoodServo = m_hoodServo;
+
+    public enum HoodPosition{
+        MAX(0.33),
+        MIN(1);
+        public final double value;
+        HoodPosition(double m_val){
+            this.value = m_val;
+        }
+    }
+
+    public Hood(Servo m_hoodServo, Servo m_hoodServoR){
+        hoodServoL = m_hoodServo;
+        hoodServoR = m_hoodServoR;
     }
 
     public void setPosition(double position){
-        hoodServo.setPosition(position);
+        hoodServoL.setPosition(position);
+        hoodServoR.setPosition(position);
+    }
+
+    public void setPosition(HoodPosition position){
+        hoodServoL.setPosition(position.value);
+        hoodServoR.setPosition(position.value);
     }
 
     public void autoSetPosition(double angle){
-        hoodServo.setPosition(angle/rangeOfMotion);
+        hoodServoL.setPosition(angle/rangeOfMotion);
+        hoodServoR.setPosition(angle/rangeOfMotion);
     }
 }

@@ -26,6 +26,8 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommand
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchTwoPurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
+import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleIntakeBlockerCG;
+import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleTiltCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
@@ -142,10 +144,10 @@ public class ThwompTeleOp extends OpMode {
         backupController.getGamepadButton(GamepadKeys.Button.TRIANGLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)));
 
-        backupController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+        /*backupController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
                         new SetAllVelocityCommandGroup(robotBase, 750)
-                ));
+                ));*/
 
         backupController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 1950)));
@@ -158,6 +160,12 @@ public class ThwompTeleOp extends OpMode {
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),  new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME)))
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.HOME)))
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
+
+        backupController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleIntakeBlockerCG(robotBase)));
+
+        backupController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTiltCommandGroup(robotBase)));
 
         //Custom Triggers for Sorter and such
 
@@ -212,6 +220,7 @@ public class ThwompTeleOp extends OpMode {
     @Override
     public void start(){
         follower.setStartingPose(DataStorage.endPosition);
+        robotBase.hoodSubsystem.setPosition(0.75);
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
     }

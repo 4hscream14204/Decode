@@ -4,16 +4,37 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class Tilt extends SubsystemBase {
-    Servo TiltServo;
+    Servo TiltServoL;
+    Servo tiltServoR;
+    public Position tiltPositionL;
+    public Position tiltPositionR;
 
     public enum Position {
-        ACTIVE(0),
-        INACTIVE(0);
+        LEFTACTIVE(0.753),
+        LEFTINACTIVE(1),
+        RIGHTACTIVE(0.227),
+        RIGHTINACTIVE(0);
         public final double value;
         Position(double m_val){this.value = m_val;}
     }
-    public Tilt(Servo m_tiltServo) {TiltServo = m_tiltServo;}
+    public Tilt(Servo m_tiltServoL, Servo m_tiltServoR) {
+        TiltServoL = m_tiltServoL;
+        tiltServoR = m_tiltServoR;
+    }
 
-    public void setPosition(double position) {TiltServo.setPosition(position);}
+    public void setPosition(Position positionL, Position positionR) {
+        tiltPositionL = positionL;
+        tiltPositionR = positionR;
+        TiltServoL.setPosition(positionL.value);
+        tiltServoR.setPosition(positionR.value);
+    }
+
+    public Position getPositionL(){
+        return tiltPositionL;
+    }
+
+    public Position getPositionR(){
+        return tiltPositionR;
+    }
 
 }

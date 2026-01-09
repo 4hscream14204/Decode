@@ -63,13 +63,13 @@ public class RobotBase {
            RGBLightRightSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightRightServo"));
            RGBLightMiddleSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightMiddleServo"));
            RGBLightLeftSubsystem = new RGBLightSubsystem(hwMap.servo.get("RGBLightLeftServo"));
-           cameraLightSubsystemLeft = new CameraLight(hwMap.servo.get("cameraLightLeft"));
+           cameraLightSubsystemLeft = new CameraLight(hwMap.servo.get("cameraLight"));
            cameraLightSubsystemRight = new CameraLight(hwMap.servo.get("cameraLightRight"));
            sorterCameraSubsystem = new SorterCamera(hwMap.get(WebcamName.class, "SorterCamera"));
             launcherSubsystemLeft.launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            tiltSubsystem= new Tilt(hwMap.servo.get("TiltServo"));
+            tiltSubsystem= new Tilt(hwMap.servo.get("TiltServoL"), hwMap.servo.get("tiltServoR"));
             intakeBlockerSubsystem= new IntakeBlocker(hwMap.servo.get("IntakeBlockerServo"));
-            hoodSubsystem = new Hood(hwMap.servo.get("hoodServo"));
+            hoodSubsystem = new Hood(hwMap.servo.get("hoodServoL"), hwMap.servo.get("hoodServoR"));
 
 
 
