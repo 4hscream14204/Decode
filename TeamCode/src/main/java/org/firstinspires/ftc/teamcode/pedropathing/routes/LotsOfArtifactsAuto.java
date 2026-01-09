@@ -39,6 +39,7 @@ public class LotsOfArtifactsAuto extends OpMode {
     Pose facingGoalPoint = new Pose(132, 136/*133.5, 139*/);
     Pose topRowLineUp = new Pose(99, 83.5, Math.toRadians(0));
     Pose intakeTopRow = new Pose(124, 83.57);
+    Pose park = new Pose(118.83,60.74,Math.toRadians(36.86));
 
     PathChain startPath;
     PathChain launchPath;
@@ -49,6 +50,7 @@ public class LotsOfArtifactsAuto extends OpMode {
     PathChain intakeFromGateToLaunch;
     PathChain intakeTopRowPath;
     PathChain launchTopRow;
+    PathChain parking;
 
     SequentialCommandGroup route;
     @Override
@@ -133,6 +135,10 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .addParametricCallback(0.85, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .build();
+        parking = follower.pathBuilder()
+                .addPath(new BezierLine(launchAftIntakeFromGate,park))
+                .setConstantHeadingInterpolation(park.getHeading())
+                .build();
 
         route = new SequentialCommandGroup(
                 new FollowPathCommand(follower, startPath, false, 1),
@@ -158,7 +164,10 @@ public class LotsOfArtifactsAuto extends OpMode {
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
                 new FollowPathCommand(follower, intakeTopRowPath, true, 1),
-                new FollowPathCommand(follower, launchTopRow, true, 1)
+                new FollowPathCommand(follower, launchTopRow, true, 1),
+                new WaitCommand(700),
+                new FollowPathCommand(follower,parking,false,1),
+                new TransferResetCommandGroup(robotBase)
         );
         new Trigger(()->follower.getCurrentPathChain() == startPath)
                 .whileActiveContinuous(new SetAllLaunchVelocityCommandGroup(robotBase, robotBase.limelightSubsystem.getHorizontalDistance(follower)));
