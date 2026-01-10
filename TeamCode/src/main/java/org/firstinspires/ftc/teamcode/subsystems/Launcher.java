@@ -19,14 +19,13 @@ public class Launcher extends SubsystemBase {
         launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         launcherMotor.setVelocityPIDFCoefficients(9, 0.8, 0, 0.7);
         launcherLUT = new InterpLUT();
-        launcherLUT.add(128, 1730);
-        launcherLUT.add(168, 1770);
-        launcherLUT.add(188, 1780);
-        launcherLUT.add(208, 1800);
-        launcherLUT.add(248, 1820);
-        launcherLUT.add(248, 1820);
-        launcherLUT.add(280, 1940);
-        launcherLUT.add(326, 2090);
+        launcherLUT.add(121, 1700);
+        launcherLUT.add(131, 1730);
+        launcherLUT.add(141, 1750);
+        launcherLUT.add(151, 1790);
+        launcherLUT.add(161, 1810);
+        launcherLUT.add(171, 1840);
+        launcherLUT.add(181, 1880);
         launcherLUT.createLUT();
     }
 
@@ -58,11 +57,11 @@ public class Launcher extends SubsystemBase {
     }
 
     public double getLaunchVelocity(double m_Distance){
-        return launcherLUT.get(m_Distance);
+        return ((0.0071*(Math.pow(m_Distance, 2))) + (0.7714 * m_Distance) + 1503.5);
     }
 
     public boolean isAtSpeed(double velocity){
-        if(Math.abs((getVelocity() - velocity)) == 20){
+        if(Math.abs((getVelocity() - velocity)) <= 30){
             return true;
         }
         else{

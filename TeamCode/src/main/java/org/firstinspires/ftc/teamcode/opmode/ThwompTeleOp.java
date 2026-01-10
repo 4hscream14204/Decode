@@ -28,12 +28,15 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityComman
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleIntakeBlockerCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleTiltCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
+import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
@@ -48,7 +51,7 @@ public class ThwompTeleOp extends OpMode {
     boolean isFieldCentric = true;
     ElapsedTime timer;
     Follower follower;
-    double velocity;
+    double velocity = 1500;
     Supplier<PathChain> pathChain;
     Pose gatePose = new Pose(126, 73, Math.toRadians(0));
     boolean automatedDrive;
@@ -79,6 +82,8 @@ public class ThwompTeleOp extends OpMode {
             robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), DataStorage.endPosition.getHeading()), PedroCoordinates.INSTANCE));
         }
 
+        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.TESTLEFT);
+
         timer = new ElapsedTime();
 
 
@@ -107,7 +112,7 @@ public class ThwompTeleOp extends OpMode {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.CROSS)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoSortingCommandGroup(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)/*Launch3ArtifactsNoSortingCommandGroup(robotBase)*/));
 
         mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOnePurple(robotBase)));
@@ -126,6 +131,21 @@ public class ThwompTeleOp extends OpMode {
                         new InstantCommand(()->robotBase.intakeSubsystem.intake(mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)))))
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeSubsystem.intake(0))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity += 20))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity -= 20))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.PS)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTiltCommandGroup(robotBase)));
 
         //Backup Driver Keybinds
 
@@ -163,9 +183,6 @@ public class ThwompTeleOp extends OpMode {
 
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleIntakeBlockerCG(robotBase)));
-
-        backupController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTiltCommandGroup(robotBase)));
 
         //Custom Triggers for Sorter and such
 
@@ -220,7 +237,7 @@ public class ThwompTeleOp extends OpMode {
     @Override
     public void start(){
         follower.setStartingPose(DataStorage.endPosition);
-        robotBase.hoodSubsystem.setPosition(0.75);
+        //robotBase.hoodSubsystem.setPosition(0.75);
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
     }
@@ -269,7 +286,7 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
         telemetry.addData("Real Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
-        telemetry.addData("Staleness", robotBase.limelightSubsystem.limelight.getLatestResult().getStaleness());
+        telemetry.addData("Velocity", velocity);
         telemetry.update();
     }
 

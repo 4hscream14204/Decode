@@ -53,7 +53,7 @@ public class SorterSubsystemTest extends OpMode {
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->DataStorage.pattern = DecodeEnums.Patterns.PPG)));
 
         chassis.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->sorterServoLeft.setPosition(SorterServo.ServoPosition.TEST1)), new InstantCommand(()->sorterServoMiddle.setPosition(SorterServo.ServoPosition.TEST1)), new InstantCommand(()->sorterServoRight.setPosition(SorterServo.ServoPosition.TEST1))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->sorterServoLeft.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->sorterServoMiddle.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->sorterServoRight.setPosition(SorterServo.ServoPosition.LAUNCH))));
 
     }
 
