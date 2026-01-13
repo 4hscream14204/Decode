@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.pedropathing.geometry.Pose;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -108,6 +109,10 @@ public class Limelight extends SubsystemBase {
         else{
             return Math.sqrt(Math.pow(((127.7-follower.getPose().getX()) * 2.54), 2) + Math.pow(((131.7-follower.getPose().getY()) * 2.54), 2));
         }
+    }
+
+    public double getHorizontalDistance(Follower follower, Pose goalPose){
+        return Math.sqrt(Math.pow(((goalPose.getX()-follower.getPose().getX()) * 2.54), 2) + Math.pow(((goalPose.getY()-follower.getPose().getY()) * 2.54), 2));
     }
 
     public double getVerticalDistance(double m_Offset){ //Y
