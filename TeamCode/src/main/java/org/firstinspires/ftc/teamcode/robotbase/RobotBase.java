@@ -68,7 +68,7 @@ public class RobotBase {
             launcherSubsystemLeft.launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             launcherSubsystemMiddle.launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             tiltSubsystem= new Tilt(hwMap.servo.get("TiltServoL"), hwMap.servo.get("tiltServoR"));
-            intakeBlockerSubsystem= new IntakeBlocker(hwMap.servo.get("IntakeBlockerServo"));
+            //intakeBlockerSubsystem= new IntakeBlocker(hwMap.servo.get("IntakeBlockerServo"));
             hoodSubsystem = new Hood(hwMap.servo.get("hoodServoL"), hwMap.servo.get("hoodServoR"));
 
 

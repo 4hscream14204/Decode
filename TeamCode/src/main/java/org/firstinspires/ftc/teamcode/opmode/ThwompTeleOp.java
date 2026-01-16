@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 
+import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -32,8 +33,11 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleTiltCommandGro
 import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
+import org.firstinspires.ftc.teamcode.robotbase.Color;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
+import org.firstinspires.ftc.teamcode.robotbase.GoBildaPrismDriver;
+import org.firstinspires.ftc.teamcode.robotbase.PrismAnimations;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
@@ -58,11 +62,15 @@ public class ThwompTeleOp extends OpMode {
     Pose redGoalPose = new Pose(132, 137);
     Pose blueGoalPose = new Pose(132, 137).mirror();
     boolean automatedDrive;
+    Servo prism;
+    PrismAnimations.Rainbow rainbow;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
+        prism = hardwareMap.get(Servo.class, "prism");
+        CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225)));
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -115,7 +123,7 @@ public class ThwompTeleOp extends OpMode {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.CROSS)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)/*Launch3ArtifactsNoSortingCommandGroup(robotBase)*/));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoSortingCommandGroup(robotBase)));
 
         mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOnePurple(robotBase)));
@@ -183,9 +191,6 @@ public class ThwompTeleOp extends OpMode {
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)),  new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME)))
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.HOME)))
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
-
-        backupController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleIntakeBlockerCG(robotBase)));
 
         //Custom Triggers for Sorter and such
 
