@@ -123,7 +123,7 @@ public class ThwompTeleOp extends OpMode {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.CROSS)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsNoSortingCommandGroup(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)/*new Launch3ArtifactsNoSortingCommandGroup(robotBase)*/));
 
         mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOnePurple(robotBase)));
@@ -244,7 +244,7 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        follower.setStartingPose(DataStorage.endPosition);
+        follower.setStartingPose(new Pose(88, 8, Math.toRadians(0))/*DataStorage.endPosition*/);
         //robotBase.hoodSubsystem.setPosition(0.75);
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
@@ -259,7 +259,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.update();
         robotBase.limelightSubsystem.updateLimelight();
-        //CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower, redGoalPose, blueGoalPose));
+        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower, redGoalPose, blueGoalPose));
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
@@ -294,7 +294,7 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Automated drive", automatedDrive);
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
         telemetry.addData("Real Velocity", robotBase.launcherSubsystemLeft.getVelocity());
-        telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
+        telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose));
         telemetry.addData("Velocity", velocity);
         telemetry.update();
     }
