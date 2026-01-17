@@ -93,8 +93,6 @@ public class ThwompTeleOp extends OpMode {
             robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), DataStorage.endPosition.getHeading()), PedroCoordinates.INSTANCE));
         }
 
-        robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.TESTLEFT);
-
         timer = new ElapsedTime();
 
 
@@ -282,20 +280,20 @@ public class ThwompTeleOp extends OpMode {
         //telemetry.addData("Target Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
         //telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
         //telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());
-        /*telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
+        telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
         telemetry.addData("Hue M", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.MIDDLE));
         telemetry.addData("Hue R", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.RIGHT));
         telemetry.addData("Sat L", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.LEFT));
         telemetry.addData("Sat M", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.MIDDLE));
-        telemetry.addData("Sat R", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.RIGHT));*/
+        telemetry.addData("Sat R", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.RIGHT));
         telemetry.addData("Time", timer.seconds());
         telemetry.addData("Limelight Z", robotBase.limelightSubsystem.getTargetZ());
         //telemetry.addData("Follower Pose", follower.getPose());
-        telemetry.addData("Automated drive", automatedDrive);
+        /*telemetry.addData("Automated drive", automatedDrive);
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
         telemetry.addData("Real Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose));
-        telemetry.addData("Velocity", velocity);
+        telemetry.addData("Velocity", velocity);*/
         telemetry.update();
     }
 

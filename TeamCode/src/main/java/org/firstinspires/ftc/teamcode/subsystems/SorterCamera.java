@@ -23,6 +23,7 @@ public class SorterCamera extends SubsystemBase {
     public boolean isMiddleAndLeftPurple = false;
     public boolean isRightAndLeftPurple = false;
     public boolean isMiddleAndRightPurple = false;
+    public int intMinSaturation = 20;
 
     public enum Colors{
         GREENHIGH (109),
@@ -42,7 +43,7 @@ public class SorterCamera extends SubsystemBase {
     public SorterCamera(WebcamName m_webcam){
         webcam = m_webcam;
         colorSensor = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.15, 0.1, 0.3, -0.3))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0, 0.3, -0.4))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -51,7 +52,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorLeft = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-.85, 0.1, -0.4, -0.3))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-.65, -0.05, -0.6, -0.25))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -60,7 +61,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorRight = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(0.4, 0.1, 0.9, -0.3))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(0.85, -0.05, 0.9, -0.25))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -109,13 +110,13 @@ public class SorterCamera extends SubsystemBase {
 
     public PredominantColorProcessor.Swatch getColor(ArtifactSlot m_slot){
 
-        //if(getSaturation(m_slot) > 140) {
+        if(getSaturation(m_slot) > intMinSaturation) {
             if ((getHue(m_slot) > Colors.GREENLOW.value) && (getHue(m_slot) < Colors.GREENHIGH.value)) {
                 return PredominantColorProcessor.Swatch.ARTIFACT_GREEN;
             } else if ((getHue(m_slot) > Colors.PURPLELOW.value) && (getHue(m_slot) < Colors.PURPLEHIGH.value)) {
                 return PredominantColorProcessor.Swatch.ARTIFACT_PURPLE;
             }
-        //}
+        }
 
         return PredominantColorProcessor.Swatch.BLACK;
     }
