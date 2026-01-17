@@ -3,18 +3,13 @@ package org.firstinspires.ftc.teamcode.opmode;
 
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
-import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.PoseConverter;
-import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.HeadingInterpolator;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -26,24 +21,18 @@ import com.skeletonarmy.marrow.zones.PolygonZone;
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicLaunchVelCommand;
-import org.firstinspires.ftc.teamcode.commandgroups.general.InitSorterLightsCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsNoSortingCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchTwoPurple;
-import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllLaunchVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.UpdateLightsCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
@@ -83,7 +72,7 @@ public class ThwompTeleOp extends OpMode {
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose.mirror())))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
                     .build();*/
-            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(88/*DataStorage.endPosition.getX()*/, 8/*DataStorage.endPosition.getY()*/, (DataStorage.endPosition.getHeading() + Math.toRadians(180))), PedroCoordinates.INSTANCE));
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading() + Math.toRadians(90))), PedroCoordinates.INSTANCE));
         }
         else{
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
@@ -224,8 +213,8 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        follower.setStartingPose(new Pose(88, 8, 0)/*DataStorage.endPosition*/);
-        goalPose = new Pose(127.7, 131.7);
+        follower.setStartingPose(/*new Pose(88, 8, Math.toRadians(180))*/new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading() + Math.toRadians(90))));
+        goalPose = new Pose(127.7, 131.7).mirror();
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
     }
@@ -233,8 +222,8 @@ public class ThwompTeleOp extends OpMode {
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
-        CommandScheduler.getInstance().schedule(new DynamicLaunchVelCommand(robotBase, follower));
         follower.update();
+        //CommandScheduler.getInstance().schedule(new DynamicLaunchVelCommand(robotBase, follower));
         mainController.readButtons();
         backupController.readButtons();
         robotBase.sorterCameraSubsystem.getAnalysis();
@@ -257,6 +246,7 @@ public class ThwompTeleOp extends OpMode {
         robotZone.setRotation(follower.getPose().getHeading());
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
+        telemetry.addData("Pedro Heading", Math.toDegrees(follower.getHeading()));
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
         //telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
         telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
@@ -281,7 +271,7 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Limelight Z", robotBase.limelightSubsystem.getTargetZ());
         //telemetry.addData("Follower Pose", follower.getPose());
         telemetry.addData("X: ", follower.getPose().getX());
-        telemetry.addData("Y: ", follower.getPose().getX());
+        telemetry.addData("Y: ", follower.getPose().getY());
         telemetry.addData("Large Zone Partial", robotZone.isInside(closeLaunchZone));
         telemetry.addData("Large Zone Fully", robotZone.isFullyInside(closeLaunchZone));
         telemetry.addData("Small Zone Partial", robotZone.isInside(farLaunchZone));

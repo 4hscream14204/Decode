@@ -20,15 +20,15 @@ public class DynamicLaunchVelCommand extends CommandBase {
     }
     @Override
     public void initialize(){
-        distance = robotBase.limelightSubsystem.getHorizontalDistance(follower);
-        /*if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
             goalPose = new Pose(127.7, 131.7);
-            distance = /*follower.getPose().distanceFrom(goalPose) * 2.54;
+            //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
         }
         else{
             goalPose = new Pose(127.7, 131.7).mirror();
+            //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
+        }
             distance = follower.getPose().distanceFrom(goalPose) * 2.54;
-        }*/
         robotBase.launcherSubsystemLeft.setLaunchVelocity(distance);
         robotBase.launcherSubsystemMiddle.setLaunchVelocity(distance);
         robotBase.launcherSubsystemRight.setLaunchVelocity(distance);
