@@ -21,6 +21,7 @@ import com.skeletonarmy.marrow.zones.PolygonZone;
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicLaunchVelCommand;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
@@ -50,6 +51,7 @@ public class ThwompTeleOp extends OpMode {
     double velocity;
     Supplier<PathChain> pathChain;
     Pose gatePose = new Pose(126, 73, Math.toRadians(0));
+    Pose startPose;
     Pose goalPose;
     double distance;
     boolean automatedDrive;
@@ -72,7 +74,7 @@ public class ThwompTeleOp extends OpMode {
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose.mirror())))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
                     .build();*/
-            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading() + Math.toRadians(90))), PedroCoordinates.INSTANCE));
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading())), PedroCoordinates.INSTANCE));
         }
         else{
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
@@ -80,7 +82,7 @@ public class ThwompTeleOp extends OpMode {
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose)))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
                     .build();*/
-            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(88/*DataStorage.endPosition.getX()*/, 8/*DataStorage.endPosition.getY()*/, 0/*DataStorage.endPosition.getHeading()*/), PedroCoordinates.INSTANCE));
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading())), PedroCoordinates.INSTANCE));
         }
 
         timer = new ElapsedTime();
@@ -213,7 +215,7 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        follower.setStartingPose(/*new Pose(88, 8, Math.toRadians(180))*/new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading() + Math.toRadians(90))));
+        follower.setStartingPose(/*new Pose(88, 8, Math.toRadians(180))*/new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading())));
         goalPose = new Pose(127.7, 131.7).mirror();
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
@@ -223,7 +225,7 @@ public class ThwompTeleOp extends OpMode {
     public void loop() {
         CommandScheduler.getInstance().run();
         follower.update();
-        //CommandScheduler.getInstance().schedule(new DynamicLaunchVelCommand(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new DynamicLaunchVelCommand(robotBase, follower));
         mainController.readButtons();
         backupController.readButtons();
         robotBase.sorterCameraSubsystem.getAnalysis();
@@ -241,7 +243,12 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
+        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
+        }
+        else{
+            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
+        }
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getPose().getHeading());
         telemetry.addData("Alliance", DataStorage.alliance);
