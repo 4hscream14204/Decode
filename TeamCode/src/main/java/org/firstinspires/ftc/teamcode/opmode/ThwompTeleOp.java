@@ -82,7 +82,7 @@ public class ThwompTeleOp extends OpMode {
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose.mirror())))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
                     .build();*/
-            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading() + Math.toRadians(180))), PedroCoordinates.INSTANCE));
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading())), PedroCoordinates.INSTANCE));
         }
         else{
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
@@ -90,7 +90,7 @@ public class ThwompTeleOp extends OpMode {
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose)))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
                     .build();*/
-            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), DataStorage.endPosition.getHeading()), PedroCoordinates.INSTANCE));
+            robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading())), PedroCoordinates.INSTANCE));
         }
 
         timer = new ElapsedTime();

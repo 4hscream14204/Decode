@@ -10,8 +10,8 @@ public class Hood extends SubsystemBase {
 
     public enum HoodPosition{
         MAX(0.33),
-        FAR(0.52),
-        CLOSE(0.75),
+        FAR(0.36),
+        CLOSE(0.63),
         MIN(1);
         public final double value;
         HoodPosition(double m_val){

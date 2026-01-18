@@ -24,12 +24,13 @@ public class DynamicVelocityCommand extends CommandBase {
     @Override
     public void initialize(){
         if(DataStorage.alliance == DecodeEnums.Alliance.BLUE){
-            velocity = robotBase.limelightSubsystem.getHorizontalDistance(follower, blueGoalPose);
+            velocity = follower.getPose().distanceFrom(blueGoalPose);
             new SetAllLaunchVelocityCommandGroup(robotBase, velocity);
         }
         else{
-            velocity = robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose);
+            velocity = follower.getPose().distanceFrom(redGoalPose);
             new SetAllLaunchVelocityCommandGroup(robotBase, velocity);
         }
+        super.initialize();
     }
 }
