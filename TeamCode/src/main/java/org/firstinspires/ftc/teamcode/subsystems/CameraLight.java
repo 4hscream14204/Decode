@@ -15,7 +15,7 @@ public class CameraLight extends SubsystemBase{
     public Shades enmColorHue;
     public enum Shades {
         OFF(0),
-        TESTLEFT(0.2),
+        FIFTH(0.2),
         TESTRIGHT(0.4),
         HALF(0.5),
         FULL(1);
