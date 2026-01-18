@@ -15,12 +15,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
+import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllLaunchVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
@@ -28,15 +30,15 @@ import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 public class LotsOfArtifactsAuto extends OpMode {
     RobotBase robotBase;
     Follower follower;
-    Pose startPose = new Pose(109.8, 134.34, Math.toRadians(180));
-    Pose beginLaunch = new Pose(102.34, 106.32, Math.toRadians(47));
-    Pose launchPose = new Pose(91, 95, Math.toRadians(47));
+    Pose startPose = new Pose(109.8, 134, Math.toRadians(180));
+    Pose beginLaunch = new Pose(100, 106, Math.toRadians(44));
+    Pose launchPose = new Pose(94, 95, Math.toRadians(47));
     //Pose launchAftPreloadPose = new Pose(85, 85, Math.toRadians(45));
-    Pose intakeMiddleLineUp = new Pose(110.55, 67, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(142.61, 67, Math.toRadians(0));
-    Pose intakeArtifactsFromGate = new Pose(137, 70.24, Math.toRadians(23.6));
+    Pose intakeMiddleLineUp = new Pose(110.55, 65, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(142.61, 65, Math.toRadians(0));
+    Pose intakeArtifactsFromGate = new Pose(139.5, 70, Math.toRadians(34));
     Pose launchAftIntakeFromGate = new Pose(93,91.5,Math.toRadians(45));
-    Pose facingGoalPoint = new Pose(132, 136/*133.5, 139*/);
+    Pose facingGoalPoint = new Pose(140, 136/*133.5, 139*/);
     Pose topRowLineUp = new Pose(113, 90.8, Math.toRadians(0));
     Pose intakeTopRow = new Pose(136, 90.8);
     Pose park = new Pose(128.7,69.65,Math.toRadians(23.6));
@@ -64,8 +66,8 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .addPath(new BezierLine(startPose, beginLaunch))
                 .setLinearHeadingInterpolation(startPose.getHeading(), beginLaunch.getHeading())
                 .addPath(new BezierLine(beginLaunch, launchPose))
-                .setConstantHeadingInterpolation(Math.toRadians(47))
-                .addParametricCallback(0.25, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .setConstantHeadingInterpolation(beginLaunch.getHeading())
+                .addParametricCallback(0, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(1, ()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
@@ -100,11 +102,13 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .addParametricCallback(0.85, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9,()->robotBase.intakeSubsystem.intake(1))
                 .build();
         launchMiddleToIntake = follower.pathBuilder()
                 .addPath(new BezierLine(launchAftIntakeFromGate, intakeArtifactsFromGate))
                 .setConstantHeadingInterpolation(intakeArtifactsFromGate.getHeading())
                 .addParametricCallback(0.1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
+                .addParametricCallback(0.5,()->robotBase.intakeSubsystem.intake(-1))
                 .build();
         intakeFromGateToLaunch = follower.pathBuilder()
                 .addPath(new BezierLine(intakeArtifactsFromGate,launchAftIntakeFromGate))
@@ -116,6 +120,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .addParametricCallback(0.85, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9, ()->robotBase.intakeSubsystem.intake(1))
                 .build();
 
         intakeTopRowPath = follower.pathBuilder()
@@ -124,6 +129,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .addParametricCallback(0.1, ()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
                 .addPath(new BezierLine(topRowLineUp, intakeTopRow))
                 .setConstantHeadingInterpolation(topRowLineUp.getHeading())
+                .addParametricCallback(0.5,()->robotBase.intakeSubsystem.intake(-1))
                 .build();
 
         launchTopRow = follower.pathBuilder()
@@ -134,6 +140,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .addParametricCallback(0.85, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9,()->robotBase.intakeSubsystem.intake(1))
                 .build();
         parking = follower.pathBuilder()
                 .addPath(new BezierLine(launchAftIntakeFromGate,park))
@@ -141,6 +148,8 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .build();
 
         route = new SequentialCommandGroup(
+                new SetAllVelocityCommandGroup(robotBase, 1845),
+                new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPathCommand(follower, startPath, false, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 //new WaitCommand(250),
@@ -152,7 +161,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 new WaitCommand(250),
                 new TransferResetCommandGroup(robotBase),
                 new FollowPathCommand(follower, launchMiddleToIntake,true,0.75),
-                new WaitCommand(1800),
+                new WaitCommand(1740),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
                 new FollowPathCommand(follower, launchMiddleToIntake, true, 1),
