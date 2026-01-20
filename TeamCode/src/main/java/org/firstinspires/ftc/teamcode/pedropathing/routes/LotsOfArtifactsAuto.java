@@ -162,8 +162,8 @@ public class LotsOfArtifactsAuto extends OpMode {
                 new WaitCommand(250),
                 new TransferResetCommandGroup(robotBase),
                 new FollowPathCommand(follower, launchMiddleToIntake,false,0.75),
-                new WaitCommand(1740)
-               /* new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
+                new WaitCommand(1740),
+                new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
                 new FollowPathCommand(follower, launchMiddleToIntake, true, 1),
                 new WaitCommand(2000),
@@ -178,7 +178,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 new WaitCommand(250),
                 new FollowPathCommand(follower,parking,false,1),
                 new TransferResetCommandGroup(robotBase)
-        */);
+        );
         /*new Trigger(()->follower.getCurrentPathChain() == startPath)
                 .whileActiveContinuous(new SetAllLaunchVelocityCommandGroup(robotBase, robotBase.limelightSubsystem.getHorizontalDistance(follower)));*/
     }
