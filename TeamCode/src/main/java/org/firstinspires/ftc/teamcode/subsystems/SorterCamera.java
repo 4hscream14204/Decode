@@ -94,7 +94,7 @@ public class SorterCamera extends SubsystemBase {
         exposureControl = portal.getCameraControl(ExposureControl.class);
 
         exposureControl.setMode(ExposureControl.Mode.Manual);
-        exposureControl.setExposure(15, TimeUnit.MILLISECONDS);
+        exposureControl.setExposure(7, TimeUnit.MILLISECONDS);
 
         gainControl.setGain(0);
     }
