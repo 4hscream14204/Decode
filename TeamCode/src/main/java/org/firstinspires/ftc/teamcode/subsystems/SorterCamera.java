@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static android.os.SystemClock.sleep;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import android.util.Size;
@@ -7,9 +8,13 @@ import android.util.Size;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
+
+import java.util.concurrent.TimeUnit;
 
 public class SorterCamera extends SubsystemBase {
     WebcamName webcam;
@@ -24,6 +29,9 @@ public class SorterCamera extends SubsystemBase {
     public boolean isRightAndLeftPurple = false;
     public boolean isMiddleAndRightPurple = false;
     public int intMinSaturation = 20;
+
+    GainControl gainControl;
+    ExposureControl exposureControl;
 
     public enum Colors{
         GREENHIGH (109),
@@ -43,7 +51,7 @@ public class SorterCamera extends SubsystemBase {
     public SorterCamera(WebcamName m_webcam){
         webcam = m_webcam;
         colorSensor = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0, 0.3, -0.4))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, -0.05, 0.3, -0.35))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -77,6 +85,18 @@ public class SorterCamera extends SubsystemBase {
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(m_webcam)
                 .build();
+
+        while (portal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            sleep(20);
+        }
+
+        gainControl = portal.getCameraControl(GainControl.class);
+        exposureControl = portal.getCameraControl(ExposureControl.class);
+
+        exposureControl.setMode(ExposureControl.Mode.Manual);
+        exposureControl.setExposure(15, TimeUnit.MILLISECONDS);
+
+        gainControl.setGain(0);
     }
     public void getAnalysis(){
         resultMiddle = colorSensor.getAnalysis();
