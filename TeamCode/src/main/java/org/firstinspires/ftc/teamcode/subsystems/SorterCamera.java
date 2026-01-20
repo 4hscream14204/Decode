@@ -60,7 +60,7 @@ public class SorterCamera extends SubsystemBase {
                 .build();
 
         colorSensorLeft = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-.65, -0.05, -0.6, -0.25))
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-.65, -0.05, -0.63, -0.25))
                 .setSwatches(
                         PredominantColorProcessor.Swatch.ARTIFACT_GREEN,
                         PredominantColorProcessor.Swatch.ARTIFACT_PURPLE,
@@ -94,7 +94,7 @@ public class SorterCamera extends SubsystemBase {
         exposureControl = portal.getCameraControl(ExposureControl.class);
 
         exposureControl.setMode(ExposureControl.Mode.Manual);
-        exposureControl.setExposure(7, TimeUnit.MILLISECONDS);
+        exposureControl.setExposure(5, TimeUnit.MILLISECONDS);
 
         gainControl.setGain(0);
     }
