@@ -161,7 +161,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 new FollowPathCommand(follower, middleRowToLaunch, true, 1),
                 new WaitCommand(250),
                 new TransferResetCommandGroup(robotBase),
-                new FollowPathCommand(follower, launchMiddleToIntake,true,0.75),
+                new FollowPathCommand(follower, launchMiddleToIntake,false,0.75),
                 new WaitCommand(1740)
                /* new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
