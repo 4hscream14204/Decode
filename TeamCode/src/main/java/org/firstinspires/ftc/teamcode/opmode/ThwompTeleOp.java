@@ -16,11 +16,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.skeletonarmy.marrow.zones.CircleZone;
+import com.skeletonarmy.marrow.zones.Point;
+import com.skeletonarmy.marrow.zones.PolygonZone;
+import com.skeletonarmy.marrow.zones.Zone;
 
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicVelocityCommand;
+import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsNoSortingCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
@@ -63,13 +68,19 @@ public class ThwompTeleOp extends OpMode {
     Pose blueGoalPose = new Pose(132, 137).mirror();
     boolean automatedDrive;
     Servo prism;
-    PrismAnimations.Rainbow rainbow;
+
+    PolygonZone robotZone;
+    PolygonZone closeLaunchZone;
+    PolygonZone farLaunchZone;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
         prism = hardwareMap.get(Servo.class, "prism");
+        robotZone = new PolygonZone(18, 18);
+        closeLaunchZone = new PolygonZone(new Point(144, 144), new Point(72, 55), new Point(0, 144));
+        farLaunchZone = new PolygonZone(new Point(36, 0), new Point(72, 48), new Point(110, 0));
         CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225)));
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -222,9 +233,11 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()-> timer.seconds() > 129)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(1000)), new InstantCommand(()->backupController.gamepad.rumble(1000))));
 
-        /**new Trigger(()-> Math.abs(mainController.getLeftX()) < 0.1 && Math.abs(mainController.getRightX()) < 0.1 && !robotBase.chassisSubsystem.PIDMode.equals(Chassis.PIDSteeringMode.GOAL))
-                .whenActive(()-> robotBase.chassisSubsystem.PIDMode = Chassis.PIDSteeringMode.HOLD)
-                .whenInactive(new Trigger(()->robotBase.chassisSubsystem.PIDMode != Chassis.PIDSteeringMode.GOAL));**/
+        new Trigger(()->robotZone.isInside(closeLaunchZone))
+                .whileActiveOnce(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)));
+
+        new Trigger(()->robotZone.isInside(farLaunchZone))
+                .whileActiveOnce(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)));
 
         /*new Trigger(()->automatedDrive && mainController.wasJustPressed(GamepadKeys.Button.DPAD_UP) || !follower.isBusy())
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));*/
@@ -257,7 +270,9 @@ public class ThwompTeleOp extends OpMode {
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.pinpoint.update();
         robotBase.limelightSubsystem.updateLimelight();
-        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower, redGoalPose, blueGoalPose));
+        robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
+        robotZone.setRotation(follower.getHeading());
+        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
@@ -288,6 +303,9 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Sat R", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.RIGHT));
         telemetry.addData("Time", timer.seconds());
         telemetry.addData("Limelight Z", robotBase.limelightSubsystem.getTargetZ());
+        telemetry.addData("Limelight X", robotBase.limelightSubsystem.getTargetX());
+        telemetry.addData("Pedro Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose));
+        telemetry.addData("Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         //telemetry.addData("Follower Pose", follower.getPose());
         /*telemetry.addData("Automated drive", automatedDrive);
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));

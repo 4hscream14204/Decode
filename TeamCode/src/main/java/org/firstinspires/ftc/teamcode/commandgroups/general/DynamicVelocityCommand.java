@@ -11,26 +11,25 @@ import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 public class DynamicVelocityCommand extends CommandBase {
     RobotBase robotBase;
     Follower follower;
-    Pose redGoalPose;
-    Pose blueGoalPose;
-    double velocity;
-    public DynamicVelocityCommand(RobotBase m_robotBase, Follower m_follower, Pose m_redGoalPose, Pose m_blueGoalPose){
+    Pose goalPose;
+    double distance;
+    public DynamicVelocityCommand(RobotBase m_robotBase, Follower m_follower){
         robotBase = m_robotBase;
         follower = m_follower;
-        redGoalPose = m_redGoalPose;
-        blueGoalPose = m_blueGoalPose;
     }
-
     @Override
     public void initialize(){
-        if(DataStorage.alliance == DecodeEnums.Alliance.BLUE){
-            velocity = follower.getPose().distanceFrom(blueGoalPose);
-            new SetAllLaunchVelocityCommandGroup(robotBase, velocity);
+        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+            goalPose = new Pose(127.7, 131.7);
+            //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
         }
         else{
-            velocity = follower.getPose().distanceFrom(redGoalPose);
-            new SetAllLaunchVelocityCommandGroup(robotBase, velocity);
+            goalPose = new Pose(127.7, 131.7).mirror();
+            //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
         }
-        super.initialize();
+        distance = follower.getPose().distanceFrom(goalPose) * 2.54;
+        robotBase.launcherSubsystemLeft.setLaunchVelocity(distance);
+        robotBase.launcherSubsystemMiddle.setLaunchVelocity(distance);
+        robotBase.launcherSubsystemRight.setLaunchVelocity(distance);
     }
 }
