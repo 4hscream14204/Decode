@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
+import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @Autonomous(name = "Red 12 Artifact Big Launch Zone Auto")
@@ -213,7 +214,8 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
 
         route = new SequentialCommandGroup(
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
-                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
+                new SetAllVelocityCommandGroup(robotBase,1750),
+                new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new AutoTransferAndLaunchNoPatternCG(robotBase, dblLaucnhVel),
@@ -308,7 +310,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(route);
         robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK);
-        robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF);
+      //  robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF);
         robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.HALF);
        // new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
