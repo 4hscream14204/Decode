@@ -209,6 +209,38 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
 
         follower = Constants.createFollower(hardwareMap);
 
+        routeMiddleRow =new SequentialCommandGroup(
+                        new WaitUntilCommand(()->!follower.isBusy()),
+                        new FollowPath(follower, linesUpWithSecondRow),
+                        new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                        new FollowPath(follower, intakesSecondRow).withTimeout(1500),
+                        new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
+                        new FollowPath(follower, backUpFromSecondRow, 1),
+                        new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                        new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                        new Transfer3BallsNoCameraCommandGroup(robotBase),
+                        new SetAllVelocityCommandGroup(robotBase, 0),
+                        new FollowPath(follower, park, true, 1),
+                        new InstantCommand(()->robotBase.intakeSubsystem.intake(0))
+
+        );
+
+        routeBottomRow =new SequentialCommandGroup(
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPath(follower, linesUpToIntakeThirdRow),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower,intakesThirdRow).withTimeout(1500),
+                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
+                new FollowPath(follower,goesToShootThirdRow),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                new SetAllVelocityCommandGroup(robotBase, 0),
+                new FollowPath(follower, park, true, 1),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0))
+
+        );
+
 
 
         route = new SequentialCommandGroup(
