@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
 import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.ConditionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
@@ -209,7 +210,42 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
         follower = Constants.createFollower(hardwareMap);
 
 
+        routeMiddleRow = new SequentialCommandGroup(
+                new FollowPath(follower, linesUpWithSecondRow),
+                //new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPath(follower, intakesSecondRow).withTimeout(1500),
+                //new WaitUntilCommand(()->!follower.isBusy()),
+                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
+                //Back up and go to launch pose
+                new FollowPath(follower, backUpFromSecondRow, 1),
+                //new WaitUntilCommand(()->!follower.isBusy()),
+                //new FollowPath(follower, goesToShootSecondRow),
+                //new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.THREE)
+        );
 
+        routeBottomRow = new SequentialCommandGroup(
+                new FollowPath(follower, linesUpToIntakeThirdRow),
+                //new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                //new SetAllVelocityCommandGroup(robotBase,1800),
+                new FollowPath(follower,intakesThirdRow).withTimeout(1500),
+                //new WaitUntilCommand(()->!follower.isBusy()),
+                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
+                new FollowPath(follower,goesToShootThirdRow),
+                //new WaitUntilCommand(()->!follower.isBusy()),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                // new FollowPath(follower,goesToShootThirdRow),
+                // new WaitUntilCommand(()->!follower.isBusy()),
+                new SetAllVelocityCommandGroup(robotBase, 0),
+                new FollowPath(follower, park, true, 1),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)));
 
         route = new SequentialCommandGroup(
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
@@ -240,50 +276,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-                //new SetAllVelocityCommandGroup(robotBase, 0),
-                new FollowPath(follower, linesUpWithSecondRow),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesSecondRow).withTimeout(1500),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
-                //Back up and go to launch pose
-                new FollowPath(follower, backUpFromSecondRow, 1),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                //new FollowPath(follower, goesToShootSecondRow),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
-                //new SetAllVelocityCommandGroup(robotBase, 0),
-                new FollowPath(follower, linesUpToIntakeThirdRow),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                //new SetAllVelocityCommandGroup(robotBase,1800),
-                new FollowPath(follower,intakesThirdRow).withTimeout(1500),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
-                new FollowPath(follower,goesToShootThirdRow),
-                //new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
-                // new FollowPath(follower,goesToShootThirdRow),
-                // new WaitUntilCommand(()->!follower.isBusy()),
-                new SetAllVelocityCommandGroup(robotBase, 0),
-                new FollowPath(follower, park, true, 1),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)));
-
-
-        /*
-                //new LaunchCommandGroup(robotBase),
-                //new InstantCommand(()->patternCommandGroup.schedule()),
-                //new WaitUntilCommand(()->patternCommandGroup.isFinished()),
-                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->follower.followPath(park)),()-> (desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE)),
-                new WaitUntilCommand(()-> middleRowDone),
-                new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new InstantCommand(()->follower.followPath(park)), ()-> (desiredRows == DesiredRows.THREE)),
-                new WaitUntilCommand(()->bottomRowDone),
-                new FollowPath(follower, park, true, 1));*/
+                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new InstantCommand(()->new FollowPath(follower, park, true, 1)), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
 /*
         /*CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
         CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));*/
