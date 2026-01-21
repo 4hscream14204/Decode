@@ -7,6 +7,7 @@ import com.seattlesolvers.solverslib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.Tilt;
 
 public class DynamicVelocityCommand extends CommandBase {
     RobotBase robotBase;
@@ -34,7 +35,12 @@ public class DynamicVelocityCommand extends CommandBase {
     }
 
     @Override
-    public boolean isFinished(){
-        return false;
+    public boolean isFinished() {
+        if (robotBase.tiltSubsystem.tiltPositionL == Tilt.Position.LEFTACTIVE) {
+            return false;
+        } else {
+            new SetAllVelocityCommandGroup(robotBase, 0);
+            return true;
+        }
     }
 }
