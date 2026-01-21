@@ -40,11 +40,11 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose launchPose = new Pose(86, 90, Math.toRadians(47));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
-    Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
-    Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0));
+    Pose preIntakeTopRow = new Pose(94, 90, Math.toRadians(0));
+    Pose intakeTopRow = new Pose(130, 91, Math.toRadians(0));
     Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90));
-    Pose lineUpToOpenRamp = new Pose(125, 76, Math.toRadians(90));
-    Pose openRamp = new Pose(126, 76, Math.toRadians(90));
+    Pose lineUpToOpenRamp = new Pose(129, 86, Math.toRadians(90));
+    Pose openRamp = new Pose(131, 86, Math.toRadians(90));
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
     Pose preIntakeMiddleRow = new Pose(94, 60, Math.toRadians(0));
@@ -79,8 +79,8 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     boolean middleRowDone = false;
     boolean bottomRowDone = false;
     int secondsToWait = 0;
-    double dblLaucnhVel = 1845;
-    double dblPreLaucnhVel = 1845;
+    double dblLaucnhVel = 1775;
+    double dblPreLaucnhVel = 1775;
     ElapsedTime timer;
 
     public enum DesiredRows{
@@ -214,7 +214,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
 
         route = new SequentialCommandGroup(
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
-                new SetAllVelocityCommandGroup(robotBase,1750),
+                new SetAllVelocityCommandGroup(robotBase,dblPreLaucnhVel),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
@@ -231,8 +231,8 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new WaitUntilCommand(()->!follower.isBusy()),*/
                 new FollowPath(follower,linesUpToOpenRamp,true,1 ),
                 //new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPath(follower,opensRamp,true,1).withTimeout(500),
-                new WaitCommand(500),
+               new FollowPath(follower,opensRamp,false,1).withTimeout(500),
+                new WaitCommand(500)
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 // new WaitCommand(1000),
@@ -240,7 +240,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new FollowPath(follower, shootsFirstRow, false, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+               /* new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
                 //new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, linesUpWithSecondRow),
@@ -274,9 +274,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                // new WaitUntilCommand(()->!follower.isBusy()),
                 new SetAllVelocityCommandGroup(robotBase, 0),
                 new FollowPath(follower, park, true, 1),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(0)));
-
-
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(0))
+*/
+        );
         /*
                 //new LaunchCommandGroup(robotBase),
                 //new InstantCommand(()->patternCommandGroup.schedule()),
@@ -289,7 +289,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
 /*
         /*CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
         CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));*/
-    }
+        }
 
     @Override
     public void init_loop(){
