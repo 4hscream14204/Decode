@@ -132,7 +132,7 @@ public class ThwompTeleOp extends OpMode {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.CROSS)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)/*new Launch3ArtifactsNoSortingCommandGroup(robotBase)*/));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)/*new Launch3ArtifactsNoSortingCommandGroup(robotBase)*/));
 
         mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOnePurple(robotBase)));
@@ -256,6 +256,8 @@ public class ThwompTeleOp extends OpMode {
     @Override
     public void start(){
         follower.setStartingPose(new Pose(88, 8, Math.toRadians(0))/*DataStorage.endPosition*/);
+        CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase));
+        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //robotBase.hoodSubsystem.setPosition(0.75);
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
@@ -272,7 +274,6 @@ public class ThwompTeleOp extends OpMode {
         robotBase.limelightSubsystem.updateLimelight();
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getHeading());
-        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);

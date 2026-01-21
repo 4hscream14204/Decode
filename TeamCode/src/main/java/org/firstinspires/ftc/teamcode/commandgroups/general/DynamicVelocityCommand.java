@@ -18,7 +18,7 @@ public class DynamicVelocityCommand extends CommandBase {
         follower = m_follower;
     }
     @Override
-    public void initialize(){
+    public void execute(){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
             goalPose = new Pose(127.7, 131.7);
             //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
@@ -31,5 +31,10 @@ public class DynamicVelocityCommand extends CommandBase {
         robotBase.launcherSubsystemLeft.setLaunchVelocity(distance);
         robotBase.launcherSubsystemMiddle.setLaunchVelocity(distance);
         robotBase.launcherSubsystemRight.setLaunchVelocity(distance);
+    }
+
+    @Override
+    public boolean isFinished(){
+        return false;
     }
 }
