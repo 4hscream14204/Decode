@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
 
+import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -38,9 +39,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose parkPose = new Pose(124, 74, Math.toRadians(0));
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
     Pose launchPose1 = new Pose(97, 93, Math.toRadians(51));
-    Pose launchPose2 = new Pose(98, 92, Math.toRadians(50.7));
-    Pose launchPose3 = new Pose(98, 92, Math.toRadians(49.2));
-    Pose launchPose4 = new Pose(98, 92, Math.toRadians(50.7));
+    Pose launchPose2 = new Pose(98, 92, Math.toRadians(43.7));
+    Pose launchPose3 = new Pose(98, 92, Math.toRadians(44.2));
+    Pose launchPose4 = new Pose(98, 92, Math.toRadians(44.7));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
     Pose preIntakeTopRow = new Pose(105, 91, Math.toRadians(0));
@@ -85,6 +86,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     double dblLaucnhVel = 1740;
     double dblPreLaucnhVel = 1740;
     ElapsedTime timer;
+    Servo prism;
 
     public enum DesiredRows{
         ONE,
@@ -96,7 +98,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     public void init() {
         DataStorage.alliance = DecodeEnums.Alliance.RED;
         follower = Constants.createFollower(hardwareMap);
+        prism = hardwareMap.get(Servo.class, "prism");
         CommandScheduler.getInstance().reset();
+        CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225)));
         chassis = new GamepadEx(gamepad1);
         timer = new ElapsedTime();
         robotBase = new RobotBase(hardwareMap);
@@ -120,7 +124,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
 
         goesFromWallToShootPreload = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, launchPose1))
-                .setLinearHeadingInterpolation(startPose.getHeading(), launchPose1.getHeading()+Math.toRadians(1))
+                .setLinearHeadingInterpolation(startPose.getHeading(), launchPose1.getHeading())
                 .build();
 
         //First line//
@@ -137,7 +141,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
         shootsFirstRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(intakeTopRow, launchPose2))
-                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose2.getHeading()-Math.toRadians(7))
+                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose2.getHeading())
                 .build();
         //Opens Classifier Ramp//
 
@@ -174,7 +178,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                         new BezierLine( intakeMiddleRow,backupMiddleRow))
                 .setConstantHeadingInterpolation(backupMiddleRow.getHeading())
                 .addPath(new BezierLine(backupMiddleRow, launchPose3))
-                .setLinearHeadingInterpolation(backupMiddleRow.getHeading(), launchPose3.getHeading()-Math.toRadians(5))
+                .setLinearHeadingInterpolation(backupMiddleRow.getHeading(), launchPose3.getHeading())
                 .build();
 
         goesToShootSecondRow = follower.pathBuilder()
@@ -202,7 +206,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
         goesToShootThirdRow = follower.pathBuilder()
                 .addPath(
                         new BezierLine(intakeBottomRow, launchPose4))
-                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose4.getHeading()-Math.toRadians(6))
+                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose4.getHeading())
                 .build();
         //park//
 
