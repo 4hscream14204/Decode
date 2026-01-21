@@ -23,12 +23,12 @@ public class Launch3ArtifactsDynamicCG extends CommandBase {
     public void initialize(){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED) {
                     goalPose = new Pose(127.7, 131.7);
-                    new WaitUntilCommand(() -> robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose)));
+                    new WaitUntilCommand(() -> robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose))));
                     new Transfer3BallsNoCameraCommandGroup(robotBase);
         }
         else{
                     goalPose = new Pose(127.7, 131.7).mirror();
-                    robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose));
+                    robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose)));
                     new Transfer3BallsNoCameraCommandGroup(robotBase);
         }
         super.initialize();
