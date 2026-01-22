@@ -4,6 +4,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
 public class Launcher extends SubsystemBase {
@@ -14,13 +15,14 @@ public class Launcher extends SubsystemBase {
     public double dblTargetVel = 0;
     private InterpLUT launcherLUT;
     double maximum = 2300;
+    PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
 
 
     public Launcher(DcMotorEx m_Launcher){
         launcherMotor = m_Launcher;
         launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        launcherMotor.setVelocityPIDFCoefficients(9, 0.8, 0, 0.7);
+        launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //launcherMotor.setVelocityPIDFCoefficients(9, 0.8, 0, 0.7);
         launcherLUT = new InterpLUT();
         launcherLUT.add(121, 1700);
         launcherLUT.add(131, 1730);
@@ -37,7 +39,7 @@ public class Launcher extends SubsystemBase {
     }
 
     public void setVelocity(double m_velocity) {
-        launcherMotor.setVelocity(m_velocity);
+        launcherMotor.setPower(launcherPIDF.calculate(getVelocity(), m_velocity));
         dblTargetVel = m_velocity;
     }
 

@@ -174,7 +174,8 @@ public class ThwompTeleOp extends OpMode {
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAlliance(robotBase)));
 
         backupController.getGamepadButton(GamepadKeys.Button.BACK)
-                        .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleLaunchZoneCommandGroup()));
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(
+                                new ToggleLaunchZoneCommandGroup(robotBase)));
 
         backupController.getGamepadButton(GamepadKeys.Button.SQUARE)
                 .toggleWhenPressed(new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH)), new InstantCommand(()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.HOME)));
