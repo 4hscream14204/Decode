@@ -45,10 +45,10 @@ public class DynamicVelocityCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         if (robotBase.tiltSubsystem.tiltPositionL == Tilt.Position.LEFTACTIVE) {
-            return false;
-        } else {
             new SetAllVelocityCommandGroup(robotBase, 0);
             return true;
+        } else {
+            return false;
         }
     }*/
 }
