@@ -43,6 +43,8 @@ public class LotsOfArtifactsAuto extends OpMode {
     Pose intakeTopRow = new Pose(138, 90.8);
     Pose park = new Pose(116,69.65,Math.toRadians(23.6));
 
+    double dblLaunchVel = 2000;
+
     PathChain startPath;
     PathChain launchPath;
     PathChain intakeMiddleRowPathLineUp;
@@ -148,7 +150,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .build();
 
         route = new SequentialCommandGroup(
-                new SetAllVelocityCommandGroup(robotBase, 2000),
+                new InstantCommand(()->dblLaunchVel = 2000),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPathCommand(follower, startPath, false, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
@@ -156,7 +158,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 //new FollowPath(follower, launchPath, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower, intakeMiddleRowPathLineUp, true, 1),
-                new SetAllVelocityCommandGroup(robotBase, 1750),
+                new InstantCommand(()->dblLaunchVel = 1750),
                 new FollowPathCommand(follower, intakeMiddleRowPath, true, 1),
                 new FollowPathCommand(follower, middleRowToLaunch, true, 1),
                 new WaitCommand(250),
@@ -197,6 +199,9 @@ public class LotsOfArtifactsAuto extends OpMode {
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
+        CommandScheduler.getInstance().schedule(
+                new SetAllVelocityCommandGroup(robotBase, dblLaunchVel)
+        );
         follower.update();
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Limelight Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));

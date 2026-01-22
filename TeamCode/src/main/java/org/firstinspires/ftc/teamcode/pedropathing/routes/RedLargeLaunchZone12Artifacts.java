@@ -293,6 +293,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
+        CommandScheduler.getInstance().schedule(
+                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel)
+        );
         robotBase.limelightSubsystem.updateLimelight();
         robotBase.sorterCameraSubsystem.getAnalysis();
         follower.update();
