@@ -13,6 +13,7 @@ public class Launcher extends SubsystemBase {
     public final double launchVar2 = 1770.4;
     public double dblTargetVel = 0;
     private InterpLUT launcherLUT;
+    double maximum = 2300;
 
 
     public Launcher(DcMotorEx m_Launcher){
@@ -56,8 +57,8 @@ public class Launcher extends SubsystemBase {
     public void setLaunchVelocity(double m_Distance) {
 
         double velocity = getLaunchVelocity(m_Distance);
-        if(velocity > 2300){
-            setVelocity(2300);
+        if(velocity > maximum){
+            setVelocity(maximum);
         }
         else if(velocity < 1700){
             setVelocity(1700);
@@ -78,5 +79,9 @@ public class Launcher extends SubsystemBase {
         else{
             return false;
         }
+    }
+
+    public void setMaximum(double m_maximum){
+        maximum = m_maximum;
     }
 }
