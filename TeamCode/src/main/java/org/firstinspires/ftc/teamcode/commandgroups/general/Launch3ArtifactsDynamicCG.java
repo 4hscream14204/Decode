@@ -11,42 +11,29 @@ import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 
-public class Launch3ArtifactsDynamicCG extends CommandBase {
+public class Launch3ArtifactsDynamicCG extends SequentialCommandGroup {
     RobotBase robotBase;
     Pose goalPose;
     Follower follower;
     public Launch3ArtifactsDynamicCG(RobotBase m_robotBase, Follower m_follower){
         robotBase = m_robotBase;
         follower = m_follower;
-    }
-    @Override
-    public void initialize(){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED) {
             goalPose = new Pose(127.7, 131.7);
-            new WaitUntilCommand(() -> robotBase.launcherSubsystemLeft.isAtSpeed(
-                    robotBase.launcherSubsystemLeft.getLaunchVelocity(
-                            robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose))));
-            new WaitUntilCommand(() -> robotBase.launcherSubsystemMiddle.isAtSpeed(
-                    robotBase.launcherSubsystemLeft.getLaunchVelocity(
-                            robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose))));
-            new WaitUntilCommand(() -> robotBase.launcherSubsystemRight.isAtSpeed(
-                    robotBase.launcherSubsystemLeft.getLaunchVelocity(
-                            robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose))));
-            new Transfer3BallsNoCameraCommandGroup(robotBase);
         }
         else{
             goalPose = new Pose(127.7, 131.7).mirror();
-            new WaitUntilCommand(() -> robotBase.launcherSubsystemLeft.isAtSpeed(
-                    robotBase.launcherSubsystemLeft.getLaunchVelocity(
-                            robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose))));
-            new WaitUntilCommand(() -> robotBase.launcherSubsystemMiddle.isAtSpeed(
-                    robotBase.launcherSubsystemLeft.getLaunchVelocity(
-                            robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose))));
-            new WaitUntilCommand(() -> robotBase.launcherSubsystemRight.isAtSpeed(
-                    robotBase.launcherSubsystemLeft.getLaunchVelocity(
-                            robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose))));
-            new Transfer3BallsNoCameraCommandGroup(robotBase);
         }
-        super.initialize();
+        addCommands(
+                new WaitUntilCommand(() -> robotBase.launcherSubsystemLeft.isAtSpeed(
+                        robotBase.launcherSubsystemLeft.getLaunchVelocity(
+                                robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose)))),
+                new WaitUntilCommand(() -> robotBase.launcherSubsystemMiddle.isAtSpeed(
+                        robotBase.launcherSubsystemMiddle.getLaunchVelocity(
+                                robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose)))),
+                new WaitUntilCommand(() -> robotBase.launcherSubsystemRight.isAtSpeed(
+                        robotBase.launcherSubsystemRight.getLaunchVelocity(
+                                robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose)))),
+                new Transfer3BallsNoCameraCommandGroup(robotBase));
     }
-}
+    }

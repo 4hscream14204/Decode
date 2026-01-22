@@ -56,7 +56,15 @@ public class Launcher extends SubsystemBase {
     public void setLaunchVelocity(double m_Distance) {
 
         double velocity = getLaunchVelocity(m_Distance);
+        if(velocity > 2300){
+            setVelocity(2300);
+        }
+        else if(velocity < 1700){
+            setVelocity(1700);
+        }
+        else{
         setVelocity(velocity);
+        }
     }
 
     public double getLaunchVelocity(double m_Distance){
