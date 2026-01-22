@@ -23,6 +23,8 @@ public class AutoTransferAndLaunchNoPatternCG extends SequentialCommandGroup {
     public void initialize() {
         addCommands(
                 new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.isAtSpeed(velocity)),
+                new WaitUntilCommand(()->robotBase.launcherSubsystemMiddle.isAtSpeed(velocity)),
+                new WaitUntilCommand(()->robotBase.launcherSubsystemRight.isAtSpeed(velocity)),
                 // new LaunchNoLimelightCommandGroup(robotBase, velocity),
                 new Transfer3BallsNoCameraCommandGroup(robotBase)
         );

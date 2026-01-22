@@ -36,7 +36,9 @@ public class TransferPatternCommandGroup extends SequentialCommandGroup {
             } else if (DataStorage.pattern == DecodeEnums.Patterns.PGP) {
                 addCommands(
                         new TransferPurpleBallCommandGroup(robotBase),
+                        new WaitCommand(500),
                         new TransferGreenBallCommandGroup(robotBase),
+                        new WaitCommand(500),
                         new TransferPurpleBallCommandGroup(robotBase),
                         new TransferResetCommandGroup(robotBase)
                 );

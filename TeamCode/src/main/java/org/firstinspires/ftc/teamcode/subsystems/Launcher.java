@@ -61,7 +61,7 @@ public class Launcher extends SubsystemBase {
     }
 
     public boolean isAtSpeed(double velocity){
-        if(Math.abs((getVelocity() - velocity)) <= 30){
+        if(Math.abs((getVelocity() - velocity)) <= 10){
             return true;
         }
         else{

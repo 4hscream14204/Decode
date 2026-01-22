@@ -255,9 +255,8 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        follower.setStartingPose(new Pose(88, 8, Math.toRadians(0))/*DataStorage.endPosition*/);
+        follower.setStartingPose(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY()));
         CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase));
-        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //robotBase.hoodSubsystem.setPosition(0.75);
         //new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
@@ -274,6 +273,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.limelightSubsystem.updateLimelight();
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getHeading());
+        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
