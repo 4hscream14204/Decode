@@ -11,7 +11,9 @@ public class Launcher extends SubsystemBase {
     public final double dblLaunchWheelRadius = 1.375;
     public final double launchVar1 = 2.2787;
     public final double launchVar2 = 1770.4;
+    public double dblTargetVel = 0;
     private InterpLUT launcherLUT;
+
 
     public Launcher(DcMotorEx m_Launcher){
         launcherMotor = m_Launcher;
@@ -35,6 +37,7 @@ public class Launcher extends SubsystemBase {
 
     public void setVelocity(double m_velocity) {
         launcherMotor.setVelocity(m_velocity);
+        dblTargetVel = m_velocity;
     }
 
     /*public void setRPM(double m_RPM) {
@@ -61,7 +64,7 @@ public class Launcher extends SubsystemBase {
     }
 
     public boolean isAtSpeed(double velocity){
-        if(Math.abs((getVelocity() - velocity)) <= 10){
+        if(Math.abs((getVelocity() - dblTargetVel)) <= 10){
             return true;
         }
         else{
