@@ -260,7 +260,12 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        follower.setStartingPose(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY()));
+        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+            follower.setStartingPose(new Pose((DataStorage.endPosition.getX() - 11), (DataStorage.endPosition.getY() - 9), DataStorage.endPosition.getHeading()));
+        }
+        else{
+            follower.setStartingPose(new Pose((DataStorage.endPosition.getX() + 7), (DataStorage.endPosition.getY() - 8), DataStorage.endPosition.getHeading()));
+        }
         CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase));
         //robotBase.hoodSubsystem.setPosition(0.75);
         //new InitSorterLightsCommandGroup(robotBase);
@@ -283,12 +288,7 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
-        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
-        }
-        else{
-            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
-        }
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         //telemetry.addData("This is new code 7", true);
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
