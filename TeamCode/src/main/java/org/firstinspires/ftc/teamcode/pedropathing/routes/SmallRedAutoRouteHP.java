@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
+import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.pedropathing.follower.Follower;
@@ -38,8 +39,9 @@ public class SmallRedAutoRouteHP extends OpMode {
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
 
     Pose startPose = new Pose(93,7,Math.toRadians(0));
-    Pose launchPose = new Pose(87,14,Math.toRadians(66));
-    Pose intakePose = new Pose(138.5,7.5,Math.toRadians(0));
+    Pose preloadLaunchPose = new Pose(87,14,Math.toRadians(68));
+    Pose intakePose = new Pose(133,6.5,Math.toRadians(0));
+    Pose launchPose = new Pose(78,14,Math.toRadians(59));
 
 
     PathChain goesToShootPreload;
@@ -72,14 +74,14 @@ public class SmallRedAutoRouteHP extends OpMode {
         follower = Constants.createFollower(hardwareMap);
 
         goesToShootPreload = follower.pathBuilder()
-                .addPath(new BezierLine(startPose, launchPose))
-                .setLinearHeadingInterpolation(startPose.getHeading(), launchPose.getHeading())
+                .addPath(new BezierLine(startPose, preloadLaunchPose))
+                .setLinearHeadingInterpolation(startPose.getHeading(), preloadLaunchPose.getHeading())
                 .build();
 
         intakesFromHumanZone = follower.pathBuilder()
-                .addPath(new BezierLine(launchPose, intakePose))
+                .addPath(new BezierLine(preloadLaunchPose, intakePose))
                 .setHeadingInterpolation(HeadingInterpolator.piecewise(
-                        new HeadingInterpolator.PiecewiseNode(0,0.5,HeadingInterpolator.linear(launchPose.getHeading() , intakePose.getHeading())),
+                        new HeadingInterpolator.PiecewiseNode(0,0.5,HeadingInterpolator.linear(preloadLaunchPose.getHeading() , intakePose.getHeading())),
                         new HeadingInterpolator.PiecewiseNode(0.5,1, HeadingInterpolator.constant(intakePose.getHeading()))))
                                 .build();
 
@@ -96,10 +98,11 @@ public class SmallRedAutoRouteHP extends OpMode {
                 new InstantCommand(() -> robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)),
                 new FollowPathCommand(follower, goesToShootPreload, true, 1),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
-                new WaitUntilCommand(()->!follower.isBusy()),
+                //new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPathCommand(follower,intakesFromHumanZone,true,1),
-                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPathCommand(follower,intakesFromHumanZone,false,1),
+                new WaitCommand(1000),
+               // new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower,goesBackToShoot,false,1),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1))

@@ -259,7 +259,8 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
+                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()),
+                        new FollowPath(follower, park, false, 1), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
 /*
         /*CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
         CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));*/
