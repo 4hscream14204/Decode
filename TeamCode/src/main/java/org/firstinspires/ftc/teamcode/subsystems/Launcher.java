@@ -43,6 +43,10 @@ public class Launcher extends SubsystemBase {
         dblTargetVel = m_velocity;
     }
 
+    public void setVelocitySimple(double m_velocity) {
+        launcherMotor.setVelocity(m_velocity);
+    }
+
     /*public void setRPM(double m_RPM) {
         double m_RPMToVelocity = m_RPM / (6.28 * dblLaunchWheelRadius);
         launcherMotorLeft.setVelocity(m_RPMToVelocity);

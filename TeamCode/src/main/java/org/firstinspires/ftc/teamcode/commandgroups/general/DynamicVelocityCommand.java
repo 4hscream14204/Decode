@@ -31,9 +31,9 @@ public class DynamicVelocityCommand extends CommandBase {
             //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
         }
         if (robotBase.tiltSubsystem.tiltPositionL == Tilt.Position.LEFTACTIVE) {
-            robotBase.launcherSubsystemLeft.setVelocity(0);
-            robotBase.launcherSubsystemMiddle.setVelocity(0);
-            robotBase.launcherSubsystemRight.setVelocity(0);
+            robotBase.launcherSubsystemLeft.setVelocitySimple(0);
+            robotBase.launcherSubsystemMiddle.setVelocitySimple(0);
+            robotBase.launcherSubsystemRight.setVelocitySimple(0);
         } else {
             distance = follower.getPose().distanceFrom(goalPose) * 2.54;
             robotBase.launcherSubsystemLeft.setLaunchVelocity(distance);
