@@ -47,8 +47,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     Pose preIntakeTopRow = new Pose(105, 91, Math.toRadians(0)).mirror();
     Pose intakeTopRow = new Pose(139, 91, Math.toRadians(0)).mirror();
     Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90)).mirror();
-    Pose lineUpToOpenRamp = new Pose(129, 90, Math.toRadians(90)).mirror();
-    Pose openRamp = new Pose(131, 90, Math.toRadians(90)).mirror();
+    Pose lineUpToOpenRamp = new Pose(129, 92, Math.toRadians(90)).mirror();
+    Pose openRamp = new Pose(131, 92, Math.toRadians(90)).mirror();
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0)).mirror();
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0)).mirror();
     Pose preIntakeMiddleRow = new Pose(110, 66, Math.toRadians(0)).mirror();
