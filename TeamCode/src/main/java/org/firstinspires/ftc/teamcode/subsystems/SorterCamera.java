@@ -24,19 +24,18 @@ public class SorterCamera extends SubsystemBase {
     public PredominantColorProcessor.Result resultMiddle;
     public PredominantColorProcessor.Result resultLeft;
     public PredominantColorProcessor.Result resultRight;
-    public int intPurple = 0;
     public boolean isMiddleAndLeftPurple = false;
     public boolean isRightAndLeftPurple = false;
     public boolean isMiddleAndRightPurple = false;
-    public int intMinSaturation = 20;
+    public int intMinSaturation = 15;
 
     GainControl gainControl;
     ExposureControl exposureControl;
 
     public enum Colors{
         GREENHIGH (109),
-        GREENLOW (55),
-        PURPLEHIGH (160),
+        GREENLOW (45),
+        PURPLEHIGH (165),
         PURPLELOW (109);
         public final double value;
         Colors(double m_colorAmounts){this.value = m_colorAmounts;}
@@ -94,7 +93,7 @@ public class SorterCamera extends SubsystemBase {
         exposureControl = portal.getCameraControl(ExposureControl.class);
 
         exposureControl.setMode(ExposureControl.Mode.Manual);
-        exposureControl.setExposure(5, TimeUnit.MILLISECONDS);
+        exposureControl.setExposure(7, TimeUnit.MILLISECONDS);
 
         gainControl.setGain(0);
     }
