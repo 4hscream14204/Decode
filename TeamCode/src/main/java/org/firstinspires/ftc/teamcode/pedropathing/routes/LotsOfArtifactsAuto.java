@@ -100,7 +100,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .setHeadingInterpolation(HeadingInterpolator.piecewise(
                         new HeadingInterpolator.PiecewiseNode(0, 0.5, HeadingInterpolator.linear(intakeArtifactsFromGate.getHeading(), launchAftIntakeFromGate.getHeading())),
                         new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
-                .addParametricCallback(0, ()->new SetAllVelocityCommandGroup(robotBase, 1900))
+                //.addParametricCallback(0, ()->new SetAllVelocityCommandGroup(robotBase, 1900))
                 .addParametricCallback(0.85, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
@@ -150,7 +150,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .build();
 
         route = new SequentialCommandGroup(
-                new InstantCommand(()->dblLaunchVel = 2000),
+                new InstantCommand(()->dblLaunchVel = 1850),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPathCommand(follower, startPath, false, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
@@ -158,7 +158,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 //new FollowPath(follower, launchPath, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower, intakeMiddleRowPathLineUp, true, 1),
-                new InstantCommand(()->dblLaunchVel = 1750),
+                new InstantCommand(()->dblLaunchVel = 1800),
                 new FollowPathCommand(follower, intakeMiddleRowPath, true, 1),
                 new FollowPathCommand(follower, middleRowToLaunch, true, 1),
                 new WaitCommand(250),
