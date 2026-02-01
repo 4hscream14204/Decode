@@ -221,7 +221,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
         routeMiddleRow = new SequentialCommandGroup(
                 new FollowPath(follower, linesUpWithSecondRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesSecondRow).withTimeout(1500),
+                new FollowPath(follower, intakesSecondRow).withTimeout(1200),
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower, backUpFromSecondRow, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
@@ -232,7 +232,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
         routeBottomRow = new SequentialCommandGroup(
                 new FollowPath(follower, linesUpToIntakeThirdRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower,intakesThirdRow).withTimeout(1500),
+                new FollowPath(follower,intakesThirdRow).withTimeout(1200),
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower,goesToShootThirdRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
@@ -253,7 +253,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new FollowPath(follower, intakesFirstRow, true, 1).withTimeout(1200),
                 new FollowPath(follower,linesUpToOpenRamp,true,1 ),
                 new FollowPath(follower,opensRamp,false,1).withTimeout(500),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower, shootsFirstRow, true, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
