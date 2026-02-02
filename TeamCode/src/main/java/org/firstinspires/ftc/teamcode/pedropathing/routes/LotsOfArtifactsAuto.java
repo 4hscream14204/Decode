@@ -119,10 +119,10 @@ public class LotsOfArtifactsAuto extends OpMode {
                         new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
                 //.setLinearHeadingInterpolation(intakeArtifactsFromGate.getHeading(),launchAftIntakeFromGate.getHeading())
                 .addParametricCallback(0.1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
-                .addParametricCallback(0.85, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.85, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.85, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.9, ()->robotBase.intakeSubsystem.intake(1))
+                .addParametricCallback(0.9, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.95, ()->robotBase.intakeSubsystem.intake(1))
                 .build();
 
         intakeTopRowPath = follower.pathBuilder()
@@ -158,7 +158,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 //new FollowPath(follower, launchPath, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower, intakeMiddleRowPathLineUp, true, 1),
-                new InstantCommand(()->dblLaunchVel = 1800),
+                new InstantCommand(()->dblLaunchVel = 1750),
                 new FollowPathCommand(follower, intakeMiddleRowPath, true, 1),
                 new FollowPathCommand(follower, middleRowToLaunch, true, 1),
                 new WaitCommand(250),
@@ -167,11 +167,11 @@ public class LotsOfArtifactsAuto extends OpMode {
                 new WaitCommand(1740),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
-                new FollowPathCommand(follower, launchMiddleToIntake, true, 1),
+                new FollowPathCommand(follower, launchMiddleToIntake, false, 1),
                 new WaitCommand(2000),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
-                new FollowPathCommand(follower, launchMiddleToIntake, true, 1),
+                new FollowPathCommand(follower, launchMiddleToIntake, false, 1),
                 new WaitCommand(1750),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
