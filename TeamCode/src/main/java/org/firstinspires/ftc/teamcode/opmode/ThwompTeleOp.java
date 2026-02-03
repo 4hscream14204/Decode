@@ -80,7 +80,7 @@ public class ThwompTeleOp extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         prism = hardwareMap.get(Servo.class, "prism");
         robotZone = new PolygonZone(18, 18);
-        closeLaunchZone = new PolygonZone(new Point(144, 144), new Point(72, 55), new Point(0, 144));
+        closeLaunchZone = new PolygonZone(new Point(144, 130), new Point(72, 30), new Point(0, 130));
         farLaunchZone = new PolygonZone(new Point(36, 0), new Point(72, 48), new Point(110, 0));
         CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225)));
         robotBase.sorterCameraSubsystem.getAnalysis();
