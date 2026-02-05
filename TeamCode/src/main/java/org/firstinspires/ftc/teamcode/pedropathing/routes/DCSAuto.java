@@ -14,6 +14,7 @@ import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
@@ -35,7 +36,8 @@ public class DCSAuto extends OpMode{
         Pose intakeMiddleLineUp = new Pose(126, 82, Math.toRadians(-90));
         Pose intakeMiddleRow = new Pose(126, 67, Math.toRadians(-90));
         Pose openGateForDCS = new Pose(135, 65, Math.toRadians(-90));
-        Pose intakeArtifactsFromGate = new Pose(140, 70, Math.toRadians(34));
+        Pose intakeArtifactsFromGate = new Pose(137, 70, Math.toRadians(24));
+        //Pose moveBackFromGateToIntake = new Pose(136, 69, Math.toRadians(47));
         Pose facingGoalPoint = new Pose(138, 136/*133.5, 139*/);
         Pose topRowLineUp = new Pose(113, 90.8, Math.toRadians(0));
         Pose intakeTopRow = new Pose(138, 90.8);
@@ -125,9 +127,9 @@ public class DCSAuto extends OpMode{
                             new HeadingInterpolator.PiecewiseNode(0, 0.5, HeadingInterpolator.linear(openGateForDCS.getHeading(), launchPose3.getHeading())),
                             new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
                     //.addParametricCallback(0, ()->new SetAllVelocityCommandGroup(robotBase, 1900))
-                    .addParametricCallback(0.85, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                    /*.addParametricCallback(0.85, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                     .addParametricCallback(0.85, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                    .addParametricCallback(0.85, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                    .addParametricCallback(0.85, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))*/
                     .addParametricCallback(0.9,()->robotBase.intakeSubsystem.intake(1))
                     .build();
             launchMiddleToIntake = follower.pathBuilder()
@@ -135,17 +137,19 @@ public class DCSAuto extends OpMode{
                     .setConstantHeadingInterpolation(intakeArtifactsFromGate.getHeading())
                     .addParametricCallback(0.1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
                     .addParametricCallback(0.5,()->robotBase.intakeSubsystem.intake(-1))
+                    /*.addPath(new BezierLine(intakeArtifactsFromGate, moveBackFromGateToIntake))
+                    .setLinearHeadingInterpolation(intakeArtifactsFromGate.getHeading(), moveBackFromGateToIntake.getHeading())*/
                     .build();
             intakeFromGateToLaunch = follower.pathBuilder()
                     .addPath(new BezierLine(intakeArtifactsFromGate, launchPose3))
                     .setHeadingInterpolation(HeadingInterpolator.piecewise(
                             new HeadingInterpolator.PiecewiseNode(0, 0.5, HeadingInterpolator.linear(intakeArtifactsFromGate.getHeading(), launchPose3.getHeading())),
-                            new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
+                            new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.constant(launchPose3.getHeading()))))
                     //.setLinearHeadingInterpolation(intakeArtifactsFromGate.getHeading(),launchAftIntakeFromGate.getHeading())
                     .addParametricCallback(0.1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
-                    .addParametricCallback(0.9, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                    .addParametricCallback(0.9, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                    .addParametricCallback(0.9, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                    /*.addParametricCallback(0.95, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                    .addParametricCallback(0.95, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                    .addParametricCallback(0.95, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))*/
                     .addParametricCallback(0.5, ()->robotBase.intakeSubsystem.intake(1))
                     .build();
 
@@ -162,7 +166,7 @@ public class DCSAuto extends OpMode{
                     .addPath(new BezierLine(intakeTopRow, launchPose2))
                     .setHeadingInterpolation(HeadingInterpolator.piecewise(
                             new HeadingInterpolator.PiecewiseNode(0, 0.25, HeadingInterpolator.linear(topRowLineUp.getHeading(), launchPose2.getHeading())),
-                            new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
+                            new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.constant(launchPose2.getHeading()))))
                     .addParametricCallback(0.9, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                     .addParametricCallback(0.9, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                     .addParametricCallback(0.9, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
@@ -175,7 +179,7 @@ public class DCSAuto extends OpMode{
 
             route = new SequentialCommandGroup(
                     //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                    new InstantCommand(()->dblLaunchVel = 1850),
+                   new InstantCommand(()->dblLaunchVel = 1800),
                     new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                     new FollowPathCommand(follower, startPath, false, 1),
                     new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
@@ -189,16 +193,21 @@ public class DCSAuto extends OpMode{
                     new FollowPathCommand(follower, intakeMiddleRowPath, true,1),
                     new FollowPathCommand(follower, openGate, true,1),
                     new FollowPathCommand(follower, middleRowToLaunch, true,1),
+                    new Transfer3BallsNoCameraCommandGroup(robotBase),
                     new WaitCommand(500),
                     new TransferResetCommandGroup(robotBase),
                     new FollowPathCommand(follower, launchMiddleToIntake,true,1),
                     new WaitCommand(1740),
                     new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
+                    new Transfer3BallsNoCameraCommandGroup(robotBase),
                     new WaitCommand(500),
                     new TransferResetCommandGroup(robotBase),
                     new FollowPathCommand(follower, launchMiddleToIntake,true,1),
                     new WaitCommand(1740),
                     new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
+                    new Transfer3BallsNoCameraCommandGroup(robotBase),
+                    new WaitCommand(500),
+                    new FollowPathCommand(follower, parking, true, 1)
                     /*
                     new WaitCommand(500),
                     new FollowPathCommand(follower, openGate, true, 0.25),
@@ -232,11 +241,10 @@ public class DCSAuto extends OpMode{
                     new FollowPathCommand(follower, launchTopRow, true, 1),
                     new WaitCommand(250),
                     new FollowPathCommand(follower,parking,false,1),
-                    */
                     new TransferResetCommandGroup(robotBase),
                     new InstantCommand(()->robotBase.launcherSubsystemLeft.setPower(0)),
                     new InstantCommand(()->robotBase.launcherSubsystemMiddle.setPower(0)),
-                    new InstantCommand(()->robotBase.launcherSubsystemRight.setPower(0))
+                    new InstantCommand(()->robotBase.launcherSubsystemRight.setPower(0))*/
             );
         /*new Trigger(()->follower.getCurrentPathChain() == startPath)
                 .whileActiveContinuous(new SetAllLaunchVelocityCommandGroup(robotBase, robotBase.limelightSubsystem.getHorizontalDistance(follower)));*/
