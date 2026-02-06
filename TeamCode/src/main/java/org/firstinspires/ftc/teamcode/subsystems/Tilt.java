@@ -10,9 +10,9 @@ public class Tilt extends SubsystemBase {
     public Position tiltPositionR;
 
     public enum Position {
-        LEFTACTIVE(0.753),
+        LEFTACTIVE(0.333),
         LEFTINACTIVE(1),
-        RIGHTACTIVE(0.227),
+        RIGHTACTIVE(0.666),
         RIGHTINACTIVE(0);
         public final double value;
         Position(double m_val){this.value = m_val;}
