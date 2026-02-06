@@ -17,13 +17,15 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityComman
 import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
+import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
+import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
-@Autonomous(name = "DCS Auto")
-public class DCSAuto extends OpMode{
+@Autonomous(name = "Red DCS Auto")
+public class RedDCSAuto extends OpMode{
         RobotBase robotBase;
         Follower follower;
         Pose startPose = new Pose(109.8, 134, Math.toRadians(180));
@@ -74,7 +76,7 @@ public class DCSAuto extends OpMode{
                     .addParametricCallback(0, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                     .addParametricCallback(0, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                     .addParametricCallback(0, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                    .addParametricCallback(1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
+                    //.addParametricCallback(1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
                     .addParametricCallback(1, ()->robotBase.intakeSubsystem.intake(-1))
                     .build();
         /*launchPath = follower.pathBuilder()
@@ -167,9 +169,9 @@ public class DCSAuto extends OpMode{
                     .setHeadingInterpolation(HeadingInterpolator.piecewise(
                             new HeadingInterpolator.PiecewiseNode(0, 0.25, HeadingInterpolator.linear(topRowLineUp.getHeading(), launchPose2.getHeading())),
                             new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.constant(launchPose2.getHeading()))))
-                    .addParametricCallback(0.9, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                    .addParametricCallback(0.9, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                    .addParametricCallback(0.9, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                    .addParametricCallback(0.95, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                    .addParametricCallback(0.95, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                    .addParametricCallback(0.95, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                     .addParametricCallback(0.95,()->robotBase.intakeSubsystem.intake(1))
                     .build();
             parking = follower.pathBuilder()
@@ -182,6 +184,8 @@ public class DCSAuto extends OpMode{
                    new InstantCommand(()->dblLaunchVel = 1800),
                     new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                     new FollowPathCommand(follower, startPath, false, 1),
+                    new WaitCommand(500),
+                    new TransferResetCommandGroup(robotBase),
                     new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                     new InstantCommand(()->dblLaunchVel = 1750),
                     new FollowPathCommand(follower, intakeTopRowPath, true, 1),
@@ -275,4 +279,11 @@ public class DCSAuto extends OpMode{
             telemetry.addData("Heading: ", Math.toDegrees(follower.getPose().getHeading()));
             telemetry.update();
         }
+        @Override
+        public void stop(){
+            robotBase.limelightSubsystem.limelight.stop();
+            Pose endPose = new Pose(follower.getPose().getX() + 53, follower.getPose().getY() -28, follower.getPose().getHeading());
+            DataStorage.endPosition = endPose;
+            DataStorage.alliance = DecodeEnums.Alliance.RED;
+    }
     }

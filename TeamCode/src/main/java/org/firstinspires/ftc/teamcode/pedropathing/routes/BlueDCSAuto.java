@@ -17,6 +17,8 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityComman
 import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
+import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
+import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
@@ -27,20 +29,20 @@ public class BlueDCSAuto extends OpMode{
     RobotBase robotBase;
     Follower follower;
     Pose startPose = new Pose(109.8, 134, Math.toRadians(180)).mirror();
-    Pose beginLaunch = new Pose(100, 106, Math.toRadians(44)).mirror();
-    Pose launchPose1 = new Pose(46, 87, Math.toRadians(47));
-    Pose launchPose2 = new Pose(100,95,Math.toRadians(45)).mirror();
-    Pose launchPose3 = new Pose(96, 95, Math.toRadians(43)).mirror();
+    Pose beginLaunch = new Pose(39, 95, Math.toRadians(132));
+    Pose launchPose1 = new Pose(43, 84, Math.toRadians(132));
+    Pose launchPose2 = new Pose(41,80,Math.toRadians(134));
+    Pose launchPose3 = new Pose(41, 80, Math.toRadians(133));
     Pose launchAftIntakeFromGate = new Pose(93,91.5,Math.toRadians(45)).mirror();
     //Pose launchAftPreloadPose = new Pose(85, 85, Math.toRadians(45));
-    Pose intakeMiddleLineUp = new Pose(126, 82, Math.toRadians(-90)).mirror();
-    Pose intakeMiddleRow = new Pose(126, 67, Math.toRadians(-90)).mirror();
-    Pose openGateForDCS = new Pose(135, 65, Math.toRadians(-90)).mirror();
-    Pose intakeArtifactsFromGate = new Pose(137, 70, Math.toRadians(24)).mirror();
+    Pose intakeMiddleLineUp = new Pose(23, 69, Math.toRadians(-90));
+    Pose intakeMiddleRow = new Pose(23, 57, Math.toRadians(-90));
+    Pose openGateForDCS = new Pose(12, 57, Math.toRadians(-90));
+    Pose intakeArtifactsFromGate = new Pose(0.75, 59.6, Math.toRadians(151.3));
     //Pose moveBackFromGateToIntake = new Pose(136, 69, Math.toRadians(47));
     Pose facingGoalPoint = new Pose(138, 136/*133.5, 139*/);
-    Pose topRowLineUp = new Pose(113, 87, Math.toRadians(0)).mirror();
-    Pose intakeTopRow = new Pose(138, 87, Math.toRadians(0)).mirror();
+    Pose topRowLineUp = new Pose(30, 78, Math.toRadians(180));
+    Pose intakeTopRow = new Pose(5, 78, Math.toRadians(180));
     Pose park = new Pose(116,69.65,Math.toRadians(23.6)).mirror();
 
     double dblLaunchVel = 2000;
@@ -74,7 +76,7 @@ public class BlueDCSAuto extends OpMode{
                 .addParametricCallback(0, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
+                //.addParametricCallback(1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
                 .addParametricCallback(1, ()->robotBase.intakeSubsystem.intake(-1))
                 .build();
         /*launchPath = follower.pathBuilder()
@@ -112,8 +114,8 @@ public class BlueDCSAuto extends OpMode{
                 .build();
 
         intakeMiddleRowPathLineUp = follower.pathBuilder()
-                .addPath(new BezierLine(launchPose1, intakeMiddleLineUp))
-                .setLinearHeadingInterpolation(launchPose1.getHeading(), intakeMiddleLineUp.getHeading())
+                .addPath(new BezierLine(launchPose2, intakeMiddleLineUp))
+                .setLinearHeadingInterpolation(launchPose2.getHeading(), intakeMiddleLineUp.getHeading())
                 .build();
 
         intakeMiddleRowPath = follower.pathBuilder()
@@ -125,7 +127,7 @@ public class BlueDCSAuto extends OpMode{
                 .addPath(new BezierLine(openGateForDCS, launchPose3))
                 .setHeadingInterpolation(HeadingInterpolator.piecewise(
                         new HeadingInterpolator.PiecewiseNode(0, 0.5, HeadingInterpolator.linear(openGateForDCS.getHeading(), launchPose3.getHeading())),
-                        new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
+                        new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.constant(launchPose3.getHeading()))))
                 //.addParametricCallback(0, ()->new SetAllVelocityCommandGroup(robotBase, 1900))
                 /*.addParametricCallback(0.85, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.85, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
@@ -167,9 +169,9 @@ public class BlueDCSAuto extends OpMode{
                 .setHeadingInterpolation(HeadingInterpolator.piecewise(
                         new HeadingInterpolator.PiecewiseNode(0, 0.25, HeadingInterpolator.linear(topRowLineUp.getHeading(), launchPose2.getHeading())),
                         new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.constant(launchPose2.getHeading()))))
-                .addParametricCallback(0.9, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.9, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.9, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.95, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.95, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.95, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.95,()->robotBase.intakeSubsystem.intake(1))
                 .build();
         parking = follower.pathBuilder()
@@ -181,10 +183,12 @@ public class BlueDCSAuto extends OpMode{
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new InstantCommand(()->dblLaunchVel = 1800),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
-                new FollowPathCommand(follower, startPath, false, 1),
+                new FollowPathCommand(follower, startPath, true, 1),
+                new WaitCommand(500),
+                new TransferResetCommandGroup(robotBase),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new InstantCommand(()->dblLaunchVel = 1750),
-                new FollowPathCommand(follower, intakeTopRowPath, true, 1)/*,
+                new FollowPathCommand(follower, intakeTopRowPath, true, 1),
                 new FollowPathCommand(follower, launchTopRow,true,1),
                 new WaitCommand(500),
                 new TransferResetCommandGroup(robotBase),
@@ -274,5 +278,12 @@ public class BlueDCSAuto extends OpMode{
         telemetry.addData("Y: ", follower.getPose().getY());
         telemetry.addData("Heading: ", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.update();
+    }
+    @Override
+    public void stop(){
+        robotBase.limelightSubsystem.limelight.stop();
+        Pose endPose = new Pose(follower.getPose().getX() - 5, follower.getPose().getY() + 5.5, follower.getPose().getHeading());
+        DataStorage.endPosition = endPose;
+        DataStorage.alliance = DecodeEnums.Alliance.BLUE;
     }
 }
