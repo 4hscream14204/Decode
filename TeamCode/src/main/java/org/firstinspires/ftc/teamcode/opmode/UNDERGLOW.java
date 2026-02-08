@@ -15,6 +15,7 @@ public class UNDERGLOW extends OpMode {
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
+        chassis = new GamepadEx(gamepad1);
         prism = hardwareMap.get(Servo.class, "prism");
         chassis.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225))));
@@ -25,6 +26,7 @@ public class UNDERGLOW extends OpMode {
 
     @Override
     public void loop() {
+        chassis.readButtons();
         CommandScheduler.getInstance().run();
     }
 }
