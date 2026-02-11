@@ -5,6 +5,7 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
     public class Chassis extends SubsystemBase {
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
         double dblBackRightPower;
         public boolean isFieldCentric;
 
-        PIDController headingControl = new PIDController(0.025, 0, 0.001);
+        PIDFController headingControl = new PIDFController(0.03, 0, 0.002, 0.1);
 
         double dblXOffset;
         public double dblHeadingOutput;
@@ -51,9 +52,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
                 double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
                 double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
                 if (m_PIDSteering) {
-                    dblXOffset = 0 - m_TX;
-                    dblHeadingOutput = (headingControl.calculate(dblXOffset));
-                    rx = dblHeadingOutput;
+                        dblXOffset = 0 - m_TX;
+                        dblHeadingOutput = (headingControl.calculate(dblXOffset));
+                        rx = dblHeadingOutput;
                     if (m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5) {
                         bolSnapToTarget = false;
                     }
