@@ -23,6 +23,7 @@ import com.skeletonarmy.marrow.zones.Zone;
 
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
@@ -304,7 +305,7 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
+            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, timer);
         }
         else{
             robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
@@ -312,6 +313,7 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         //telemetry.addData("This is new code 7", true);
         telemetry.addData("Alliance", DataStorage.alliance);
+        telemetry.addData("Target Heading", Math.toDegrees(robotBase.chassisSubsystem.targetHeading));
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Launch Zone", DataStorage.launchZone);
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
