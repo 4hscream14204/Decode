@@ -22,7 +22,8 @@ public class Chassis extends SubsystemBase {
         double dblBackRightPower;
         public boolean isFieldCentric;
 
-        PIDFController headingControl = new PIDFController(0.3, 0, 0.002, 0.1);
+        PIDFController headingControl = new PIDFController(0.03, 0, 0.001, 0.1);
+        PIDFController driveHeadingControl = new PIDFController(2, 0, 0.1, 0.1);
         Pose goalPose = new Pose(127.7, 131.7);
         ElapsedTime timer;
 
@@ -88,7 +89,7 @@ public class Chassis extends SubsystemBase {
             backRightMotor.setPower(dblBackRightPower);
         }
 
-        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean m_isFieldCentric, ElapsedTime m_timer) {
+        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer) {
             timer = m_timer;
             currentTime = timer.milliseconds();
             double dblDenominator;
@@ -100,7 +101,7 @@ public class Chassis extends SubsystemBase {
             if (isFieldCentric) {
                 double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
                 double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
-                if (m_PIDSteering) {
+                if (bolSnapToTarget) {
 
                     if (m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5) {
                         bolSnapToTarget = false;
@@ -114,9 +115,9 @@ public class Chassis extends SubsystemBase {
                         targetHeading = botHeading;
                     }
                     else if(!bolSnapToTarget){
-                        headingDeviation = botHeading - targetHeading;
+                        headingDeviation = (botHeading - targetHeading) * -1;
                         headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
-                        dblHeadingOutput = headingControl.calculate(headingDeviation);
+                        dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
                         rx = dblHeadingOutput;
                     }
                 }

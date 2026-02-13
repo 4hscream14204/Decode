@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.seattlesolvers.solverslib.pedroCommand.HoldPointCommand;
 import com.skeletonarmy.marrow.zones.CircleZone;
 import com.skeletonarmy.marrow.zones.Point;
 import com.skeletonarmy.marrow.zones.PolygonZone;
@@ -260,6 +261,9 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()->robotZone.isInside(farLaunchZone))
                 .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)));
 
+        new Trigger(()->Math.abs(mainController.getLeftX()) < 0.1 && Math.abs(mainController.getLeftY()) < 0.1)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new HoldPointCommand(follower, follower.getPose(), true)));
+
         /*new Trigger(()->automatedDrive && mainController.wasJustPressed(GamepadKeys.Button.DPAD_UP) || !follower.isBusy())
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));*/
     }
@@ -305,7 +309,7 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, timer);
+            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer);
         }
         else{
             robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
