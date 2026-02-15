@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 
+import com.pedropathing.geometry.BezierLine;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -16,6 +18,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import com.seattlesolvers.solverslib.pedroCommand.HoldPointCommand;
 import com.skeletonarmy.marrow.zones.CircleZone;
 import com.skeletonarmy.marrow.zones.Point;
@@ -71,6 +74,7 @@ public class ThwompTeleOp extends OpMode {
     Pose blueGoalPose = new Pose(132, 137).mirror();
     boolean automatedDrive;
     Servo prism;
+    PathChain holdPoint;
 
     PolygonZone robotZone;
     PolygonZone closeLaunchZone;
@@ -108,8 +112,6 @@ public class ThwompTeleOp extends OpMode {
         }
 
         timer = new ElapsedTime();
-
-
 
         //new InitSorterLightsCommandGroup(robotBase);
 
@@ -261,8 +263,14 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()->robotZone.isInside(farLaunchZone))
                 .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)));
 
-        new Trigger(()->Math.abs(mainController.getLeftX()) < 0.1 && Math.abs(mainController.getLeftY()) < 0.1)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new HoldPointCommand(follower, follower.getPose(), true)));
+        /*new Trigger(()->Math.abs(mainController.getLeftX()) < 0.1 && Math.abs(mainController.getLeftY()) < 0.1 && Math.abs(mainController.getRightX()) > 0.1)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.resumePathFollowing()), new HoldPointCommand(follower, follower.getPose(), true)));
+
+        new Trigger(()->Math.abs(mainController.getLeftX()) > 0.09 || Math.abs(mainController.getLeftY()) > 0.09 || Math.abs(mainController.getRightX()) > 0.09)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new FollowPathCommand(follower, holdPoint)));
+
+        new Trigger(()->!follower.isBusy())
+                .whenActive(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.pausePathFollowing())));*/
 
         /*new Trigger(()->automatedDrive && mainController.wasJustPressed(GamepadKeys.Button.DPAD_UP) || !follower.isBusy())
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX())), new InstantCommand(()->automatedDrive = false)));*/
@@ -303,7 +311,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.limelightSubsystem.updateLimelight();
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getHeading());
-        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
+        //CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
@@ -314,6 +322,12 @@ public class ThwompTeleOp extends OpMode {
         else{
             robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         }
+
+        /*holdPoint = follower.pathBuilder()
+                .addPath(new BezierLine(follower.getPose(), follower.getPose()))
+                .setConstantHeadingInterpolation(follower.getHeading())
+                .build();*/
+
         //robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         //telemetry.addData("This is new code 7", true);
         telemetry.addData("Alliance", DataStorage.alliance);
