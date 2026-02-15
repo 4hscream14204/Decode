@@ -50,7 +50,7 @@ public class Chassis extends SubsystemBase {
             backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
-        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean m_isFieldCentric, double m_TX) {
+        /*public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean m_isFieldCentric, double m_TX) {
             double dblDenominator;
             double y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY); // Remember, Y stick value is reversed
             double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
@@ -87,9 +87,9 @@ public class Chassis extends SubsystemBase {
             frontRightMotor.setPower(dblFrontRightPower);
             backLeftMotor.setPower(dblBackLeftPower);
             backRightMotor.setPower(dblBackRightPower);
-        }
+        }*/
 
-        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer) {
+        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer, double m_TX) {
             timer = m_timer;
             currentTime = timer.milliseconds();
             double dblDenominator;
@@ -102,7 +102,9 @@ public class Chassis extends SubsystemBase {
                 double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
                 double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
                 if (bolSnapToTarget) {
-
+                    dblXOffset = 0 - m_TX;
+                    dblHeadingOutput = (headingControl.calculate(dblXOffset));
+                    rx = dblHeadingOutput;
                     if (m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5) {
                         bolSnapToTarget = false;
                     }
