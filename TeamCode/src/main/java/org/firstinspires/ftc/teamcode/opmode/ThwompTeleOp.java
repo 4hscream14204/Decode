@@ -259,12 +259,17 @@ public class ThwompTeleOp extends OpMode {
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(1000)), new InstantCommand(()->backupController.gamepad.rumble(1000))));
 
         new Trigger(()->robotZone.isInside(closeLaunchZone))
-                .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)))
+                .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE))
+                );
+
+        new Trigger(()->robotZone.isInside(closeLaunchZone))
+                .or(new Trigger(()->!robotBase.limelightSubsystem.goalInSight()))
                 .whenActive(new InstantCommand(()->dblLockOffset = 0));
+
 
         new Trigger(()->robotZone.isInside(farLaunchZone))
                 .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)))
-                .whenActive(new InstantCommand(()->dblLockOffset = 10));
+                .whenActive(new InstantCommand(()->dblLockOffset = 8));
 
         /*new Trigger(()->Math.abs(mainController.getLeftX()) < 0.1 && Math.abs(mainController.getLeftY()) < 0.1 && Math.abs(mainController.getRightX()) > 0.1)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.resumePathFollowing()), new HoldPointCommand(follower, follower.getPose(), true)));
@@ -320,10 +325,10 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.limelightTX + dblLockOffset);
+            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.limelightTX - dblLockOffset);
         }
         else{
-            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.getTargetX() - dblLockOffset);
+            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.getTargetX() + dblLockOffset);
         }
 
         /*holdPoint = follower.pathBuilder()

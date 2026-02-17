@@ -22,7 +22,7 @@ public class Chassis extends SubsystemBase {
         double dblBackRightPower;
         public boolean isFieldCentric;
 
-        PIDFController headingControl = new PIDFController(0.03, 0, 0.001, 0.1);
+        PIDFController headingControl = new PIDFController(0.03, 0, 0.001, 0.15);
         PIDFController driveHeadingControl = new PIDFController(2, 0, 0.1, 0.1);
         Pose goalPose = new Pose(127.7, 131.7);
         ElapsedTime timer;
