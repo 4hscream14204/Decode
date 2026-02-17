@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
+
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.ConditionalCommand;
@@ -35,30 +36,30 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     Follower follower;
     SequentialCommandGroup route;
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
-    Pose startPose = new Pose(107.12, 146.55, Math.toRadians(180)).mirror();
-    Pose parkPose = new Pose(124, 74, Math.toRadians(0)).mirror();
+    Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180)).mirror();
+    Pose parkPose = new Pose(106, 74, Math.toRadians(0)).mirror();
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
-    Pose launchPose1 = new Pose(97, 93, Math.toRadians(51)).mirror();
-    Pose launchPose2 = new Pose(98, 92, Math.toRadians(43.7)).mirror();
-    Pose launchPose3 = new Pose(98, 92, Math.toRadians(44.2)).mirror();
-    Pose launchPose4 = new Pose(98, 92, Math.toRadians(44.7)).mirror();
+    Pose launchPose1 = new Pose(53, 92, Math.toRadians(135));
+    Pose launchPose2 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading()).mirror();
+    Pose launchPose3 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading()).mirror();
+    Pose launchPose4 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading()).mirror();
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0)).mirror();
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0)).mirror();
-    Pose preIntakeTopRow = new Pose(105, 91, Math.toRadians(0)).mirror();
-    Pose intakeTopRow = new Pose(139, 91, Math.toRadians(0)).mirror();
+    Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0)).mirror();
+    Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0)).mirror();
     Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90)).mirror();
-    Pose lineUpToOpenRamp = new Pose(129, 92, Math.toRadians(90)).mirror();
-    Pose openRamp = new Pose(131, 92, Math.toRadians(90)).mirror();
+    Pose lineUpToOpenRamp = new Pose(125, 78, Math.toRadians(90)).mirror();
+    Pose openRamp = new Pose(126, 78, Math.toRadians(90)).mirror();
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0)).mirror();
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0)).mirror();
-    Pose preIntakeMiddleRow = new Pose(110, 66, Math.toRadians(0)).mirror();
-    Pose intakeMiddleRow = new Pose(145, 66, Math.toRadians(0)).mirror();
-    Pose backupMiddleRow = new Pose(131, 66, Math.toRadians(0)).mirror();
+    Pose preIntakeMiddleRow = new Pose(94, 62, Math.toRadians(0)).mirror();
+    Pose intakeMiddleRow = new Pose(132, 62, Math.toRadians(0)).mirror();
+    Pose backupMiddleRow = new Pose(114, 62, Math.toRadians(0)).mirror();
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0)).mirror();
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0)).mirror();
-    Pose preIntakeBottomRow = new Pose(110, 46, Math.toRadians(0)).mirror();
-    Pose intakeBottomRow = new Pose(145, 46, Math.toRadians(0)).mirror();
-    Pose backsUpFromBottomRow = new Pose(131,46,Math.toRadians(0)).mirror();
+    Pose preIntakeBottomRow = new Pose(94, 39, Math.toRadians(0)).mirror();
+    Pose intakeBottomRow = new Pose(132, 39, Math.toRadians(0)).mirror();
+    Pose backsUpFromBottomRow = new Pose(104,35,Math.toRadians(0)).mirror();
     Pose bottomRowToLaunchControl = new Pose(99.020, 40.449).mirror();
     PathChain goesFromWallToShootPreload;
     PathChain linesUpToIntakeThirdRow;
@@ -96,7 +97,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
 
     @Override
     public void init() {
-        DataStorage.alliance = DecodeEnums.Alliance.BLUE;
+        DataStorage.alliance = DecodeEnums.Alliance.RED;
         follower = Constants.createFollower(hardwareMap);
         prism = hardwareMap.get(Servo.class, "prism");
         CommandScheduler.getInstance().reset();
@@ -140,8 +141,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 .build();
         shootsFirstRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(intakeTopRow, launchPose2))
-                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose2.getHeading())
+                        new BezierLine(intakeTopRow, launchPose1))
+                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose1.getHeading())
                 .build();
         //Opens Classifier Ramp//
 
@@ -165,8 +166,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
         //Second line//
         linesUpWithSecondRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(launchPose2, preIntakeMiddleRow))
-                .setLinearHeadingInterpolation(launchPose2.getHeading(), preIntakeMiddleRow.getHeading())
+                        new BezierLine(launchPose1, preIntakeMiddleRow))
+                .setLinearHeadingInterpolation(launchPose1.getHeading(), preIntakeMiddleRow.getHeading())
                 .build();
         intakesSecondRow = follower.pathBuilder()
                 .addPath(
@@ -177,14 +178,14 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 .addPath(
                         new BezierLine( intakeMiddleRow,backupMiddleRow))
                 .setConstantHeadingInterpolation(backupMiddleRow.getHeading())
-                .addPath(new BezierLine(backupMiddleRow, launchPose3))
-                .setLinearHeadingInterpolation(backupMiddleRow.getHeading(), launchPose3.getHeading())
+                .addPath(new BezierLine(backupMiddleRow, launchPose1))
+                .setLinearHeadingInterpolation(backupMiddleRow.getHeading(), launchPose1.getHeading())
                 .build();
 
         goesToShootSecondRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(preIntakeMiddleRow, launchPose3))
-                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose3.getHeading())
+                        new BezierLine(preIntakeMiddleRow, launchPose1))
+                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose1.getHeading())
                 .build();
 
         //Third line//
@@ -205,8 +206,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 .build();
         goesToShootThirdRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(intakeBottomRow, launchPose4))
-                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose4.getHeading())
+                        new BezierLine(intakeBottomRow, launchPose1))
+                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose1.getHeading())
                 .build();
         //park//
 
@@ -222,13 +223,11 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesSecondRow).withTimeout(1200),
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
-                //Back up and go to launch pose
                 new FollowPath(follower, backUpFromSecondRow, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-                new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.THREE)
-        );
+                new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.THREE));
 
         routeBottomRow = new SequentialCommandGroup(
                 new FollowPath(follower, linesUpToIntakeThirdRow),
@@ -285,7 +284,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(route);
         robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK);
-        //robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF);
+        //  robotBase.cameraLightSubsystemRight.setShade(CameraLight.Shades.HALF);
         robotBase.cameraLightSubsystemLeft.setShade(CameraLight.Shades.HALF);
         // new InitSorterLightsCommandGroup(robotBase);
         timer.reset();
@@ -332,5 +331,3 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
         DataStorage.alliance = DecodeEnums.Alliance.BLUE;
     }
 }
-
-
