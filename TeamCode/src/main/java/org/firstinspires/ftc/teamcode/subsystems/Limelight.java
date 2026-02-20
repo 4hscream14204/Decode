@@ -112,7 +112,7 @@ public class Limelight extends SubsystemBase {
     }
 
     public boolean goalInSight(){
-        return result.getFiducialResults().isEmpty();
+        return !result.getFiducialResults().isEmpty();
     }
 
     public double getHorizontalDistance(Follower follower, Pose goalPose){
