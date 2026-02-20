@@ -88,7 +88,7 @@ public class ThwompTeleOp extends OpMode {
         prism = hardwareMap.get(Servo.class, "prism");
         robotZone = new PolygonZone(18, 18);
         closeLaunchZone = new PolygonZone(new Point(144, 130), new Point(72, 30), new Point(0, 130));
-        farLaunchZone = new PolygonZone(new Point(24, 0), new Point(72, 60), new Point(122, 0));
+        farLaunchZone = new PolygonZone(new Point(24, 0), new Point(72, 36), new Point(122, 0));
         CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225)));
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -265,7 +265,7 @@ public class ThwompTeleOp extends OpMode {
 
         new Trigger(()->robotZone.isInside(farLaunchZone))
                 .and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
-                .whenActive(new InstantCommand(()->dblLockOffset = 20))
+                .whenActive(new InstantCommand(()->dblLockOffset = -2))
                 .whenInactive(new InstantCommand(()->dblLockOffset = 0))
                 ;
 
@@ -295,12 +295,7 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
-        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            follower.setStartingPose(new Pose((DataStorage.endPosition.getX() - 11), (DataStorage.endPosition.getY() - 9), DataStorage.endPosition.getHeading()));
-        }
-        else{
-            follower.setStartingPose(new Pose((DataStorage.endPosition.getX() + 7), (DataStorage.endPosition.getY() - 8), DataStorage.endPosition.getHeading()));
-        }
+        follower.setStartingPose(new Pose((DataStorage.endPosition.getX()), (DataStorage.endPosition.getY()), DataStorage.endPosition.getHeading()));
         CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase));
         //robotBase.hoodSubsystem.setPosition(0.75);
         //new InitSorterLightsCommandGroup(robotBase);
@@ -318,7 +313,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.limelightSubsystem.updateLimelight();
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getHeading());
-        //CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -25,7 +26,7 @@ import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
-
+@Disabled
 @Autonomous(name = "12 Ball Auto Updated")
 public class RedLLZone12BallAutoUpdated extends OpMode {
     RobotBase robotBase;
