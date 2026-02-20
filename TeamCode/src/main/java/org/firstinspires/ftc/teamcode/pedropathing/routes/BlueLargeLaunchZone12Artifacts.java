@@ -39,7 +39,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180)).mirror();
     Pose parkPose = new Pose(106, 74, Math.toRadians(0)).mirror();
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
-    Pose launchPose1 = new Pose(53, 92, Math.toRadians(135));
+    Pose launchPreload = new Pose(53,89,Math.toRadians(135));
+    Pose launchPose1 = new Pose(53, 83, Math.toRadians(135));
     Pose launchPose2 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading()).mirror();
     Pose launchPose3 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading()).mirror();
     Pose launchPose4 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading()).mirror();
@@ -124,8 +125,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->secondsToWait = secondsToWait - 1000)));
 
         goesFromWallToShootPreload = follower.pathBuilder()
-                .addPath(new BezierLine(startPose, launchPose1))
-                .setLinearHeadingInterpolation(startPose.getHeading(), launchPose1.getHeading())
+                .addPath(new BezierLine(startPose, launchPreload))
+                .setLinearHeadingInterpolation(startPose.getHeading(), launchPreload.getHeading())
                 .build();
 
         //First line//
@@ -227,7 +228,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-                new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.THREE));
+                new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new FollowPath(follower, park, false, 1), ()->desiredRows == DesiredRows.THREE));
 
         routeBottomRow = new SequentialCommandGroup(
                 new FollowPath(follower, linesUpToIntakeThirdRow),
@@ -238,7 +239,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-                new FollowPath(follower, park, true, 1),
+                new FollowPath(follower, park, false, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new SetAllVelocityCommandGroup(robotBase, 0));
 
@@ -259,7 +260,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
+                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new FollowPath(follower, park, false, 1), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
 /*
         /*CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
         CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));*/
