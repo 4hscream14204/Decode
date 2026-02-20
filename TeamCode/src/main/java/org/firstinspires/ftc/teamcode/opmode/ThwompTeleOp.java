@@ -88,7 +88,7 @@ public class ThwompTeleOp extends OpMode {
         prism = hardwareMap.get(Servo.class, "prism");
         robotZone = new PolygonZone(18, 18);
         closeLaunchZone = new PolygonZone(new Point(144, 130), new Point(72, 30), new Point(0, 130));
-        farLaunchZone = new PolygonZone(new Point(36, 0), new Point(72, 48), new Point(110, 0));
+        farLaunchZone = new PolygonZone(new Point(24, 0), new Point(72, 60), new Point(122, 0));
         CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225)));
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -258,18 +258,17 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()-> timer.seconds() > 129)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(1000)), new InstantCommand(()->backupController.gamepad.rumble(1000))));
 
-        new Trigger(()->robotZone.isInside(closeLaunchZone))
-                .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE))
-                );
-
-        new Trigger(()->robotZone.isInside(closeLaunchZone))
-                .or(new Trigger(()->!robotBase.limelightSubsystem.goalInSight()))
-                .whenActive(new InstantCommand(()->dblLockOffset = 0));
-
-
         new Trigger(()->robotZone.isInside(farLaunchZone))
                 .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)))
-                .whenActive(new InstantCommand(()->dblLockOffset = 8));
+                .whenInactive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)))
+                ;
+
+        new Trigger(()->robotZone.isInside(farLaunchZone))
+                .and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
+                .whenActive(new InstantCommand(()->dblLockOffset = 20))
+                .whenInactive(new InstantCommand(()->dblLockOffset = 0))
+                ;
+
 
         /*new Trigger(()->Math.abs(mainController.getLeftX()) < 0.1 && Math.abs(mainController.getLeftY()) < 0.1 && Math.abs(mainController.getRightX()) > 0.1)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.resumePathFollowing()), new HoldPointCommand(follower, follower.getPose(), true)));
@@ -373,6 +372,8 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("IsAtSpeed", robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose))));
         telemetry.addData("X: ", follower.getPose().getX());
         telemetry.addData("Y: ", follower.getPose().getY());
+        telemetry.addData("goal in sight", robotBase.limelightSubsystem.goalInSight());
+        telemetry.addData("lock offset", dblLockOffset);
         //telemetry.addData("Follower Pose", follower.getPose());
         /*telemetry.addData("Automated drive", automatedDrive);
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
