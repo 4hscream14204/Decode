@@ -338,9 +338,9 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Launch Zone", DataStorage.launchZone);
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
         //telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
-        telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
+        /*telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
-        telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
+        telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());*/
         //telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
         //telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
         telemetry.addData("Limelight Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
@@ -350,25 +350,25 @@ public class ThwompTeleOp extends OpMode {
         //telemetry.addData("Target Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
         //telemetry.addData("Is Running", robotBase.limelightSubsystem.limelight.isRunning());
         //telemetry.addData("Is connected: ", robotBase.limelightSubsystem.limelight.isConnected());
-        telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
+        /*telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
         telemetry.addData("Hue M", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.MIDDLE));
         telemetry.addData("Hue R", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.RIGHT));
         telemetry.addData("Sat L", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.LEFT));
         telemetry.addData("Sat M", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.MIDDLE));
-        telemetry.addData("Sat R", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.RIGHT));
+        telemetry.addData("Sat R", robotBase.sorterCameraSubsystem.getSaturation(SorterCamera.ArtifactSlot.RIGHT));*/
         telemetry.addData("Time", timer.seconds());
         telemetry.addData("Limelight Z", robotBase.limelightSubsystem.getTargetZ());
         telemetry.addData("Limelight X", robotBase.limelightSubsystem.getTargetX());
-        telemetry.addData("Pedro Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower, blueGoalPose));
+        //telemetry.addData("Pedro Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower, blueGoalPose));
         telemetry.addData("Velocity", robotBase.launcherSubsystemLeft.getVelocity());
-        telemetry.addData("Target Velocity Limelight Blue", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose)));
-        telemetry.addData("Target Velocity follower Blue", robotBase.launcherSubsystemLeft.getLaunchVelocity(follower.getPose().distanceFrom(redGoalPose)* 2.54));
-        telemetry.addData("True left target vel", robotBase.launcherSubsystemLeft.dblTargetVel);
-        telemetry.addData("IsAtSpeed", robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose))));
+        //telemetry.addData("Target Velocity Limelight Blue", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose)));
+        //telemetry.addData("Target Velocity follower Blue", robotBase.launcherSubsystemLeft.getLaunchVelocity(follower.getPose().distanceFrom(redGoalPose)* 2.54));
+        //telemetry.addData("True left target vel", robotBase.launcherSubsystemLeft.dblTargetVel);
+        //telemetry.addData("IsAtSpeed", robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose))));
         telemetry.addData("X: ", follower.getPose().getX());
         telemetry.addData("Y: ", follower.getPose().getY());
-        telemetry.addData("goal in sight", robotBase.limelightSubsystem.goalInSight());
-        telemetry.addData("lock offset", dblLockOffset);
+        //telemetry.addData("goal in sight", robotBase.limelightSubsystem.goalInSight());
+        //telemetry.addData("lock offset", dblLockOffset);
         //telemetry.addData("Follower Pose", follower.getPose());
         /*telemetry.addData("Automated drive", automatedDrive);
         telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0)));
