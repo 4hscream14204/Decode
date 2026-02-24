@@ -192,4 +192,12 @@ public class SorterCamera extends SubsystemBase {
             return false;
         }
     }
+
+    public long getExposure(){
+        if(exposureControl != null) {
+            return exposureControl.getExposure(TimeUnit.MILLISECONDS);
+        } else {
+            return -43572987;
+        }
+    }
 }
