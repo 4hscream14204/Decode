@@ -5,7 +5,11 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 import android.util.Size;
 
+import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -85,17 +89,13 @@ public class SorterCamera extends SubsystemBase {
                 .setCamera(m_webcam)
                 .build();
 
-        while (portal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            sleep(20);
-        }
+        CommandScheduler.getInstance().schedule(new SequentialCommandGroup(new WaitUntilCommand(()->portal.getCameraState() == VisionPortal.CameraState.STREAMING),
+                new InstantCommand(()->gainControl = portal.getCameraControl(GainControl.class)),
+                new InstantCommand(()->exposureControl = portal.getCameraControl(ExposureControl.class)),
+                new InstantCommand(()->exposureControl.setMode(ExposureControl.Mode.Manual)),
+                new InstantCommand(()->exposureControl.setExposure(7, TimeUnit.MILLISECONDS)),
+                new InstantCommand(()->gainControl.setGain(0))));
 
-        gainControl = portal.getCameraControl(GainControl.class);
-        exposureControl = portal.getCameraControl(ExposureControl.class);
-
-        exposureControl.setMode(ExposureControl.Mode.Manual);
-        exposureControl.setExposure(7, TimeUnit.MILLISECONDS);
-
-        gainControl.setGain(0);
     }
     public void getAnalysis(){
         resultMiddle = colorSensor.getAnalysis();
@@ -192,5 +192,4 @@ public class SorterCamera extends SubsystemBase {
             return false;
         }
     }
-
 }
