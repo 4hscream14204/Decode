@@ -42,6 +42,7 @@ public class LotsOfArtifactsAuto extends OpMode {
     Pose facingGoalPoint = new Pose(132, 136/*133.5, 139*/);
     Pose topRowLineUp = new Pose(96, 82, Math.toRadians(0));
     Pose intakeTopRow = new Pose(121, 82);
+    Pose secondToLastLaunch = new Pose(88,77,Math.toRadians(47));
     Pose lastLaunch = new Pose(83,82,Math.toRadians(47));
     Pose park = new Pose(105,65,Math.toRadians(24));
 
@@ -56,6 +57,7 @@ public class LotsOfArtifactsAuto extends OpMode {
     PathChain intakeFromGateToLaunch;
     PathChain intakeTopRowPath;
     PathChain launchTopRow;
+    PathChain lastLaunchFromGate;
     PathChain parking;
 
     SequentialCommandGroup route;
@@ -125,6 +127,19 @@ public class LotsOfArtifactsAuto extends OpMode {
                         new HeadingInterpolator.PiecewiseNode(0, 0.25, HeadingInterpolator.linear(intakeArtifactsFromGate.getHeading(), launchAftIntakeFromGate.getHeading())),
                         //new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
                         new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.constant(launchAftIntakeFromGate.getHeading()))))
+                //.setLinearHeadingInterpolation(intakeArtifactsFromGate.getHeading(),launchAftIntakeFromGate.getHeading())
+                .addParametricCallback(0.1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
+                .addParametricCallback(0.97, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.97, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.97, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.8, ()->robotBase.intakeSubsystem.intake(1))
+                .build();
+        intakeFromGateToLaunch = follower.pathBuilder()
+                .addPath(new BezierLine(intakeArtifactsFromGate,secondToLastLaunch))
+                .setHeadingInterpolation(HeadingInterpolator.piecewise(
+                        new HeadingInterpolator.PiecewiseNode(0, 0.25, HeadingInterpolator.linear(intakeArtifactsFromGate.getHeading(), secondToLastLaunch.getHeading())),
+                        //new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
+                        new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.constant(secondToLastLaunch.getHeading()))))
                 //.setLinearHeadingInterpolation(intakeArtifactsFromGate.getHeading(),launchAftIntakeFromGate.getHeading())
                 .addParametricCallback(0.1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
                 .addParametricCallback(0.97, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
