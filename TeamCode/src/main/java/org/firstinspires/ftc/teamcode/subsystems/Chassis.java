@@ -142,6 +142,10 @@ public class Chassis extends SubsystemBase {
             backRightMotor.setPower(dblBackRightPower);
         }
 
+        public void setTargetHeading(double degrees){
+            targetHeading = Math.toRadians(degrees);
+        }
+
         public void resetIMU() {
             pinpoint.setHeading(0, AngleUnit.DEGREES);
         }
