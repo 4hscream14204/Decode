@@ -42,6 +42,7 @@ public class LotsOfArtifactsAuto extends OpMode {
     Pose facingGoalPoint = new Pose(132, 136/*133.5, 139*/);
     Pose topRowLineUp = new Pose(96, 82, Math.toRadians(0));
     Pose intakeTopRow = new Pose(121, 82);
+    Pose lastLaunch = new Pose(83,82,Math.toRadians(47));
     Pose park = new Pose(105,65,Math.toRadians(24));
 
     double dblLaunchVel = 1700;
@@ -142,7 +143,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .build();
 
         launchTopRow = follower.pathBuilder()
-                .addPath(new BezierLine(topRowLineUp, launchAftIntakeFromGate))
+                .addPath(new BezierLine(topRowLineUp, lastLaunch))
                 .setHeadingInterpolation(HeadingInterpolator.piecewise(
                         new HeadingInterpolator.PiecewiseNode(0, 0.25, HeadingInterpolator.linear(topRowLineUp.getHeading(), launchAftIntakeFromGate.getHeading())),
                         new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
@@ -157,7 +158,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 .build();
 
         route = new SequentialCommandGroup(
-                new InstantCommand(()->dblLaunchVel = 1700),
+                new InstantCommand(()->dblLaunchVel = 1710),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPathCommand(follower, startPath, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
@@ -183,6 +184,7 @@ public class LotsOfArtifactsAuto extends OpMode {
                 new WaitCommand(600),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
+                new InstantCommand(()->dblLaunchVel = 1730),
                 new FollowPathCommand(follower, intakeTopRowPath, true, 1),
                 new FollowPathCommand(follower, launchTopRow, true, 1),
                 new WaitCommand(250),
