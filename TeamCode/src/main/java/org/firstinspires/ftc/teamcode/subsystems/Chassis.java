@@ -110,11 +110,11 @@ public class Chassis extends SubsystemBase {
             double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
             isFieldCentric = m_isFieldCentric;
             if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-                goalPose = new Pose(133, 138);
+                goalPose = new Pose(137, 138);
                 //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
             }
             else{
-                goalPose = new Pose(133, 138).mirror();
+                goalPose = new Pose(137, 138).mirror();
                 //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
             }
             if (isFieldCentric) {
@@ -123,10 +123,10 @@ public class Chassis extends SubsystemBase {
                 xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
                 ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
                 if (bolSnapToTarget) {
-                    if(Math.abs(xSpeed) > 1 || Math.abs(ySpeed) > 1){
+                    if(Math.abs(xSpeed) > 2 || Math.abs(ySpeed) > 2){
                         distance = follower.getPose().distanceFrom(goalPose) * 2.54;
                         timeOfFlight = distance * timeOfFlightMultiplier;
-                        targetHeading = Math.atan2((goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight)), (goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)));
+                        targetHeading = Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight)));
                         headingDeviation = (botHeading - targetHeading) * -1;
                         headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
                         dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
