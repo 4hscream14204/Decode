@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
@@ -8,6 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
+import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 
 public class Chassis extends SubsystemBase {
 
@@ -26,6 +30,8 @@ public class Chassis extends SubsystemBase {
         PIDFController driveHeadingControl = new PIDFController(2, 0, 0.1, 0.1);
         Pose goalPose = new Pose(127.7, 131.7);
         ElapsedTime timer;
+        Follower follower;
+        double distance;
 
         double dblXOffset;
         public double dblHeadingOutput;
@@ -35,6 +41,10 @@ public class Chassis extends SubsystemBase {
         double lastStickTime;
         double currentTime;
         double delayTime = 1000;
+        double xSpeed;
+        double ySpeed;
+        double timeOfFlightMultiplier = 0.003;
+        double timeOfFlight;
 
         public Chassis(DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor, GoBildaPinpointDriver m_pinpoint) {
             frontLeftMotor = m_frontLeftMotor;
@@ -89,7 +99,8 @@ public class Chassis extends SubsystemBase {
             backRightMotor.setPower(dblBackRightPower);
         }*/
 
-        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer, double m_TX) {
+        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer, double m_TX, Follower m_follower) {
+            follower = m_follower;
             timer = m_timer;
             currentTime = timer.milliseconds();
             double dblDenominator;
@@ -98,13 +109,34 @@ public class Chassis extends SubsystemBase {
             double rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
             double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
             isFieldCentric = m_isFieldCentric;
+            if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+                goalPose = new Pose(133, 138);
+                //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
+            }
+            else{
+                goalPose = new Pose(133, 138).mirror();
+                //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
+            }
             if (isFieldCentric) {
                 double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
                 double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
+                xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
+                ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
                 if (bolSnapToTarget) {
-                    dblXOffset = 0 - m_TX;
-                    dblHeadingOutput = (headingControl.calculate(dblXOffset));
-                    rx = dblHeadingOutput;
+                    if(Math.abs(xSpeed) > 1 || Math.abs(ySpeed) > 1){
+                        distance = follower.getPose().distanceFrom(goalPose) * 2.54;
+                        timeOfFlight = distance * timeOfFlightMultiplier;
+                        targetHeading = Math.atan2((goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight)), (goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)));
+                        headingDeviation = (botHeading - targetHeading) * -1;
+                        headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
+                        dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
+                        rx = dblHeadingOutput;
+                    }
+                    else{
+                        dblXOffset = 0 - m_TX;
+                        dblHeadingOutput = (headingControl.calculate(dblXOffset));
+                        rx = dblHeadingOutput;
+                    }
                     if (m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5) {
                         bolSnapToTarget = false;
                     }
