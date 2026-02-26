@@ -5,29 +5,26 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
-import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
-import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllLaunchVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
+import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
+import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 
-@Autonomous(name = "Lots of Artifacts")
-public class LotsOfArtifactsAuto extends OpMode {
+@Autonomous(name = "Red Lots of Artifacts")
+public class RedLotsOfArtifactsAuto extends OpMode {
     RobotBase robotBase;
     Follower follower;
     Pose startPose = new Pose(109.8, 134, Math.toRadians(180));
@@ -237,5 +234,11 @@ public class LotsOfArtifactsAuto extends OpMode {
         telemetry.addData("Y: ", follower.getPose().getY());
         telemetry.addData("Heading: ", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.update();
+    }
+    @Override
+    public void stop(){
+        robotBase.limelightSubsystem.limelight.stop();
+        DataStorage.endPosition = follower.getPose();
+        DataStorage.alliance = DecodeEnums.Alliance.RED;
     }
 }
