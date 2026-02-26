@@ -123,7 +123,7 @@ public class Chassis extends SubsystemBase {
                 xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
                 ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
                 if (bolSnapToTarget) {
-                    if(Math.abs(xSpeed) > 2 || Math.abs(ySpeed) > 2){
+                    if(Math.abs(m_gamepadOneLSX) > 0.1 || Math.abs(m_gamepadOneLSY) > 0.1){
                         distance = follower.getPose().distanceFrom(goalPose) * 2.54;
                         timeOfFlight = distance * timeOfFlightMultiplier;
                         targetHeading = Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight)));
