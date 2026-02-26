@@ -76,6 +76,8 @@ public class ThwompTeleOp extends OpMode {
     Servo prism;
     PathChain holdPoint;
     double dblLockOffset = 0;
+    double xSpeed;
+    double ySpeed;
 
     PolygonZone robotZone;
     PolygonZone closeLaunchZone;
@@ -316,6 +318,8 @@ public class ThwompTeleOp extends OpMode {
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getHeading());
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
+        xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
+        ySpeed = robotBase.chassisSubsystem.pinpoint.getVelY(DistanceUnit.INCH);
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
