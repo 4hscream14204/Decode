@@ -291,7 +291,6 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Hue L", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.LEFT));
         telemetry.addData("Hue M", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.MIDDLE));
         telemetry.addData("Hue R", robotBase.sorterCameraSubsystem.getHue(SorterCamera.ArtifactSlot.RIGHT));
-        telemetry.update();
     }
 
     @Override
@@ -322,7 +321,6 @@ public class ThwompTeleOp extends OpMode {
         mainController.readButtons();
         backupController.readButtons();
         robotBase.sorterCameraSubsystem.getAnalysis();
-        robotBase.chassisSubsystem.pinpoint.update();
         robotBase.limelightSubsystem.updateLimelight();
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getHeading());
@@ -391,7 +389,6 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Real Velocity", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose));
         telemetry.addData("Velocity", velocity);*/
-        telemetry.update();
     }
 
     @Override
