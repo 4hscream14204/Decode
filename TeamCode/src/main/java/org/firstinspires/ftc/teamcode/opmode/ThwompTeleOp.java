@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode;
 
 
-import com.pedropathing.geometry.BezierLine;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -18,12 +17,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
-import com.seattlesolvers.solverslib.pedroCommand.HoldPointCommand;
-import com.skeletonarmy.marrow.zones.CircleZone;
 import com.skeletonarmy.marrow.zones.Point;
 import com.skeletonarmy.marrow.zones.PolygonZone;
-import com.skeletonarmy.marrow.zones.Zone;
 
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -31,33 +26,27 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
-import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsNoSortingCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOneGreen;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchOnePurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchTwoPurple;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
-import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleIntakeBlockerCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleLaunchZoneCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleTiltCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
-import org.firstinspires.ftc.teamcode.robotbase.Color;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
-import org.firstinspires.ftc.teamcode.robotbase.GoBildaPrismDriver;
-import org.firstinspires.ftc.teamcode.robotbase.PrismAnimations;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
-import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 import org.firstinspires.ftc.teamcode.subsystems.RGBLightSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SorterCamera;
 import org.firstinspires.ftc.teamcode.subsystems.SorterServo;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
+
+import java.util.List;
 
 @TeleOp(name = "Thwomp TeleOp")
 public class ThwompTeleOp extends OpMode {
@@ -76,12 +65,17 @@ public class ThwompTeleOp extends OpMode {
     Servo prism;
     PathChain holdPoint;
     double dblLockOffset = 0;
+    double loopTime = 0;
+    double previousLoop = 0;
     double xSpeed;
     double ySpeed;
 
     PolygonZone robotZone;
     PolygonZone closeLaunchZone;
     PolygonZone farLaunchZone;
+
+    List<LynxModule> allHubs;
+
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -97,6 +91,9 @@ public class ThwompTeleOp extends OpMode {
         robotBase.chassisSubsystem.frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        allHubs = hardwareMap.getAll(LynxModule.class);
+
         if(DataStorage.alliance == DecodeEnums.Alliance.BLUE){
             robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
             /*pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
@@ -299,6 +296,11 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void start(){
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         follower.setStartingPose(new Pose((DataStorage.endPosition.getX()), (DataStorage.endPosition.getY()), DataStorage.endPosition.getHeading()));
         CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase));
         //robotBase.hoodSubsystem.setPosition(0.75);
@@ -308,6 +310,13 @@ public class ThwompTeleOp extends OpMode {
 
     @Override
     public void loop() {
+
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
+        loopTime = timer.milliseconds() - previousLoop;
+        previousLoop = timer.milliseconds();
         CommandScheduler.getInstance().run();
         follower.update();
         mainController.readButtons();
@@ -373,6 +382,7 @@ public class ThwompTeleOp extends OpMode {
         //telemetry.addData("IsAtSpeed", robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose))));
         telemetry.addData("X: ", follower.getPose().getX());
         telemetry.addData("Y: ", follower.getPose().getY());
+        telemetry.addData("Loop Time", loopTime);
         //telemetry.addData("goal in sight", robotBase.limelightSubsystem.goalInSight());
         //telemetry.addData("lock offset", dblLockOffset);
         //telemetry.addData("Follower Pose", follower.getPose());
