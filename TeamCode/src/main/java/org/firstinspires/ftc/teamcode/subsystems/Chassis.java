@@ -45,6 +45,7 @@ public class Chassis extends SubsystemBase {
         double ySpeed;
         double timeOfFlightMultiplier = 0.0028/*0.003*/;
         double timeOfFlight;
+        double changeThreshold = 0.01;
 
         public Chassis(DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor, GoBildaPinpointDriver m_pinpoint) {
             frontLeftMotor = m_frontLeftMotor;
@@ -168,10 +169,16 @@ public class Chassis extends SubsystemBase {
                 dblFrontRightPower = (y - x - rx) / dblDenominator;
                 dblBackRightPower = (y + x - rx) / dblDenominator;
             }
-            frontLeftMotor.setPower(dblFrontLeftPower);
-            frontRightMotor.setPower(dblFrontRightPower);
-            backLeftMotor.setPower(dblBackLeftPower);
-            backRightMotor.setPower(dblBackRightPower);
+
+            if ((Math.abs(dblFrontLeftPower - frontLeftMotor.getPower()) > changeThreshold) ||
+                    (Math.abs(dblFrontRightPower - frontRightMotor.getPower()) > changeThreshold) ||
+                    (Math.abs(dblBackLeftPower - backLeftMotor.getPower()) > changeThreshold) ||
+                    (Math.abs(dblBackRightPower - backRightMotor.getPower()) > changeThreshold)) {
+                frontLeftMotor.setPower(dblFrontLeftPower);
+                frontRightMotor.setPower(dblFrontRightPower);
+                backLeftMotor.setPower(dblBackLeftPower);
+                backRightMotor.setPower(dblBackRightPower);
+            }
         }
 
         public void setTargetHeading(double degrees){
