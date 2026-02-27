@@ -22,6 +22,7 @@ import com.skeletonarmy.marrow.zones.PolygonZone;
 
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
@@ -66,6 +67,8 @@ public class ThwompTeleOp extends OpMode {
     double dblLockOffset = 0;
     double loopTime = 0;
     double previousLoop = 0;
+    double xSpeed;
+    double ySpeed;
 
     PolygonZone robotZone;
     PolygonZone closeLaunchZone;
@@ -324,15 +327,17 @@ public class ThwompTeleOp extends OpMode {
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getHeading());
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
+        xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
+        ySpeed = robotBase.chassisSubsystem.pinpoint.getVelY(DistanceUnit.INCH);
         //robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.limelightTX - dblLockOffset);
+            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.limelightTX - dblLockOffset, follower);
         }
         else{
-            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.getTargetX() + dblLockOffset);
+            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.getTargetX() + dblLockOffset, follower);
         }
 
         /*holdPoint = follower.pathBuilder()
