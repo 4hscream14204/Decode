@@ -43,7 +43,7 @@ public class Chassis extends SubsystemBase {
         double delayTime = 1000;
         double xSpeed;
         double ySpeed;
-        double timeOfFlightMultiplier = 0.003;
+        double timeOfFlightMultiplier = 0.0028/*0.003*/;
         double timeOfFlight;
 
         public Chassis(DcMotor m_frontRightMotor, DcMotor m_frontLeftMotor, DcMotor m_backRightMotor, DcMotor m_backLeftMotor, GoBildaPinpointDriver m_pinpoint) {
@@ -110,11 +110,11 @@ public class Chassis extends SubsystemBase {
             double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
             isFieldCentric = m_isFieldCentric;
             if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-                goalPose = new Pose(137, 138);
+                goalPose = new Pose(144, 138);
                 //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
             }
             else{
-                goalPose = new Pose(137, 138).mirror();
+                goalPose = new Pose(144, 138).mirror();
                 //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
             }
             if (isFieldCentric) {
