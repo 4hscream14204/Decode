@@ -42,11 +42,13 @@ public class SmallRedAutoRouteHP extends OpMode {
     Pose preloadLaunchPose = new Pose(87,14,Math.toRadians(68));
     Pose intakePose = new Pose(133,6.5,Math.toRadians(0));
     Pose launchPose = new Pose(78,14,Math.toRadians(59));
+    Pose parkPose = new Pose(14, 12, Math.toRadians(180));
 
 
     PathChain goesToShootPreload;
     PathChain intakesFromHumanZone;
     PathChain goesBackToShoot;
+    PathChain parking;
     GamepadEx chassis;
 
 
@@ -104,8 +106,12 @@ public class SmallRedAutoRouteHP extends OpMode {
                 new WaitCommand(1000),
                // new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower,goesBackToShoot,false,1),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(1))
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPathCommand(follower,intakesFromHumanZone,false,1),
+                new WaitCommand(1000),
+                new FollowPath(follower,goesBackToShoot,false,1)
                 );
 
     }
