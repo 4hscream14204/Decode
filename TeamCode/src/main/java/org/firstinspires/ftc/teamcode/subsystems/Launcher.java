@@ -15,6 +15,8 @@ public class Launcher extends SubsystemBase {
     public double dblTargetVel = 0;
     private InterpLUT launcherLUT;
     double maximum = 2500;
+    double changeThresholdPower = 0.01;
+    double changeThresholdVelocity = 3;
     PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
 
 
@@ -35,7 +37,9 @@ public class Launcher extends SubsystemBase {
     }
 
     public void setPower(double power){
-        launcherMotor.setPower(power);
+        if(Math.abs(power - launcherMotor.getPower()) > changeThresholdPower){
+            launcherMotor.setPower(power);
+        }
     }
 
     public void setVelocity(double m_velocity) {
@@ -44,7 +48,9 @@ public class Launcher extends SubsystemBase {
     }
 
     public void setVelocitySimple(double m_velocity) {
-        launcherMotor.setVelocity(m_velocity);
+        if(Math.abs(m_velocity - launcherMotor.getVelocity()) > changeThresholdVelocity) {
+            launcherMotor.setVelocity(m_velocity);
+        }
     }
 
     /*public void setRPM(double m_RPM) {
