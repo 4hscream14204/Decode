@@ -14,7 +14,7 @@ public class Launcher extends SubsystemBase {
     public final double launchVar2 = 1770.4;
     public double dblTargetVel = 0;
     private InterpLUT launcherLUT;
-    double maximum = 2300;
+    double maximum = 2500;
     PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
 
 
