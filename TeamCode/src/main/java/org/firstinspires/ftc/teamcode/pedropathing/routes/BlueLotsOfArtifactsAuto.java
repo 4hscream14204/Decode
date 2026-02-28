@@ -179,7 +179,7 @@ public class BlueLotsOfArtifactsAuto extends OpMode {
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower, intakeMiddleRowPathLineUp, true, 1),
 
-                new InstantCommand(()->dblLaunchVel = 1845),
+                new InstantCommand(()->dblLaunchVel = 185),
                 new FollowPathCommand(follower, intakeMiddleRowPath, true, 1),
                 new FollowPathCommand(follower, middleRowToLaunch, true, 1),
                 new WaitCommand(250),
