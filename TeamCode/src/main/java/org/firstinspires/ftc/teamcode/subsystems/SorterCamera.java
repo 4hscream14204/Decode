@@ -14,6 +14,7 @@ import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.teamcode.robotbase.PrismAnimations;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
@@ -32,6 +33,19 @@ public class SorterCamera extends SubsystemBase {
     public boolean isRightAndLeftPurple = false;
     public boolean isMiddleAndRightPurple = false;
     public int intMinSaturation = 15;
+    public PredominantColorProcessor.Swatch leftColor = PredominantColorProcessor.Swatch.BLACK;
+    public PredominantColorProcessor.Swatch middleColor = PredominantColorProcessor.Swatch.BLACK;
+    public PredominantColorProcessor.Swatch rightColor = PredominantColorProcessor.Swatch.BLACK;
+
+    int blackCountLeft = 0;
+    int colorCountLeft = 0;
+    int blackCountMiddle = 0;
+    int colorCountMiddle = 0;
+    int blackCountRight = 0;
+    int colorCountRight = 0;
+
+    int blackCountThreshold = 5;
+    int colorCountThreshold = 3;
 
     GainControl gainControl;
     ExposureControl exposureControl;
@@ -101,6 +115,54 @@ public class SorterCamera extends SubsystemBase {
         resultMiddle = colorSensor.getAnalysis();
         resultLeft = colorSensorLeft.getAnalysis();
         resultRight = colorSensorRight.getAnalysis();
+
+        if (getUnfilteredColor(ArtifactSlot.LEFT) == PredominantColorProcessor.Swatch.BLACK) {
+            blackCountLeft ++;
+            colorCountLeft = 0;
+            if((leftColor != PredominantColorProcessor.Swatch.BLACK) && blackCountLeft > blackCountThreshold) {
+                leftColor = PredominantColorProcessor.Swatch.BLACK;
+            }
+        } else {
+            colorCountLeft ++;
+            blackCountLeft = 0;
+            if((leftColor == PredominantColorProcessor.Swatch.BLACK) && colorCountLeft > colorCountThreshold) {
+                leftColor = getUnfilteredColor(ArtifactSlot.LEFT);
+            } else if (leftColor != PredominantColorProcessor.Swatch.BLACK){
+                leftColor = getUnfilteredColor(ArtifactSlot.LEFT);
+            }
+        }
+
+        if(getUnfilteredColor(ArtifactSlot.MIDDLE) == PredominantColorProcessor.Swatch.BLACK) {
+            blackCountMiddle ++;
+            colorCountMiddle = 0;
+            if((middleColor != PredominantColorProcessor.Swatch.BLACK) && blackCountMiddle > blackCountThreshold) {
+                middleColor = PredominantColorProcessor.Swatch.BLACK;
+            }
+        } else {
+            colorCountMiddle ++;
+            blackCountMiddle = 0;
+            if((middleColor == PredominantColorProcessor.Swatch.BLACK) && colorCountMiddle > colorCountThreshold) {
+                middleColor = getUnfilteredColor(ArtifactSlot.MIDDLE);
+            } else if (middleColor != PredominantColorProcessor.Swatch.BLACK){
+                middleColor = getUnfilteredColor(ArtifactSlot.MIDDLE);
+            }
+        }
+
+        if(getUnfilteredColor(ArtifactSlot.RIGHT) == PredominantColorProcessor.Swatch.BLACK) {
+            blackCountRight ++;
+            colorCountRight = 0;
+            if((rightColor != PredominantColorProcessor.Swatch.BLACK) && blackCountRight > blackCountThreshold) {
+                rightColor = getUnfilteredColor(ArtifactSlot.RIGHT);
+            }
+        } else {
+            colorCountRight ++;
+            blackCountRight = 0;
+            if ((rightColor == PredominantColorProcessor.Swatch.BLACK) && colorCountRight > colorCountThreshold) {
+                rightColor = getUnfilteredColor(ArtifactSlot.RIGHT);
+            } else if (rightColor != PredominantColorProcessor.Swatch.BLACK) {
+                rightColor = getUnfilteredColor(ArtifactSlot.RIGHT);
+            }
+        }
     }
 
     public int getHue(ArtifactSlot m_slot){
@@ -127,7 +189,7 @@ public class SorterCamera extends SubsystemBase {
         return resultRight.HSV[1];
     }
 
-    public PredominantColorProcessor.Swatch getColor(ArtifactSlot m_slot){
+    public PredominantColorProcessor.Swatch getUnfilteredColor(ArtifactSlot m_slot){
 
         if(getSaturation(m_slot) > intMinSaturation) {
             if ((getHue(m_slot) > Colors.GREENLOW.value) && (getHue(m_slot) < Colors.GREENHIGH.value)) {
@@ -138,6 +200,16 @@ public class SorterCamera extends SubsystemBase {
         }
 
         return PredominantColorProcessor.Swatch.BLACK;
+    }
+
+    public PredominantColorProcessor.Swatch getColor(ArtifactSlot m_slot) {
+        if (m_slot == ArtifactSlot.LEFT) {
+            return leftColor;
+        } else if (m_slot == ArtifactSlot.MIDDLE) {
+            return middleColor;
+        } else {
+            return rightColor;
+        }
     }
 
     public PredominantColorProcessor.Swatch getClosestSwatchMiddle(){
