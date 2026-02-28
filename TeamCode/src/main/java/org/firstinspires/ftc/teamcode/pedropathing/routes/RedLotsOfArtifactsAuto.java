@@ -131,19 +131,7 @@ public class RedLotsOfArtifactsAuto extends OpMode {
                 .addParametricCallback(0.97, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.8, ()->robotBase.intakeSubsystem.intake(1))
                 .build();
-        intakeFromGateToLaunch = follower.pathBuilder()
-                .addPath(new BezierLine(intakeArtifactsFromGate,secondToLastLaunch))
-                .setHeadingInterpolation(HeadingInterpolator.piecewise(
-                        new HeadingInterpolator.PiecewiseNode(0, 0.25, HeadingInterpolator.linear(intakeArtifactsFromGate.getHeading(), secondToLastLaunch.getHeading())),
-                        //new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.facingPoint(facingGoalPoint))))
-                        new HeadingInterpolator.PiecewiseNode(0.25, 1, HeadingInterpolator.constant(secondToLastLaunch.getHeading()))))
-                //.setLinearHeadingInterpolation(intakeArtifactsFromGate.getHeading(),launchAftIntakeFromGate.getHeading())
-                .addParametricCallback(0.1, ()-> CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
-                .addParametricCallback(0.97, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.97, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.97, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.8, ()->robotBase.intakeSubsystem.intake(1))
-                .build();
+
 
         intakeTopRowPath = follower.pathBuilder()
                 .addPath(new BezierLine(launchAftIntakeFromGate, topRowLineUp))
