@@ -254,7 +254,7 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN && robotBase.ejectorRightSubsystem.getPosition() != SorterServo.ServoPosition.LAUNCH && DataStorage.alliance == DecodeEnums.Alliance.RED)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.RED))));
 
-        new Trigger(()-> timer.seconds() > 129)
+        new Trigger(()-> timer.seconds() > 110)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(1000)), new InstantCommand(()->backupController.gamepad.rumble(1000))));
 
         new Trigger(()->robotZone.isInside(farLaunchZone))
@@ -265,9 +265,10 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()->robotZone.isInside(farLaunchZone))
                 .and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
                 .whenActive(new InstantCommand(()->dblLockOffset = -2))
-                .whenInactive(new InstantCommand(()->dblLockOffset = 0))
-                ;
+                .whenInactive(new InstantCommand(()->dblLockOffset = 0));
 
+        new Trigger(()-> robotBase.chassisSubsystem.bolSnapToTarget)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->gamepad1.rumble(1, 1, 250))));
 
         /*new Trigger(()->Math.abs(mainController.getLeftX()) < 0.1 && Math.abs(mainController.getLeftY()) < 0.1 && Math.abs(mainController.getRightX()) > 0.1)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.resumePathFollowing()), new HoldPointCommand(follower, follower.getPose(), true)));
