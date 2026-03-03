@@ -34,7 +34,10 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityComman
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleLaunchZoneCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleTiltCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferGreenBallCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPurpleBallCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferTwoPurpleCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
@@ -140,12 +143,12 @@ public class ThwompTeleOp extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)/*new Launch3ArtifactsNoSortingCommandGroup(robotBase)*/));
 
         mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOnePurple(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferPurpleBallCommandGroup(robotBase)));
 
         mainController.getGamepadButton(GamepadKeys.Button.SQUARE)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchOneGreen(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferGreenBallCommandGroup(robotBase)));
         mainController.getGamepadButton(GamepadKeys.Button.TRIANGLE)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchTwoPurple(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferTwoPurpleCommandGroup(robotBase)));
 
         mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchPatternCommandGroup(robotBase)));
