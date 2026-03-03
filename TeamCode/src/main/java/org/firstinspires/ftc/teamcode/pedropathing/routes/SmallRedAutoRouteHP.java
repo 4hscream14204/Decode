@@ -38,10 +38,10 @@ public class SmallRedAutoRouteHP extends OpMode {
     SequentialCommandGroup route;
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
 
-    Pose startPose = new Pose(93,7,Math.toRadians(0));
-    Pose preloadLaunchPose = new Pose(87,14,Math.toRadians(68));
+    Pose startPose = new Pose(88,8,Math.toRadians(0));
+    Pose preloadLaunchPose = new Pose(87,14,Math.toRadians(64));
     Pose intakePose = new Pose(133,6.5,Math.toRadians(0));
-    Pose launchPose = new Pose(78,14,Math.toRadians(59));
+    Pose launchPose = new Pose(89,14,Math.toRadians(55));
     Pose parkPose = new Pose(14, 12, Math.toRadians(180));
 
 
@@ -55,7 +55,7 @@ public class SmallRedAutoRouteHP extends OpMode {
     ElapsedTime timer;
     Servo prism;
     int secondsToWait = 0;
-    double dblLaucnhVel = 2200;
+    double dblLaucnhVel = 2300;
     double dblPreLaucnhVel = 2200;
 
 
