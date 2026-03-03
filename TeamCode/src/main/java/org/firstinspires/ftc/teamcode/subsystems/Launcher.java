@@ -15,7 +15,7 @@ public class Launcher extends SubsystemBase {
     public double dblTargetVel = 0;
     private InterpLUT launcherLUT;
     double maximum = 2500;
-    double changeThresholdPower = 0.01;
+    double changeThresholdPower = 0.001;
     double changeThresholdVelocity = 3;
     PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
 
