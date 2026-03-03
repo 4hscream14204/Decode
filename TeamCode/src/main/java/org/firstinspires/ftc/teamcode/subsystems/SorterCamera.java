@@ -44,7 +44,7 @@ public class SorterCamera extends SubsystemBase {
     int blackCountRight = 0;
     int colorCountRight = 0;
 
-    int blackCountThreshold = 5;
+    int blackCountThreshold = 7;
     int colorCountThreshold = 3;
 
     GainControl gainControl;

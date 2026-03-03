@@ -7,6 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Launcher extends SubsystemBase {
     public DcMotorEx launcherMotor;
     public final double dblLaunchWheelRadius = 1.375;
@@ -15,9 +19,12 @@ public class Launcher extends SubsystemBase {
     public double dblTargetVel = 0;
     private InterpLUT launcherLUT;
     double maximum = 2500;
-    double changeThresholdPower = 0.01;
+    double changeThresholdPower = 0.001;
     double changeThresholdVelocity = 3;
+    int velStorageSize = 10;
     PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
+
+    List <Double> velStorage = new ArrayList<>();
 
 
     public Launcher(DcMotorEx m_Launcher){
@@ -34,6 +41,10 @@ public class Launcher extends SubsystemBase {
         launcherLUT.add(171, 1840);
         launcherLUT.add(181, 1880);
         launcherLUT.createLUT();
+
+        for (int i = 0; i < velStorageSize; i++) {
+            velStorage.add(0.0);
+        }
     }
 
     public void setPower(double power){
@@ -44,6 +55,8 @@ public class Launcher extends SubsystemBase {
 
     public void setVelocity(double m_velocity) {
         launcherMotor.setPower(launcherPIDF.calculate(getVelocity(), m_velocity));
+        velStorage.add(getVelocity());
+        velStorage.remove(0);
         dblTargetVel = m_velocity;
     }
 
@@ -85,7 +98,17 @@ public class Launcher extends SubsystemBase {
     }
 
     public boolean isAtSpeed(double velocity){
-        if(Math.abs((getVelocity() - dblTargetVel)) <= 10){
+        double averageSpeed = 0;
+        int velStorageIndex = 0;
+
+        for (int i = 0; i < velStorageSize; i++) {
+            averageSpeed = averageSpeed + velStorage.get(velStorageIndex);
+            velStorageIndex ++;
+        }
+
+        averageSpeed = averageSpeed / velStorageSize;
+
+        if(Math.abs((averageSpeed - dblTargetVel)) <= 10){
             return true;
         }
         else{
