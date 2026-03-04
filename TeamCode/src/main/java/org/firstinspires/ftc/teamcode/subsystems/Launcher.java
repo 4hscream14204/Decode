@@ -21,7 +21,7 @@ public class Launcher extends SubsystemBase {
     double maximum = 2500;
     double changeThresholdPower = 0.001;
     double changeThresholdVelocity = 3;
-    int velStorageSize = 10;
+    int velStorageSize = 3;
     PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
 
     List <Double> velStorage = new ArrayList<>();
@@ -42,9 +42,9 @@ public class Launcher extends SubsystemBase {
         launcherLUT.add(181, 1880);
         launcherLUT.createLUT();
 
-        /*for (int i = 0; i < velStorageSize; i++) {
+        for (int i = 0; i < velStorageSize; i++) {
             velStorage.add(0.0);
-        }*/
+        }
     }
 
     public void setPower(double power){
@@ -55,8 +55,8 @@ public class Launcher extends SubsystemBase {
 
     public void setVelocity(double m_velocity) {
         launcherMotor.setPower(launcherPIDF.calculate(getVelocity(), m_velocity));
-        //velStorage.add(getVelocity());
-        //velStorage.remove(0);
+        velStorage.add(getVelocity());
+        velStorage.remove(0);
         dblTargetVel = m_velocity;
     }
 
@@ -99,7 +99,7 @@ public class Launcher extends SubsystemBase {
     }
 
     public boolean isAtSpeed(double velocity){
-        /*double averageSpeed = 0;
+        double averageSpeed = 0;
         int velStorageIndex = 0;
 
         for (int i = 0; i < velStorageSize; i++) {
@@ -107,14 +107,9 @@ public class Launcher extends SubsystemBase {
             velStorageIndex ++;
         }
 
-        averageSpeed = averageSpeed / velStorageSize;*/
+        averageSpeed = averageSpeed / velStorageSize;
 
-        if(Math.abs((getVelocity() - dblTargetVel)) <= 10){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return Math.abs((averageSpeed - dblTargetVel)) <= 10;
     }
 
     public void setMaximum(double m_maximum){
