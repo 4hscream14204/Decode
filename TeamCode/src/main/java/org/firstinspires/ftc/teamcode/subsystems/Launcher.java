@@ -42,9 +42,9 @@ public class Launcher extends SubsystemBase {
         launcherLUT.add(181, 1880);
         launcherLUT.createLUT();
 
-        for (int i = 0; i < velStorageSize; i++) {
+        /*for (int i = 0; i < velStorageSize; i++) {
             velStorage.add(0.0);
-        }
+        }*/
     }
 
     public void setPower(double power){
@@ -55,8 +55,8 @@ public class Launcher extends SubsystemBase {
 
     public void setVelocity(double m_velocity) {
         launcherMotor.setPower(launcherPIDF.calculate(getVelocity(), m_velocity));
-        velStorage.add(getVelocity());
-        velStorage.remove(0);
+        //velStorage.add(getVelocity());
+        //velStorage.remove(0);
         dblTargetVel = m_velocity;
     }
 
@@ -94,11 +94,12 @@ public class Launcher extends SubsystemBase {
     }
 
     public double getLaunchVelocity(double m_Distance){
-        return ((-0.0008*(Math.pow(m_Distance, 2))) + (3.3166 * m_Distance) + 1300)/*((0.0071*(Math.pow(m_Distance, 2))) + (0.7714 * m_Distance) + 1503.5)*/;
+        return ((3.1834 * m_Distance) + 1240.5);
+        //return ((-0.0008*(Math.pow(m_Distance, 2))) + (3.3166 * m_Distance) + 1300)/*((0.0071*(Math.pow(m_Distance, 2))) + (0.7714 * m_Distance) + 1503.5)*/;
     }
 
     public boolean isAtSpeed(double velocity){
-        double averageSpeed = 0;
+        /*double averageSpeed = 0;
         int velStorageIndex = 0;
 
         for (int i = 0; i < velStorageSize; i++) {
@@ -106,9 +107,9 @@ public class Launcher extends SubsystemBase {
             velStorageIndex ++;
         }
 
-        averageSpeed = averageSpeed / velStorageSize;
+        averageSpeed = averageSpeed / velStorageSize;*/
 
-        if(Math.abs((averageSpeed - dblTargetVel)) <= 10){
+        if(Math.abs((getVelocity() - dblTargetVel)) <= 10){
             return true;
         }
         else{

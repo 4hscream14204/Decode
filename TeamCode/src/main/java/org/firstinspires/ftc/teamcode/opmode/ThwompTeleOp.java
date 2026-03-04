@@ -385,6 +385,7 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("X: ", follower.getPose().getX());
         telemetry.addData("Y: ", follower.getPose().getY());
         telemetry.addData("Loop Time", loopTime);
+        telemetry.addData("Distance Pedro", follower.getPose().distanceFrom(redGoalPose) * 2.54);
         //telemetry.addData("goal in sight", robotBase.limelightSubsystem.goalInSight());
         //telemetry.addData("lock offset", dblLockOffset);
         //telemetry.addData("Follower Pose", follower.getPose());

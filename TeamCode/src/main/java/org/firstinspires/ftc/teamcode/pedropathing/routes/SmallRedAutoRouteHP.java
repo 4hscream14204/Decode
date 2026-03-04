@@ -55,7 +55,7 @@ public class SmallRedAutoRouteHP extends OpMode {
     ElapsedTime timer;
     Servo prism;
     int secondsToWait = 0;
-    double dblLaucnhVel = 2300;
+    double dblLaucnhVel = 2250;
     double dblPreLaucnhVel = 2200;
 
 
@@ -105,7 +105,7 @@ public class SmallRedAutoRouteHP extends OpMode {
                 new FollowPathCommand(follower,intakesFromHumanZone,false,1),
                 new WaitCommand(1000),
                // new WaitUntilCommand(()->!follower.isBusy()),
-                new FollowPathCommand(follower,goesBackToShoot,false,1),
+                new FollowPathCommand(follower,goesBackToShoot,true,1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
