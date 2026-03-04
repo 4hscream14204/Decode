@@ -21,7 +21,7 @@ public class Launcher extends SubsystemBase {
     double maximum = 2500;
     double changeThresholdPower = 0.001;
     double changeThresholdVelocity = 3;
-    int velStorageSize = 10;
+    int velStorageSize = 3;
     PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
 
     List <Double> velStorage = new ArrayList<>();
@@ -94,7 +94,8 @@ public class Launcher extends SubsystemBase {
     }
 
     public double getLaunchVelocity(double m_Distance){
-        return ((-0.0008*(Math.pow(m_Distance, 2))) + (3.3166 * m_Distance) + 1300)/*((0.0071*(Math.pow(m_Distance, 2))) + (0.7714 * m_Distance) + 1503.5)*/;
+        return ((3.1834 * m_Distance) + 1240.5);
+        //return ((-0.0008*(Math.pow(m_Distance, 2))) + (3.3166 * m_Distance) + 1300)/*((0.0071*(Math.pow(m_Distance, 2))) + (0.7714 * m_Distance) + 1503.5)*/;
     }
 
     public boolean isAtSpeed(double velocity){
@@ -108,12 +109,7 @@ public class Launcher extends SubsystemBase {
 
         averageSpeed = averageSpeed / velStorageSize;
 
-        if(Math.abs((averageSpeed - dblTargetVel)) <= 10){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return Math.abs((averageSpeed - dblTargetVel)) <= 10;
     }
 
     public void setMaximum(double m_maximum){
