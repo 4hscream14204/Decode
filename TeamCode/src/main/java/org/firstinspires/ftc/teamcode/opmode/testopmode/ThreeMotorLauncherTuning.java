@@ -10,6 +10,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
@@ -29,6 +30,9 @@ public class ThreeMotorLauncherTuning extends OpMode {
         robotBase = new RobotBase(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
         robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
+
+        main.getGamepadButton(GamepadKeys.Button.CROSS)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)));
 
         main.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
@@ -69,6 +73,7 @@ public class ThreeMotorLauncherTuning extends OpMode {
         main.readButtons();
         robotBase.limelightSubsystem.updateLimelight();
         follower.update();
+        CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, velocity));
         //robotBase.chassisSubsystem.drive(main.getLeftY(), main.getLeftX(), main.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         telemetry.addData("Left", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Middle", robotBase.launcherSubsystemMiddle.getVelocity());
