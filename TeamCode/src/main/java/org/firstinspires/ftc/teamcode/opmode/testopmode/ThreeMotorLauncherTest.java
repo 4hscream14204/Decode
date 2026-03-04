@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.testopmode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
-
+@Disabled
 @TeleOp(name = "Three Motor Launcher Test")
 public class ThreeMotorLauncherTest extends OpMode {
     GamepadEx main;

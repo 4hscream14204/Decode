@@ -43,7 +43,7 @@ public class Chassis extends SubsystemBase {
         double delayTime = 1000;
         double xSpeed;
         double ySpeed;
-        double timeOfFlightMultiplier = 0.0028/*0.003*/;
+        double timeOfFlightMultiplier = 0.003/*0.003*/;
         double timeOfFlight;
         double changeThreshold = 0.01;
 

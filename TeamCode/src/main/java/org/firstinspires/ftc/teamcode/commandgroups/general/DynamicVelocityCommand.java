@@ -20,7 +20,7 @@ public class DynamicVelocityCommand extends CommandBase {
     Pose futurePose;
     double distance;
     double newDistance;
-    double timeOfFlightMultiplier = 0.0028/*0.003*/;
+    double timeOfFlightMultiplier = 0.003/*0.003*/;
     double xSpeed;
     double ySpeed;
     double timeOfFlight;

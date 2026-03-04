@@ -94,8 +94,8 @@ public class Launcher extends SubsystemBase {
     }
 
     public double getLaunchVelocity(double m_Distance){
-        return ((3.1834 * m_Distance) + 1240.5);
-        //return ((-0.0008*(Math.pow(m_Distance, 2))) + (3.3166 * m_Distance) + 1300)/*((0.0071*(Math.pow(m_Distance, 2))) + (0.7714 * m_Distance) + 1503.5)*/;
+        //return ((3.1834 * m_Distance) + 1240.5);
+        return ((0.005*(Math.pow(m_Distance, 2))) + (0.5651 * m_Distance) + 1618.2)/*((0.0071*(Math.pow(m_Distance, 2))) + (0.7714 * m_Distance) + 1503.5)*/;
     }
 
     public boolean isAtSpeed(double velocity){

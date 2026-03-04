@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDyna
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @TeleOp(name = "Three Motor Launcher Tuning")
@@ -33,6 +34,16 @@ public class ThreeMotorLauncherTuning extends OpMode {
 
         main.getGamepadButton(GamepadKeys.Button.TRIANGLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)));
+
+        main.getGamepadButton(GamepadKeys.Button.CIRCLE)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(
+                                new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE))
+                        ));
+
+        main.getGamepadButton(GamepadKeys.Button.SQUARE)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))
+                ));
 
         main.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
@@ -78,7 +89,8 @@ public class ThreeMotorLauncherTuning extends OpMode {
         telemetry.addData("Left", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Middle", robotBase.launcherSubsystemMiddle.getVelocity());
         telemetry.addData("Right", robotBase.launcherSubsystemRight.getVelocity());
-        telemetry.addData("Limelight Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
+        telemetry.addData("Target Velocity", velocity);
+        telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
         telemetry.update();
     }
 }
