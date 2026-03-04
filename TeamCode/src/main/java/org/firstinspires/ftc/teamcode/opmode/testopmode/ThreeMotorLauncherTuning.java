@@ -31,7 +31,7 @@ public class ThreeMotorLauncherTuning extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
 
-        main.getGamepadButton(GamepadKeys.Button.CROSS)
+        main.getGamepadButton(GamepadKeys.Button.TRIANGLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)));
 
         main.getGamepadButton(GamepadKeys.Button.A)
