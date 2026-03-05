@@ -53,7 +53,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
     Pose preIntakeMiddleRow = new Pose(94, 62, Math.toRadians(0));
     Pose intakeMiddleRow = new Pose(132, 60, Math.toRadians(0));
-    Pose backupMiddleRow = new Pose(114, 60, Math.toRadians(0));
+    Pose backupMiddleRow = new Pose(122, 60, Math.toRadians(0));
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
     Pose preIntakeBottomRow = new Pose(94, 42, Math.toRadians(0));
