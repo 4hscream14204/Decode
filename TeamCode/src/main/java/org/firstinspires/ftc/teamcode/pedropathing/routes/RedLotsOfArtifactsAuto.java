@@ -34,8 +34,8 @@ public class RedLotsOfArtifactsAuto extends OpMode {
     Pose intakeMiddleLineUp = new Pose(94, 60, Math.toRadians(0));
     Pose intakeMiddleRow = new Pose(129, 60, Math.toRadians(0));
     Pose pushGate = new Pose(120, 66, Math.toRadians(0));
-    Pose intakeArtifactsFromGate = new Pose(126, 62, Math.toRadians(30));
-    Pose launchAftIntakeFromGate = new Pose(87,76,Math.toRadians(50));
+    Pose intakeArtifactsFromGate = new Pose(127, 63, Math.toRadians(30));
+    Pose launchAftIntakeFromGate = new Pose(89,76,Math.toRadians(50));
     Pose facingGoalPoint = new Pose(132, 136/*133.5, 139*/);
     Pose topRowLineUp = new Pose(96, 82, Math.toRadians(0));
     Pose intakeTopRow = new Pose(121, 82);
@@ -167,24 +167,24 @@ public class RedLotsOfArtifactsAuto extends OpMode {
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower, intakeMiddleRowPathLineUp, true, 1),
 
-                new InstantCommand(()->dblLaunchVel = 1885),
+                new InstantCommand(()->dblLaunchVel = 1870),
                 new FollowPathCommand(follower, intakeMiddleRowPath, true, 1),
                 new FollowPathCommand(follower, middleRowToLaunch, true, 1),
                 new WaitCommand(250),
                 new TransferResetCommandGroup(robotBase),
                 new FollowPathCommand(follower, launchMiddleToIntake,true,1),
-                new WaitCommand(700),
+                new WaitCommand(425),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
                 new FollowPathCommand(follower, launchMiddleToIntake, true, 1),
-                new WaitCommand(700),
+                new WaitCommand(425),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
                 new FollowPathCommand(follower, launchMiddleToIntake, true, 1),
-                new WaitCommand(700),
+                new WaitCommand(425),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
-                new InstantCommand(()->dblLaunchVel = 1840),
+                new InstantCommand(()->dblLaunchVel = 1860),
                 new FollowPathCommand(follower, intakeTopRowPath, true, 1),
                 new FollowPathCommand(follower, launchTopRow, true, 1),
                 new WaitCommand(250),
