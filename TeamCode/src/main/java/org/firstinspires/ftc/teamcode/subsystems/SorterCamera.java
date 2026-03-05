@@ -225,19 +225,19 @@ public class SorterCamera extends SubsystemBase {
     }
 
     public boolean hasTwoPurple(){
-        if(resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
+        if(getUnfilteredColor(ArtifactSlot.MIDDLE) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && getUnfilteredColor(ArtifactSlot.LEFT) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
            isMiddleAndLeftPurple = true;
            isMiddleAndRightPurple = false;
            isRightAndLeftPurple = false;
            return true;
         }
-        else if(resultMiddle.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
+        else if(getUnfilteredColor(ArtifactSlot.MIDDLE) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && getUnfilteredColor(ArtifactSlot.RIGHT) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             isMiddleAndRightPurple = true;
             isMiddleAndLeftPurple = false;
             isRightAndLeftPurple = false;
             return true;
         }
-        else if(resultLeft.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && resultRight.closestSwatch == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
+        else if(getUnfilteredColor(ArtifactSlot.LEFT) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && getUnfilteredColor(ArtifactSlot.RIGHT) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             isRightAndLeftPurple = true;
             isMiddleAndLeftPurple = false;
             isMiddleAndRightPurple = false;
