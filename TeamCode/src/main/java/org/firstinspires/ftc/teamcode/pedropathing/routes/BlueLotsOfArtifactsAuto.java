@@ -237,8 +237,9 @@ public class BlueLotsOfArtifactsAuto extends OpMode {
     }
     @Override
     public void stop(){
+        Pose endPose = new Pose(follower.getPose().getX()+7, follower.getPose().getY()-2, follower.getPose().getHeading());
         robotBase.limelightSubsystem.limelight.stop();
-        DataStorage.endPosition = follower.getPose();
+        DataStorage.endPosition = endPose;
         DataStorage.alliance = DecodeEnums.Alliance.BLUE;
     }
 }

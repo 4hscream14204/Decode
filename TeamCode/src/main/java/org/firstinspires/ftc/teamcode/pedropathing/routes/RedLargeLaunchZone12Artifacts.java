@@ -336,8 +336,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     }
     @Override
     public void stop(){
+        Pose endPose = new Pose(follower.getPose().getX()+3, follower.getPose().getY()-4, follower.getPose().getHeading());
         robotBase.limelightSubsystem.limelight.stop();
-        DataStorage.endPosition = follower.getPose();
+        DataStorage.endPosition = endPose;
         DataStorage.alliance = DecodeEnums.Alliance.RED;
     }
 }

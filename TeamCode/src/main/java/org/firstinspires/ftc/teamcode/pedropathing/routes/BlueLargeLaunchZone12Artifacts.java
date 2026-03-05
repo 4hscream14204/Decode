@@ -49,7 +49,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0)).mirror();
     Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0)).mirror();
     Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90)).mirror();
-    Pose lineUpToOpenRamp = new Pose(125, 78, Math.toRadians(90)).mirror();
+    Pose lineUpToOpenRamp = new Pose(122, 78, Math.toRadians(90)).mirror();
     Pose openRamp = new Pose(126, 78, Math.toRadians(90)).mirror();
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0)).mirror();
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0)).mirror();
@@ -341,8 +341,9 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     }
     @Override
     public void stop(){
+        Pose endPose = new Pose(follower.getPose().getX()+7, follower.getPose().getY()-4, follower.getPose().getHeading());
         robotBase.limelightSubsystem.limelight.stop();
-        DataStorage.endPosition = follower.getPose();
+        DataStorage.endPosition = endPose;
         DataStorage.alliance = DecodeEnums.Alliance.BLUE;
     }
 }
