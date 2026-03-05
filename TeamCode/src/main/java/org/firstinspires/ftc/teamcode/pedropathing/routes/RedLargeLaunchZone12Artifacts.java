@@ -21,7 +21,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.auto.AutoTransferAndLaunchNoPatternCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
@@ -39,20 +38,20 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
     Pose parkPose = new Pose(106, 74, Math.toRadians(0));
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
-    Pose launchPose1 = new Pose(88, 92, Math.toRadians(43));
+    Pose launchPose1 = new Pose(88, 91, Math.toRadians(49));
     Pose launchPose2 = new Pose(92, 90, Math.toRadians(43));
     Pose launchPose3 = new Pose(88, 90, Math.toRadians(43));
-    Pose launchPose4 = new Pose(88, 90, Math.toRadians(43));
+    Pose launchPose4 = new Pose(89, 90, Math.toRadians(43));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
     Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
     Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0));
     Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90));
-    Pose lineUpToOpenRamp = new Pose(122, 78, Math.toRadians(90));
+    Pose lineUpToOpenRamp = new Pose(121, 78, Math.toRadians(90));
     Pose openRamp = new Pose(126, 78, Math.toRadians(90));
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
-    Pose preIntakeMiddleRow = new Pose(94, 60, Math.toRadians(0));
+    Pose preIntakeMiddleRow = new Pose(94, 62, Math.toRadians(0));
     Pose intakeMiddleRow = new Pose(132, 60, Math.toRadians(0));
     Pose backupMiddleRow = new Pose(114, 60, Math.toRadians(0));
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
@@ -84,8 +83,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     boolean middleRowDone = false;
     boolean bottomRowDone = false;
     int secondsToWait = 0;
-    double dblLaucnhVel = 1850;
-    double dblPreLaucnhVel = 1850;
+    double dblTargetLaunchVel = 1850;
+    double dblPreLaunchVel = 1830;
+    double dblSortLaunchVel = 1850;
     ElapsedTime timer;
     Servo prism;
 
@@ -222,11 +222,11 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new FollowPath(follower, linesUpWithSecondRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesSecondRow).withTimeout(1200),
-                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
+                new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new FollowPath(follower, backUpFromSecondRow, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new WaitCommand(125),
-                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
                 //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.THREE));
 
@@ -234,34 +234,37 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new FollowPath(follower, linesUpToIntakeThirdRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower,intakesThirdRow).withTimeout(1200),
-                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
+                new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new FollowPath(follower,goesToShootThirdRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new WaitCommand(125),
-                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
                 //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new FollowPath(follower, park, true, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new SetAllVelocityCommandGroup(robotBase, 0));
 
         route = new SequentialCommandGroup(
+                new InstantCommand(()->dblTargetLaunchVel = dblPreLaunchVel),
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
-                new SetAllVelocityCommandGroup(robotBase,dblLaucnhVel),
+                new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
                 new WaitCommand(125),
-                new AutoTransferAndLaunchNoPatternCG(robotBase, dblLaucnhVel),
+                new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
                 new FollowPath(follower, linesUpToIntakeFirstRow, false, 1),
+                new InstantCommand(()->dblTargetLaunchVel = dblSortLaunchVel),
+                new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                 new FollowPath(follower, intakesFirstRow, true, 1).withTimeout(1200),
                 new FollowPath(follower,linesUpToOpenRamp,true,1 ),
                 new FollowPath(follower,opensRamp,false,1).withTimeout(500),
                 new WaitCommand(500),
-                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
+                new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new FollowPath(follower, shootsFirstRow, true, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new WaitCommand(125),
-                new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
+                new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
                 //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
 /*
@@ -298,7 +301,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     public void loop() {
         CommandScheduler.getInstance().run();
         CommandScheduler.getInstance().schedule(
-                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel)
+                new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel)
         );
         CommandScheduler.getInstance().schedule(
                 new InstantCommand(()->robotBase.sorterCameraSubsystem.getAnalysis())
