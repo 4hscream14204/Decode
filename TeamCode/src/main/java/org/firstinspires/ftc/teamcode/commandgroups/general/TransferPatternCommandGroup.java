@@ -21,17 +21,18 @@ public class TransferPatternCommandGroup extends SequentialCommandGroup {
                 addCommands(
                         new TransferTwoPurpleCommandGroup(robotBase),
                         new WaitCommand(500),
-                        new TransferGreenBallCommandGroup(robotBase),
+                        new Transfer3BallsNoCameraCommandGroup(robotBase)
                         //new WaitCommand(500),
-                        new TransferResetCommandGroup(robotBase)
+                        //new TransferResetCommandGroup(robotBase)
                 );
             } else if (DataStorage.pattern == DecodeEnums.Patterns.GPP) {
                 addCommands(
                         new TransferGreenBallCommandGroup(robotBase),
                         new WaitCommand(500),
-                        new TransferTwoPurpleCommandGroup(robotBase),
+                        new TransferPurpleBallCommandGroup(robotBase),
+                        new Transfer3BallsNoCameraCommandGroup(robotBase)
                         //new WaitCommand(500),
-                       new TransferResetCommandGroup(robotBase)
+                       //new TransferResetCommandGroup(robotBase)
                 );
             } else if (DataStorage.pattern == DecodeEnums.Patterns.PGP) {
                 addCommands(
@@ -39,8 +40,8 @@ public class TransferPatternCommandGroup extends SequentialCommandGroup {
                         new WaitCommand(500),
                         new TransferGreenBallCommandGroup(robotBase),
                         new WaitCommand(500),
-                        new TransferPurpleBallCommandGroup(robotBase),
-                        new TransferResetCommandGroup(robotBase)
+                        new Transfer3BallsNoCameraCommandGroup(robotBase)
+                        //new TransferResetCommandGroup(robotBase)
                 );
             }
 

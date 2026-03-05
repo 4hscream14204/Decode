@@ -47,7 +47,7 @@ public class SorterCamera extends SubsystemBase {
     int blackCountThreshold = 7;
     int colorCountThreshold = 3;
 
-    long exposure = 3;
+    long exposure = 7;
 
     GainControl gainControl;
     ExposureControl exposureControl;
@@ -227,19 +227,19 @@ public class SorterCamera extends SubsystemBase {
     }
 
     public boolean hasTwoPurple(){
-        if(getUnfilteredColor(ArtifactSlot.MIDDLE) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && getUnfilteredColor(ArtifactSlot.LEFT) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
+        if(middleColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && leftColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
            isMiddleAndLeftPurple = true;
            isMiddleAndRightPurple = false;
            isRightAndLeftPurple = false;
            return true;
         }
-        else if(getUnfilteredColor(ArtifactSlot.MIDDLE) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && getUnfilteredColor(ArtifactSlot.RIGHT) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
+        else if(middleColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && rightColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             isMiddleAndRightPurple = true;
             isMiddleAndLeftPurple = false;
             isRightAndLeftPurple = false;
             return true;
         }
-        else if(getUnfilteredColor(ArtifactSlot.LEFT) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && getUnfilteredColor(ArtifactSlot.RIGHT) == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
+        else if(leftColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && rightColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE){
             isRightAndLeftPurple = true;
             isMiddleAndLeftPurple = false;
             isMiddleAndRightPurple = false;

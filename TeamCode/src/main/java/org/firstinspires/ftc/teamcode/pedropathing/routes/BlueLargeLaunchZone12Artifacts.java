@@ -39,11 +39,11 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180)).mirror();
     Pose parkPose = new Pose(106, 74, Math.toRadians(0)).mirror();
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
-    Pose launchPreload = new Pose(53,89,Math.toRadians(132));
-    Pose launchPose1 = new Pose(53, 83, Math.toRadians(137));
-    Pose launchPose2 = new Pose(53,83,Math.toRadians(135));
-    Pose launchPose3 = new Pose(53,83,Math.toRadians(135));
-    Pose launchPose4 = new Pose(53,83,Math.toRadians(135));
+    Pose launchPreload = new Pose(53,89,Math.toRadians(131));
+    Pose launchPose1 = new Pose(53, 83, Math.toRadians(131));
+    Pose launchPose2 = new Pose(49,85,Math.toRadians(133));
+    Pose launchPose3 = new Pose(52,83,Math.toRadians(134));
+    Pose launchPose4 = new Pose(52,83,Math.toRadians(134));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0)).mirror();
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0)).mirror();
     Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0)).mirror();
@@ -58,8 +58,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     Pose backupMiddleRow = new Pose(114, 62, Math.toRadians(0)).mirror();
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0)).mirror();
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0)).mirror();
-    Pose preIntakeBottomRow = new Pose(94, 39, Math.toRadians(0)).mirror();
-    Pose intakeBottomRow = new Pose(132, 39, Math.toRadians(0)).mirror();
+    Pose preIntakeBottomRow = new Pose(94, 42, Math.toRadians(0)).mirror();
+    Pose intakeBottomRow = new Pose(132, 41, Math.toRadians(0)).mirror();
     Pose backsUpFromBottomRow = new Pose(104,35,Math.toRadians(0)).mirror();
     Pose bottomRowToLaunchControl = new Pose(99.020, 40.449).mirror();
     PathChain goesFromWallToShootPreload;
@@ -85,8 +85,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     boolean middleRowDone = false;
     boolean bottomRowDone = false;
     int secondsToWait = 0;
-    double dblLaucnhVel = 1860;
-    double dblPreLaucnhVel = 1860;
+    double dblLaucnhVel = 1850;
+    double dblPreLaucnhVel = 1850;
     ElapsedTime timer;
     Servo prism;
 
@@ -142,8 +142,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 .build();
         shootsFirstRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(intakeTopRow, launchPose1))
-                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose1.getHeading())
+                        new BezierLine(intakeTopRow, launchPose2))
+                .setLinearHeadingInterpolation(intakeTopRow.getHeading(), launchPose2.getHeading())
                 .build();
         //Opens Classifier Ramp//
 
@@ -167,8 +167,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
         //Second line//
         linesUpWithSecondRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(launchPose1, preIntakeMiddleRow))
-                .setLinearHeadingInterpolation(launchPose1.getHeading(), preIntakeMiddleRow.getHeading())
+                        new BezierLine(launchPose2, preIntakeMiddleRow))
+                .setLinearHeadingInterpolation(launchPose2.getHeading(), preIntakeMiddleRow.getHeading())
                 .build();
         intakesSecondRow = follower.pathBuilder()
                 .addPath(
@@ -179,21 +179,21 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 .addPath(
                         new BezierLine( intakeMiddleRow,backupMiddleRow))
                 .setConstantHeadingInterpolation(backupMiddleRow.getHeading())
-                .addPath(new BezierLine(backupMiddleRow, launchPose1))
-                .setLinearHeadingInterpolation(backupMiddleRow.getHeading(), launchPose1.getHeading())
+                .addPath(new BezierLine(backupMiddleRow, launchPose3))
+                .setLinearHeadingInterpolation(backupMiddleRow.getHeading(), launchPose3.getHeading())
                 .build();
 
         goesToShootSecondRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(preIntakeMiddleRow, launchPose1))
-                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose1.getHeading())
+                        new BezierLine(preIntakeMiddleRow, launchPose3))
+                .setLinearHeadingInterpolation(preIntakeMiddleRow.getHeading(), launchPose3.getHeading())
                 .build();
 
         //Third line//
         linesUpToIntakeThirdRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(launchPose1, preIntakeBottomRow))
-                .setLinearHeadingInterpolation(launchPose1.getHeading(), preIntakeBottomRow.getHeading())
+                        new BezierLine(launchPose3, preIntakeBottomRow))
+                .setLinearHeadingInterpolation(launchPose3.getHeading(), preIntakeBottomRow.getHeading())
                 .build();
         intakesThirdRow = follower.pathBuilder()
                 .addPath(
@@ -207,14 +207,14 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 .build();
         goesToShootThirdRow = follower.pathBuilder()
                 .addPath(
-                        new BezierLine(intakeBottomRow, launchPose1))
-                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose1.getHeading())
+                        new BezierLine(intakeBottomRow, launchPose4))
+                .setLinearHeadingInterpolation(intakeBottomRow.getHeading(), launchPose4.getHeading())
                 .build();
         //park//
 
         park = follower.pathBuilder()
-                .addPath(new BezierLine(launchPose1, parkPose))
-                .setLinearHeadingInterpolation(launchPose1.getHeading(), parkPose.getHeading())
+                .addPath(new BezierLine(launchPose4, parkPose))
+                .setLinearHeadingInterpolation(launchPose4.getHeading(), parkPose.getHeading())
                 .build();
 
         follower = Constants.createFollower(hardwareMap);
@@ -226,9 +226,12 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower, backUpFromSecondRow, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
-                new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new FollowPath(follower, park, false, 1), ()->desiredRows == DesiredRows.THREE));
+                //new Transfer3BallsNoCameraCommandGroup(robotBase),
+                new ConditionalCommand(
+                        new InstantCommand(()->routeBottomRow.schedule()),
+                        new FollowPath(follower, park, false, 1), ()->desiredRows == DesiredRows.THREE));
 
         routeBottomRow = new SequentialCommandGroup(
                 new FollowPath(follower, linesUpToIntakeThirdRow),
@@ -237,8 +240,9 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower,goesToShootThirdRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new FollowPath(follower, park, false, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new SetAllVelocityCommandGroup(robotBase, 0));
@@ -248,6 +252,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase,dblLaucnhVel),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchNoPatternCG(robotBase, dblLaucnhVel),
                 new FollowPath(follower, linesUpToIntakeFirstRow, false, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
@@ -258,8 +263,9 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower, shootsFirstRow, true, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()),
                         new FollowPath(follower, park, false, 1),
                         ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
@@ -299,6 +305,9 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
         CommandScheduler.getInstance().schedule(
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel)
         );
+        CommandScheduler.getInstance().schedule(
+                new InstantCommand(()->robotBase.sorterCameraSubsystem.getAnalysis())
+        );
         robotBase.limelightSubsystem.updateLimelight();
         robotBase.sorterCameraSubsystem.getAnalysis();
         follower.update();
@@ -326,6 +335,9 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
         telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
         telemetry.addData("Is Stuck", follower.isRobotStuck());
+        telemetry.addData("Left Artifact", robotBase.sorterCameraSubsystem.leftColor);
+        telemetry.addData("Middle Artifact", robotBase.sorterCameraSubsystem.middleColor);
+        telemetry.addData("Right Artifact", robotBase.sorterCameraSubsystem.rightColor);
     }
     @Override
     public void stop(){
