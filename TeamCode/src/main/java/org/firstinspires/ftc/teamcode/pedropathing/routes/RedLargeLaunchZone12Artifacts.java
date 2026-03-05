@@ -39,16 +39,16 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
     Pose parkPose = new Pose(106, 74, Math.toRadians(0));
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
-    Pose launchPose1 = new Pose(86, 90, Math.toRadians(43));
-    Pose launchPose2 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading());
-    Pose launchPose3 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading());
-    Pose launchPose4 = new Pose(launchPose1.getX(), launchPose1.getY(), launchPose1.getHeading());
+    Pose launchPose1 = new Pose(88, 92, Math.toRadians(43));
+    Pose launchPose2 = new Pose(92, 90, Math.toRadians(43));
+    Pose launchPose3 = new Pose(88, 90, Math.toRadians(43));
+    Pose launchPose4 = new Pose(88, 90, Math.toRadians(43));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
     Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
     Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0));
     Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90));
-    Pose lineUpToOpenRamp = new Pose(125, 78, Math.toRadians(90));
+    Pose lineUpToOpenRamp = new Pose(122, 78, Math.toRadians(90));
     Pose openRamp = new Pose(126, 78, Math.toRadians(90));
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
@@ -57,8 +57,8 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose backupMiddleRow = new Pose(114, 60, Math.toRadians(0));
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
-    Pose preIntakeBottomRow = new Pose(94, 39, Math.toRadians(0));
-    Pose intakeBottomRow = new Pose(132, 39, Math.toRadians(0));
+    Pose preIntakeBottomRow = new Pose(94, 42, Math.toRadians(0));
+    Pose intakeBottomRow = new Pose(132, 41, Math.toRadians(0));
     Pose backsUpFromBottomRow = new Pose(104,35,Math.toRadians(0));
     Pose bottomRowToLaunchControl = new Pose(99.020, 40.449);
     PathChain goesFromWallToShootPreload;
@@ -84,8 +84,8 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     boolean middleRowDone = false;
     boolean bottomRowDone = false;
     int secondsToWait = 0;
-    double dblLaucnhVel = 1740;
-    double dblPreLaucnhVel = 1740;
+    double dblLaucnhVel = 1850;
+    double dblPreLaucnhVel = 1850;
     ElapsedTime timer;
     Servo prism;
 
@@ -225,8 +225,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower, backUpFromSecondRow, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new ConditionalCommand(new InstantCommand(()->routeBottomRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.THREE));
 
         routeBottomRow = new SequentialCommandGroup(
@@ -236,8 +237,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower,goesToShootThirdRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new FollowPath(follower, park, true, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(0)),
                 new SetAllVelocityCommandGroup(robotBase, 0));
@@ -247,6 +249,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase,dblLaucnhVel),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPath(follower, goesFromWallToShootPreload, true, 1),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchNoPatternCG(robotBase, dblLaucnhVel),
                 new FollowPath(follower, linesUpToIntakeFirstRow, false, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
@@ -257,8 +260,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel),
                 new FollowPath(follower, shootsFirstRow, true, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
-                new Transfer3BallsNoCameraCommandGroup(robotBase),
+                //new Transfer3BallsNoCameraCommandGroup(robotBase),
                 new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new FollowPath(follower, park, true, 1), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
 /*
         /*CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
@@ -295,6 +299,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
         CommandScheduler.getInstance().run();
         CommandScheduler.getInstance().schedule(
                 new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel)
+        );
+        CommandScheduler.getInstance().schedule(
+                new InstantCommand(()->robotBase.sorterCameraSubsystem.getAnalysis())
         );
         robotBase.limelightSubsystem.updateLimelight();
         robotBase.sorterCameraSubsystem.getAnalysis();
