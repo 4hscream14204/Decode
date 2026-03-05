@@ -47,6 +47,8 @@ public class SorterCamera extends SubsystemBase {
     int blackCountThreshold = 7;
     int colorCountThreshold = 3;
 
+    long exposure = 3;
+
     GainControl gainControl;
     ExposureControl exposureControl;
 
@@ -107,7 +109,7 @@ public class SorterCamera extends SubsystemBase {
                 new InstantCommand(()->gainControl = portal.getCameraControl(GainControl.class)),
                 new InstantCommand(()->exposureControl = portal.getCameraControl(ExposureControl.class)),
                 new InstantCommand(()->exposureControl.setMode(ExposureControl.Mode.Manual)),
-                new InstantCommand(()->exposureControl.setExposure(7, TimeUnit.MILLISECONDS)),
+                new InstantCommand(()->exposureControl.setExposure(exposure, TimeUnit.MILLISECONDS)),
                 new InstantCommand(()->gainControl.setGain(0))));
 
     }

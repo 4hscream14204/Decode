@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.testopmode;
 
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -11,9 +10,8 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
@@ -25,46 +23,42 @@ public class ThreeMotorLauncherTuning extends OpMode {
     RobotBase robotBase;
     Follower follower;
     boolean isFieldCentric;
-    double velocity = 0;
-    ElapsedTime timer;
-    Pose redGoalPose = new Pose(132, 137);
+    double velocity;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
         main = new GamepadEx(gamepad1);
         robotBase = new RobotBase(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
-        robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
-        timer = new ElapsedTime();
+        robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
+
+        main.getGamepadButton(GamepadKeys.Button.TRIANGLE)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)));
+
+        main.getGamepadButton(GamepadKeys.Button.CIRCLE)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(
+                                new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE))
+                        ));
+
+        main.getGamepadButton(GamepadKeys.Button.SQUARE)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))
+                ));
 
         main.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, 0)));
 
-        main.getGamepadButton(GamepadKeys.Button.X)
-                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE))));
-
-        main.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))));
-
         main.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->velocity += 10)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity += 10))));
 
         main.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->velocity -= 10)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity -= 10))));
 
         main.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->velocity += 100)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity += 100))));
 
         main.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->velocity -= 100)));
-
-        main.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(()-> CommandScheduler.getInstance().schedule(
-                        new ChangeHeadingLockCommandGroup(robotBase)
-                ));
-
-        main.getGamepadButton(GamepadKeys.Button.PS)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity -= 100))));
 
         new Trigger(()-> main.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> main.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -82,7 +76,6 @@ public class ThreeMotorLauncherTuning extends OpMode {
     @Override
     public void start() {
         follower.setStartingPose(new Pose(88, 8, 0));
-        timer.reset();
     }
 
     @Override
@@ -91,15 +84,13 @@ public class ThreeMotorLauncherTuning extends OpMode {
         main.readButtons();
         robotBase.limelightSubsystem.updateLimelight();
         follower.update();
-        robotBase.launcherSubsystemLeft.setVelocitySimple(velocity);
-        robotBase.launcherSubsystemMiddle.setVelocitySimple(velocity);
-        robotBase.launcherSubsystemRight.setVelocitySimple(velocity);
-        robotBase.chassisSubsystem.drive(main.getLeftY(), main.getLeftX(), main.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.getTargetX(), follower);
+        CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, velocity));
+        //robotBase.chassisSubsystem.drive(main.getLeftY(), main.getLeftX(), main.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         telemetry.addData("Left", robotBase.launcherSubsystemLeft.getVelocity());
         telemetry.addData("Middle", robotBase.launcherSubsystemMiddle.getVelocity());
         telemetry.addData("Right", robotBase.launcherSubsystemRight.getVelocity());
         telemetry.addData("Target Velocity", velocity);
-        telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower, redGoalPose));
+        telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
         telemetry.update();
     }
 }

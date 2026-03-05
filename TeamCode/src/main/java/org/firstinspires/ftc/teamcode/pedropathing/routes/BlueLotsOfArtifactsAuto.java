@@ -28,18 +28,18 @@ public class BlueLotsOfArtifactsAuto extends OpMode {
     RobotBase robotBase;
     Follower follower;
     Pose startPose = new Pose(109.8, 134, Math.toRadians(180)).mirror();
-    Pose beginLaunch = new Pose(100, 110, Math.toRadians(49)).mirror();
-    Pose launchPose = new Pose(87, 87, Math.toRadians(49)).mirror();
+    Pose beginLaunch = new Pose(100, 110, Math.toRadians(45)).mirror();
+    Pose launchPose = new Pose(87, 87, Math.toRadians(45)).mirror();
     //Pose launchAftPreloadPose = new Pose(85, 85, Math.toRadians(45));
     Pose intakeMiddleLineUp = new Pose(94, 60, Math.toRadians(0)).mirror();
     Pose intakeMiddleRow = new Pose(129, 60, Math.toRadians(0)).mirror();
     Pose pushGate = new Pose(120, 66, Math.toRadians(0)).mirror();
-    Pose intakeArtifactsFromGate = new Pose(127, 62, Math.toRadians(32)).mirror();
-    Pose launchAftIntakeFromGate = new Pose(89,76,Math.toRadians(50)).mirror();
+    Pose intakeArtifactsFromGate = new Pose(128, 62, Math.toRadians(32)).mirror();
+    Pose launchAftIntakeFromGate = new Pose(89,76,Math.toRadians(42)).mirror();
     Pose facingGoalPoint = new Pose(132, 136/*133.5, 139*/).mirror();
     Pose topRowLineUp = new Pose(96, 82, Math.toRadians(0)).mirror();
     Pose intakeTopRow = new Pose(121, 82).mirror();
-    Pose secondToLastLaunch = new Pose(88,77,Math.toRadians(48)).mirror();
+    Pose secondToLastLaunch = new Pose(88,77,Math.toRadians(41)).mirror();
     Pose lastLaunch = new Pose(85,82,Math.toRadians(40)).mirror();
     Pose park = new Pose(105,65,Math.toRadians(24)).mirror();
 
@@ -170,7 +170,7 @@ public class BlueLotsOfArtifactsAuto extends OpMode {
                 .build();
 
         route = new SequentialCommandGroup(
-                new InstantCommand(()->dblLaunchVel = 1810),
+                new InstantCommand(()->dblLaunchVel = 1880),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPathCommand(follower, startPath, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
@@ -179,21 +179,21 @@ public class BlueLotsOfArtifactsAuto extends OpMode {
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower, intakeMiddleRowPathLineUp, true, 1),
 
-                new InstantCommand(()->dblLaunchVel = 1835),
+                new InstantCommand(()->dblLaunchVel = 1860),
                 new FollowPathCommand(follower, intakeMiddleRowPath, true, 1),
                 new FollowPathCommand(follower, middleRowToLaunch, true, 1),
                 new WaitCommand(250),
                 new TransferResetCommandGroup(robotBase),
                 new FollowPathCommand(follower, launchMiddleToIntake,true,1),
-                new WaitCommand(850),
+                new WaitCommand(425),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
                 new FollowPathCommand(follower, launchMiddleToIntake, true, 1),
-                new WaitCommand(850),
+                new WaitCommand(425),
                 new FollowPathCommand(follower, intakeFromGateToLaunch, true, 1),
                 new WaitCommand(250),
                 new FollowPathCommand(follower, launchMiddleToIntake, true, 1),
-                new WaitCommand(850),
+                new WaitCommand(425),
                 new FollowPathCommand(follower, lastLaunchFromGate, true, 1),
                 new WaitCommand(250),
                 new InstantCommand(()->dblLaunchVel = 1830),

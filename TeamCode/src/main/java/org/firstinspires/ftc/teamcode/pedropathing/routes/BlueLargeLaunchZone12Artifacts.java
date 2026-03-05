@@ -85,8 +85,8 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     boolean middleRowDone = false;
     boolean bottomRowDone = false;
     int secondsToWait = 0;
-    double dblLaucnhVel = 1740;
-    double dblPreLaucnhVel = 1740;
+    double dblLaucnhVel = 1860;
+    double dblPreLaucnhVel = 1860;
     ElapsedTime timer;
     Servo prism;
 
@@ -260,7 +260,9 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchCommandGroup(robotBase, dblLaucnhVel),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
-                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()), new FollowPath(follower, park, false, 1), ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
+                new ConditionalCommand(new InstantCommand(()->routeMiddleRow.schedule()),
+                        new FollowPath(follower, park, false, 1),
+                        ()->desiredRows == DesiredRows.TWO || desiredRows == DesiredRows.THREE));
 /*
         /*CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.sorterCameraSubsystem.getAnalysis()));
         CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.OBELISK)));*/
