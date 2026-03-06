@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.subsystems.CameraLight;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
+@Disabled
 @Autonomous(name = "Red Small Side Auto")
 public class SmallRedShootPre extends OpMode {
 

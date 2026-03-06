@@ -33,7 +33,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.Limelight;
 
 @Autonomous(name = "Small Blue Auto Route Human")
-public class SmallBlueAutoRouteHP {
+public class SmallBlueAutoRouteHP extends OpMode{
     RobotBase robotBase;
     Follower follower;
     SequentialCommandGroup route;
@@ -57,7 +57,7 @@ public class SmallBlueAutoRouteHP {
     Servo prism;
     int secondsToWait = 0;
     double dblLaucnhVel = 2250;
-    double dblPreLaucnhVel = 2200;
+    double dblPreLaucnhVel = 2250;
 
 
     @Override
@@ -104,34 +104,39 @@ public class SmallBlueAutoRouteHP {
                 new SetAllVelocityCommandGroup(robotBase, dblLaucnhVel),
                 new InstantCommand(() -> robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)),
                 new FollowPathCommand(follower, goesToShootPreload, true, 1),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
                 //new WaitUntilCommand(()->!follower.isBusy()),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-0.5)),
                 new FollowPathCommand(follower,intakesFromHumanZone,true,0.5),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 // new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower,goesBackToShoot,true,1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-0.5)),
                 new FollowPathCommand(follower,intakesFromHumanZone,true,0.5),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 new FollowPath(follower,goesBackToShoot,true,1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-0.5)),
                 new FollowPathCommand(follower,intakesFromHumanZone,true,0.5),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 new FollowPath(follower,goesBackToShoot,true,1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-0.5)),
                 new FollowPathCommand(follower,intakesFromHumanZone,true,0.5),
-                new WaitCommand(1000),
+                new WaitCommand(500),
                 new FollowPath(follower,goesBackToShoot,true,1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new WaitCommand(125),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
-                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-0.5)),
                 new FollowPathCommand(follower,parking,true,1)
         );
 
@@ -151,7 +156,7 @@ public class SmallBlueAutoRouteHP {
     public void loop(){
         CommandScheduler.getInstance().run();
         CommandScheduler.getInstance().schedule(
-                new SetAllVelocityCommandGroup(robotBase, dblPreLaucnhVel)
+                new SetAllVelocityCommandGroup(robotBase, dblLaucnhVel)
         );
         robotBase.limelightSubsystem.updateLimelight();
         robotBase.sorterCameraSubsystem.getAnalysis();
@@ -179,10 +184,9 @@ public class SmallBlueAutoRouteHP {
     }
     @Override
     public void stop () {
+        Pose endPose = new Pose(follower.getPose().getX()+10, follower.getPose().getY(), follower.getPose().getHeading());
         robotBase.limelightSubsystem.limelight.stop();
-        DataStorage.endPosition = follower.getPose();
-        DataStorage.alliance = DecodeEnums.Alliance.RED;
+        DataStorage.endPosition = endPose;
+        DataStorage.alliance = DecodeEnums.Alliance.BLUE;
     }
-}
-
 }
