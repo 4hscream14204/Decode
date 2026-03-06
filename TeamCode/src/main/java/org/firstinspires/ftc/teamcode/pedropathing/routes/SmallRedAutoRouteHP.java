@@ -40,9 +40,9 @@ public class SmallRedAutoRouteHP extends OpMode {
 
     Pose startPose = new Pose(88,8,Math.toRadians(0));
     Pose preloadLaunchPose = new Pose(87,14,Math.toRadians(64));
-    Pose intakePose = new Pose(133,6.5,Math.toRadians(0));
-    Pose launchPose = new Pose(89,14,Math.toRadians(55));
-    Pose parkPose = new Pose(14, 12, Math.toRadians(180));
+    Pose intakePose = new Pose(129,6.5,Math.toRadians(0));
+    Pose launchPose = new Pose(89,14,Math.toRadians(64));
+    Pose parkPose = new Pose(119, 12, Math.toRadians(0));
 
 
     PathChain goesToShootPreload;
@@ -79,6 +79,10 @@ public class SmallRedAutoRouteHP extends OpMode {
                 .addPath(new BezierLine(startPose, preloadLaunchPose))
                 .setLinearHeadingInterpolation(startPose.getHeading(), preloadLaunchPose.getHeading())
                 .build();
+        parking = follower.pathBuilder()
+                .addPath(new BezierLine(launchPose, parkPose))
+                .setLinearHeadingInterpolation(launchPose.getHeading(), parkPose.getHeading())
+                .build();
 
         intakesFromHumanZone = follower.pathBuilder()
                 .addPath(new BezierLine(preloadLaunchPose, intakePose))
@@ -102,16 +106,32 @@ public class SmallRedAutoRouteHP extends OpMode {
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPathCommand(follower,intakesFromHumanZone,false,1),
+                new FollowPathCommand(follower,intakesFromHumanZone,true,0.5),
                 new WaitCommand(1000),
                // new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower,goesBackToShoot,true,1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                 new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPathCommand(follower,intakesFromHumanZone,false,1),
+                new FollowPathCommand(follower,intakesFromHumanZone,true,0.5),
                 new WaitCommand(1000),
-                new FollowPath(follower,goesBackToShoot,false,1)
+                new FollowPath(follower,goesBackToShoot,true,1),
+                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPathCommand(follower,intakesFromHumanZone,true,0.5),
+                new WaitCommand(1000),
+                new FollowPath(follower,goesBackToShoot,true,1),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPathCommand(follower,intakesFromHumanZone,true,0.5),
+                new WaitCommand(1000),
+                new FollowPath(follower,goesBackToShoot,true,1),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
+                new AutoTransferAndLaunchNoPatternCG(robotBase,dblLaucnhVel),
+                new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                new FollowPathCommand(follower,parking,true,1)
                 );
 
     }
