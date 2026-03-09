@@ -133,7 +133,7 @@ public class Chassis extends SubsystemBase {
                         dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
                         rx = dblHeadingOutput;
                     }
-                    else{
+                    else if(m_gamepadOneLSX > 2000){
                         dblXOffset = 0 - m_TX;
                         dblHeadingOutput = (headingControl.calculate(dblXOffset));
                         rx = dblHeadingOutput;

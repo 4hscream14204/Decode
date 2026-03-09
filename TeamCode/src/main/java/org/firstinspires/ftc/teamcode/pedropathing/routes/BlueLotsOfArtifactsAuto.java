@@ -34,7 +34,7 @@ public class BlueLotsOfArtifactsAuto extends OpMode {
     Pose intakeMiddleLineUp = new Pose(94, 60, Math.toRadians(0)).mirror();
     Pose intakeMiddleRow = new Pose(129, 60, Math.toRadians(0)).mirror();
     Pose pushGate = new Pose(120, 66, Math.toRadians(0)).mirror();
-    Pose intakeArtifactsFromGate = new Pose(128, 62, Math.toRadians(32)).mirror();
+    Pose intakeArtifactsFromGate = new Pose(128, 60, Math.toRadians(32)).mirror();
     Pose launchAftIntakeFromGate = new Pose(89,76,Math.toRadians(42)).mirror();
     Pose facingGoalPoint = new Pose(132, 136/*133.5, 139*/).mirror();
     Pose topRowLineUp = new Pose(96, 82, Math.toRadians(0)).mirror();
