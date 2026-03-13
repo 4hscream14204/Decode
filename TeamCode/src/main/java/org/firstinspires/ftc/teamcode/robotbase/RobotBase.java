@@ -73,7 +73,7 @@ public class RobotBase {
             tiltSubsystem= new Tilt(hwMap.servo.get("TiltServoL"), hwMap.servo.get("tiltServoR"));
             //intakeBlockerSubsystem= new IntakeBlocker(hwMap.servo.get("IntakeBlockerServo"));
             hoodSubsystem = new Hood(hwMap.servo.get("hoodServoL"), hwMap.servo.get("hoodServoR"));
-            modeLightSubsystem = new ModeLight(hwMap.get(GoBildaPrismDriver.class, ("modeLight")));
+            //modeLightSubsystem = new ModeLight(hwMap.get(GoBildaPrismDriver.class, ("modeLight")));
 
 
 
