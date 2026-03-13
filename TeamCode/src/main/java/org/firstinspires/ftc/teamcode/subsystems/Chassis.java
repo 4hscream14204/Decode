@@ -181,6 +181,10 @@ public class Chassis extends SubsystemBase {
             }
         }
 
+        public boolean getSnapToTarget() {
+            return bolSnapToTarget;
+        };
+
         public void setTargetHeading(double degrees){
             targetHeading = Math.toRadians(degrees);
         }

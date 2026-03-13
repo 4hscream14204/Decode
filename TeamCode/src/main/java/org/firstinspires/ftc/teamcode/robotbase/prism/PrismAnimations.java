@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robotbase;
+package org.firstinspires.ftc.teamcode.robotbase.prism;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -6,9 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 import com.qualcomm.robotcore.util.TypeConversion;
-import static org.firstinspires.ftc.teamcode.robotbase.GoBildaPrismDriver.LayerHeight;
-
-import org.firstinspires.ftc.teamcode.robotbase.Color;
+import static org.firstinspires.ftc.teamcode.robotbase.prism.GoBildaPrismDriver.LayerHeight;
 
 public class PrismAnimations {
     public enum AnimationType{

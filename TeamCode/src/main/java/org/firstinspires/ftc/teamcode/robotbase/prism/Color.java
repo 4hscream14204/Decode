@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robotbase;
+package org.firstinspires.ftc.teamcode.robotbase.prism;
 
 public class Color {
     public int red;
