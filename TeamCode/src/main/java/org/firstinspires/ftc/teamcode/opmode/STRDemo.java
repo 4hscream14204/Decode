@@ -4,6 +4,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.robocol.RobocolConfig;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
@@ -13,8 +14,11 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleTiltCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferGreenBallCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPurpleBallCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferTwoPurpleCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
@@ -30,9 +34,10 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 public class STRDemo extends OpMode {
     GamepadEx mainController;
     RobotBase robotBase;
-    boolean isFieldCentric;
+    boolean isFieldCentric = true;
     ElapsedTime timer;
     Follower follower;
+    Servo prism;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -41,11 +46,16 @@ public class STRDemo extends OpMode {
         robotBase.sorterCameraSubsystem.getAnalysis();
         timer = new ElapsedTime();
         follower = Constants.createFollower(hardwareMap);
+        prism = hardwareMap.get(Servo.class, "prism");
+        CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225)));
 
         mainController.getGamepadButton(GamepadKeys.Button.OPTIONS)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->isFieldCentric = !isFieldCentric)
                 ));
+
+        mainController.getGamepadButton(GamepadKeys.Button.CROSS)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)));
 
         mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferPurpleBallCommandGroup(robotBase)));
@@ -57,7 +67,7 @@ public class STRDemo extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferTwoPurpleCommandGroup(robotBase)));
 
         mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new LaunchPatternCommandGroup(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferPatternCommandGroup(robotBase)));
 
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -74,6 +84,12 @@ public class STRDemo extends OpMode {
 
         mainController.getGamepadButton(GamepadKeys.Button.PS)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTiltCommandGroup(robotBase)));
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystemMiddle.setVelocitySimple(1900))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystemLeft.setVelocitySimple(0)), new InstantCommand(()->robotBase.launcherSubsystemMiddle.setVelocitySimple(0)), new InstantCommand(()->robotBase.launcherSubsystemRight.setVelocitySimple(0))));
 
         new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE))));
@@ -122,6 +138,7 @@ public class STRDemo extends OpMode {
     public void loop() {
         CommandScheduler.getInstance().run();
         mainController.readButtons();
+        follower.update();
         robotBase.sorterCameraSubsystem.getAnalysis();
 
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
