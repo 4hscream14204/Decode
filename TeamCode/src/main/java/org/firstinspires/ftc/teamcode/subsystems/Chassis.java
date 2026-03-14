@@ -134,9 +134,14 @@ public class Chassis extends SubsystemBase {
                         rx = dblHeadingOutput;
                     }
                     else{
-                        dblXOffset = 0 - m_TX;
-                        dblHeadingOutput = (headingControl.calculate(dblXOffset));
+                        targetHeading = Math.atan2((goalPose.getY() - follower.getPose().getY()), (goalPose.getX() - follower.getPose().getX()));
+                        headingDeviation = (botHeading - targetHeading) * -1;
+                        headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
+                        dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
                         rx = dblHeadingOutput;
+                        /*dblXOffset = 0 - m_TX;
+                        dblHeadingOutput = (headingControl.calculate(dblXOffset));
+                        rx = dblHeadingOutput;*/
                     }
                     if (m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5) {
                         bolSnapToTarget = false;
