@@ -277,7 +277,7 @@ public class ThwompTeleOp extends OpMode {
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.444))));
 
         new Trigger(()->readyToLaunch)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new Transfer3BallsNoCameraCommandGroup(robotBase)));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)));
 
         new Trigger(()->robotBase.sorterCameraSubsystem.hasThreeArtifacts())
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.bolSnapToTarget = true)));
