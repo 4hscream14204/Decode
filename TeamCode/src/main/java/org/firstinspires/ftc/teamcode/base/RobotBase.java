@@ -2,16 +2,24 @@ package org.firstinspires.ftc.teamcode.base;
 
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
+import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 
 public class RobotBase {
-    Intake intakeSubsystem;
-    Chassis chassisSubsystem;
+    public Intake intakeSubsystem;
+    public Chassis chassisSubsystem;
+    public IntakePivot intakePivotSubsystem;
+    public Launcher launcherSubsystem;
+
     public RobotBase(HardwareMap hwMap){
         intakeSubsystem = new Intake(hwMap.dcMotor.get("intakeMotor"), hwMap.dcMotor.get("intakeMotor2"));
         chassisSubsystem = new Chassis(hwMap.dcMotor.get("frontRightMotor"), hwMap.dcMotor.get("frontLeftMotor"), hwMap.dcMotor.get("backRightMotor"), hwMap.dcMotor.get("backLeftMotor"), hwMap.get(GoBildaPinpointDriver.class, "pinpoint"));
+        intakePivotSubsystem = new IntakePivot(hwMap.servo.get("intakePivotServo"));
+        launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"));
     }
 }
