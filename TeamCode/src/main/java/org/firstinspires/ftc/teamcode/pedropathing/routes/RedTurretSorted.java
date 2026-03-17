@@ -33,6 +33,11 @@ public class RedTurretSorted extends OpMode {
         Pose linesUpToMiddleRowPgp = new Pose(97,58,Math.toRadians(0));
         Pose intakesMiddleRowPgp = new Pose(132,58,Math.toRadians(0));
         Pose linesUpToTopRowPgp = new Pose(97,83,Math.toRadians(0));
+        Pose intakes1ballFromTopRow = new Pose(116,83,Math.toRadians(0));
+        Pose linesUpToBottomRowPgp = new Pose(97,34,Math.toRadians(0));
+        Pose intakes2BallsFromBottomRow =new Pose(120,34,Math.toRadians(0));
+        Pose intakesLast2BallsFromTop = new Pose(129,83,Math.toRadians(0));
+        Pose
 
 
         double dblLaunchVel = 1700;
