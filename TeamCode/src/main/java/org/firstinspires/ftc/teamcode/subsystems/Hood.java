@@ -33,9 +33,4 @@ public class Hood extends SubsystemBase {
         hoodServoL.setPosition(position.value);
         hoodServoR.setPosition(position.value);
     }
-
-    public void autoSetPosition(double angle){
-        hoodServoL.setPosition(angle/rangeOfMotion);
-        hoodServoR.setPosition(angle/rangeOfMotion);
-    }
 }

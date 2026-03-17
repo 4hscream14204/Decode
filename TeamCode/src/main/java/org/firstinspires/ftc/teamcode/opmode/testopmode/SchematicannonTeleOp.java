@@ -98,7 +98,7 @@ chassis.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
     @Override
     public void loop() {
         chassis.readButtons();
-        robotBase.launcherSubsystemLeft.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));
+        robotBase.launcherSubsystemLeft.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance());
 
        // intake.intake(gamepad1.left_trigger / 2 + -1 * gamepad1.right_trigger / 2 );
        // robotBase.launcherSubsystem.setLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(0));

@@ -23,13 +23,10 @@ public class CheckVelocityParallelCG extends ParallelCommandGroup {
         }
         addCommands(
                 new WaitUntilCommand(() -> robotBase.launcherSubsystemLeft.isAtSpeed(
-                        robotBase.launcherSubsystemLeft.getLaunchVelocity(
-                                robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose)))),
+                )),
                 new WaitUntilCommand(() -> robotBase.launcherSubsystemMiddle.isAtSpeed(
-                        robotBase.launcherSubsystemMiddle.getLaunchVelocity(
-                                robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose)))),
+                )),
                 new WaitUntilCommand(() -> robotBase.launcherSubsystemRight.isAtSpeed(
-                        robotBase.launcherSubsystemRight.getLaunchVelocity(
-                                robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose)))));
+                )));
     }
 }

@@ -19,9 +19,9 @@ public class Launch3ArtifactsNoSortingFollowerCG extends SequentialCommandGroup 
     public void initialize(){
         addCommands(
                 new LaunchCommandGroup(robotBase),
-                new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.isAtSpeed(robotBase.limelightSubsystem.getHorizontalDistance(follower))&&
-                        robotBase.launcherSubsystemMiddle.isAtSpeed(robotBase.limelightSubsystem.getHorizontalDistance(follower))&&
-                        robotBase.launcherSubsystemRight.isAtSpeed(robotBase.limelightSubsystem.getHorizontalDistance(follower))),
+                new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.isAtSpeed()&&
+                        robotBase.launcherSubsystemMiddle.isAtSpeed()&&
+                        robotBase.launcherSubsystemRight.isAtSpeed()),
                 new WaitCommand(200),
                 new Transfer3BallsNoCameraCommandGroup(robotBase),
                 //new WaitCommand(1000),

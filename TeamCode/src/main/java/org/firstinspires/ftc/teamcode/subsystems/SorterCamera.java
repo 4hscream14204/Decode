@@ -60,7 +60,7 @@ public class SorterCamera extends SubsystemBase {
     public enum ArtifactSlot{
         LEFT,
         RIGHT,
-        MIDDLE;
+        MIDDLE
     }
 
     public SorterCamera(WebcamName m_webcam){
@@ -250,17 +250,12 @@ public class SorterCamera extends SubsystemBase {
     }
 
     public boolean hasThreeArtifacts(){
-        if((middleColor == PredominantColorProcessor.Swatch.ARTIFACT_GREEN ||
+        return (middleColor == PredominantColorProcessor.Swatch.ARTIFACT_GREEN ||
                 middleColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
                 && (leftColor == PredominantColorProcessor.Swatch.ARTIFACT_GREEN
                 || leftColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
                 && (rightColor == PredominantColorProcessor.Swatch.ARTIFACT_GREEN
-                || rightColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)){
-            return true;
-        }
-        else{
-            return false;
-        }
+                || rightColor == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE);
     }
 
     public long getExposure(){

@@ -44,7 +44,7 @@ public class HoodSubsystemTest extends OpMode {
         double verticalComp = robotBase.limelightSubsystem.getVerticalComp();
         double launchSpeed = robotBase.limelightSubsystem.getLaunchSpeed();
         //robotBase.hoodSubsystem.autoSetPosition(angle);
-        telemetry.addData("Horizontal Distance", robotBase.limelightSubsystem.getHorizontalDistance(0));
+        telemetry.addData("Horizontal Distance", robotBase.limelightSubsystem.getHorizontalDistance());
         telemetry.addData("getLaunchAngle", robotBase.limelightSubsystem.getLaunchAngle());
         telemetry.addData("AngleToGoal", robotBase.limelightSubsystem.getAngleToGoal());
         telemetry.addData("Vertical Comp", verticalComp);

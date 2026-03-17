@@ -16,7 +16,6 @@ public class CameraLight extends SubsystemBase{
     public enum Shades {
         OFF(0),
         FIFTH(0.2),
-        TESTRIGHT(0.4),
         HALF(0.5),
         FULL(1);
         public final double value;

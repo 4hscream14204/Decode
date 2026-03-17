@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.Servo;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 public class IntakeBlocker {
         Servo IntakeBlockerServo;

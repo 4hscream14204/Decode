@@ -13,9 +13,9 @@ public class LaunchPatternCommandGroup extends SequentialCommandGroup {
         transferPatternCommandGroup = new TransferPatternCommandGroup(robotBase);
         addCommands(
                 new LaunchCommandGroup(robotBase),
-                new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.getVelocity() >= robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-18.5))&&
-                        robotBase.launcherSubsystemMiddle.getVelocity() >= robotBase.launcherSubsystemMiddle.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-18.5))&&
-                        robotBase.launcherSubsystemRight.getVelocity() >= robotBase.launcherSubsystemRight.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance(-18.5))),
+                new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.getVelocity() >= robotBase.launcherSubsystemLeft.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance())&&
+                        robotBase.launcherSubsystemMiddle.getVelocity() >= robotBase.launcherSubsystemMiddle.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance())&&
+                        robotBase.launcherSubsystemRight.getVelocity() >= robotBase.launcherSubsystemRight.getLaunchVelocity(robotBase.limelightSubsystem.getHorizontalDistance())),
                 new InstantCommand(()->transferPatternCommandGroup.schedule()),
                 new WaitCommand(4500),
                 new SetAllVelocityCommandGroup(robotBase, 0),

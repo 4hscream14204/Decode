@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.commandgroups.auto;
 
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 
-import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchNoLimelightCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Transfer3BallsNoCameraCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.robotbase.RobotBase;
 
 public class AutoTransferAndLaunchNoPatternCG extends SequentialCommandGroup {
@@ -22,9 +19,9 @@ public class AutoTransferAndLaunchNoPatternCG extends SequentialCommandGroup {
     @Override
     public void initialize() {
         addCommands(
-                new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.isAtSpeed(velocity)),
-                new WaitUntilCommand(()->robotBase.launcherSubsystemMiddle.isAtSpeed(velocity)),
-                new WaitUntilCommand(()->robotBase.launcherSubsystemRight.isAtSpeed(velocity)),
+                new WaitUntilCommand(()->robotBase.launcherSubsystemLeft.isAtSpeed()),
+                new WaitUntilCommand(()->robotBase.launcherSubsystemMiddle.isAtSpeed()),
+                new WaitUntilCommand(()->robotBase.launcherSubsystemRight.isAtSpeed()),
                 // new LaunchNoLimelightCommandGroup(robotBase, velocity),
                 new Transfer3BallsNoCameraCommandGroup(robotBase)
         );

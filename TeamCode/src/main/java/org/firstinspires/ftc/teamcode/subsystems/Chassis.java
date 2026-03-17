@@ -26,14 +26,14 @@ public class Chassis extends SubsystemBase {
         double dblBackRightPower;
         public boolean isFieldCentric;
 
-        PIDFController headingControl = new PIDFController(0.02, 0, 0.002, 0.05);
+        //PIDFController headingControl = new PIDFController(0.02, 0, 0.002, 0.05);
         PIDFController driveHeadingControl = new PIDFController(2, 0, 0.1, 0.1);
         Pose goalPose = new Pose(127.7, 131.7);
         ElapsedTime timer;
         Follower follower;
         double distance;
 
-        double dblXOffset;
+        //double dblXOffset;
         public double dblHeadingOutput;
         double headingDeviation;
         public double targetHeading;
@@ -60,45 +60,6 @@ public class Chassis extends SubsystemBase {
             backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
-
-        /*public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_PIDSteering, boolean m_isFieldCentric, double m_TX) {
-            double dblDenominator;
-            double y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY); // Remember, Y stick value is reversed
-            double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
-            double rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
-            double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
-            isFieldCentric = m_isFieldCentric;
-            if (isFieldCentric) {
-                double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
-                double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
-                if (m_PIDSteering) {
-                        dblXOffset = 0 - m_TX;
-                        dblHeadingOutput = (headingControl.calculate(dblXOffset));
-                        rx = dblHeadingOutput;
-                    if (m_gamepadOneRSX < -0.5 || m_gamepadOneRSX > 0.5) {
-                        bolSnapToTarget = false;
-                    }
-                } else {
-                    rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
-                }
-                double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-                dblFrontLeftPower = (rotY + rotX + rx) / denominator;
-                dblBackLeftPower = (rotY - rotX + rx) / denominator;
-                dblFrontRightPower = (rotY - rotX - rx) / denominator;
-                dblBackRightPower = (rotY + rotX - rx) / denominator;
-            } else {
-                y = -m_gamepadOneLSY;
-                dblDenominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                dblFrontLeftPower = (y + x + rx) / dblDenominator;
-                dblBackLeftPower = (y - x + rx) / dblDenominator;
-                dblFrontRightPower = (y - x - rx) / dblDenominator;
-                dblBackRightPower = (y + x - rx) / dblDenominator;
-            }
-            frontLeftMotor.setPower(dblFrontLeftPower);
-            frontRightMotor.setPower(dblFrontRightPower);
-            backLeftMotor.setPower(dblBackLeftPower);
-            backRightMotor.setPower(dblBackRightPower);
-        }*/
 
         public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer, double m_TX, Follower m_follower) {
             follower = m_follower;
