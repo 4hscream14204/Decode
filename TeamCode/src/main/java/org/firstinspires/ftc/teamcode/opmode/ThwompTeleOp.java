@@ -23,18 +23,14 @@ import com.skeletonarmy.marrow.zones.PolygonZone;
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
-import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.SetAllVelocityCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleAlliance;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleLaunchZoneCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleTiltCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.TransferGreenBallCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPurpleBallCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
-import org.firstinspires.ftc.teamcode.commandgroups.general.TransferTwoPurpleCommandGroup;
+import org.firstinspires.ftc.teamcode.opmode.Controllers.BackupControllerKeys;
+import org.firstinspires.ftc.teamcode.opmode.Controllers.MainControllerKeys;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
@@ -73,6 +69,9 @@ public class ThwompTeleOp extends OpMode {
     PolygonZone robotZone;
     PolygonZone closeLaunchZone;
     PolygonZone farLaunchZone;
+
+    MainControllerKeys mainControllerKeys;
+    BackupControllerKeys backupControllerKeys;
 
     List<LynxModule> allHubs;
 
@@ -116,9 +115,9 @@ public class ThwompTeleOp extends OpMode {
         mainController = new GamepadEx(gamepad1);
         backupController = new GamepadEx(gamepad2);
 
-        //Main Driver keybinds
+        mainControllerKeys.addMainController(mainController, robotBase, follower);
 
-        mainController.getGamepadButton(GamepadKeys.Button.OPTIONS)
+        /*mainController.getGamepadButton(GamepadKeys.Button.OPTIONS)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->isFieldCentric = !isFieldCentric)
                 ));
@@ -132,7 +131,7 @@ public class ThwompTeleOp extends OpMode {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.CROSS)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)/*new Launch3ArtifactsNoSortingCommandGroup(robotBase)*/));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)/*new Launch3ArtifactsNoSortingCommandGroup(robotBase)*));
 
         mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferPurpleBallCommandGroup(robotBase)));
@@ -150,13 +149,13 @@ public class ThwompTeleOp extends OpMode {
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeSubsystem.intake(mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)))))
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()->robotBase.intakeSubsystem.intake(0))));
+                        new InstantCommand(()->robotBase.intakeSubsystem.intake(0))));*
 
-        mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
+       * mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity += 20))));
 
         mainController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity -= 20))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity -= 20))));*
 
         mainController.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE))));
@@ -165,11 +164,11 @@ public class ThwompTeleOp extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))));
 
         mainController.getGamepadButton(GamepadKeys.Button.PS)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTiltCommandGroup(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTiltCommandGroup(robotBase)));*/
 
-        //Backup Driver Keybinds
+        backupControllerKeys.addBackupController(backupController, robotBase);
 
-        backupController.getGamepadButton(GamepadKeys.Button.OPTIONS)
+        /*backupController.getGamepadButton(GamepadKeys.Button.OPTIONS)
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAlliance(robotBase)));
 
         backupController.getGamepadButton(GamepadKeys.Button.BACK)
@@ -204,7 +203,7 @@ public class ThwompTeleOp extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE))));
 
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))));*/
 
         //Custom Triggers for Sorter and such
 

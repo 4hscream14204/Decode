@@ -70,7 +70,7 @@ public class Chassis extends SubsystemBase {
             double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
             double rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
             double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
-            isFieldCentric = m_isFieldCentric;
+            //isFieldCentric = m_isFieldCentric;
             if(DataStorage.alliance == DecodeEnums.Alliance.RED){
                 goalPose = new Pose(144, 138);
                 //distance = robotBase.limelightSubsystem.getHorizontalDistance(follower, goalPose);
@@ -145,6 +145,10 @@ public class Chassis extends SubsystemBase {
                 backLeftMotor.setPower(dblBackLeftPower);
                 backRightMotor.setPower(dblBackRightPower);
             }
+        }
+
+        public void toggleFieldCentric() {
+            isFieldCentric = !isFieldCentric;
         }
 
         public boolean getSnapToTarget() {

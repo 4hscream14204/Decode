@@ -37,7 +37,7 @@ public class RedTurretSorted extends OpMode {
         Pose linesUpToBottomRowPgp = new Pose(97,34,Math.toRadians(0));
         Pose intakes2BallsFromBottomRow =new Pose(120,34,Math.toRadians(0));
         Pose intakesLast2BallsFromTop = new Pose(129,83,Math.toRadians(0));
-        Pose
+//        Pose
 
 
         double dblLaunchVel = 1700;
@@ -57,8 +57,8 @@ public class RedTurretSorted extends OpMode {
 
 
             intakeMiddleRowPathLineUp = follower.pathBuilder()
-                    .addPath(new BezierLine(launchPose, intakeMiddleLineUp))
-                    .setLinearHeadingInterpolation(launchPose.getHeading(), intakeMiddleLineUp.getHeading())
+//                    .addPath(new BezierLine(launchPose, intakeMiddleLineUp))
+//                    .setLinearHeadingInterpolation(launchPose.getHeading(), intakeMiddleLineUp.getHeading())
                     .build();
 
 
@@ -105,5 +105,5 @@ public class RedTurretSorted extends OpMode {
         }
     }
 
-}
+//}
 
