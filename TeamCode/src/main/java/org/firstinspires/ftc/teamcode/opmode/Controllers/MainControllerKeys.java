@@ -54,6 +54,9 @@ public class MainControllerKeys {
         mainController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))));
 
+        mainController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(54))));
+
         mainController.getGamepadButton(GamepadKeys.Button.PS)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTiltCommandGroup(robotBase)));
 

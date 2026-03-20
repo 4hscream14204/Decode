@@ -92,6 +92,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.chassisSubsystem.frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rgbLights = new RGBLights();
 
         allHubs = hardwareMap.getAll(LynxModule.class);
 
@@ -116,7 +117,8 @@ public class ThwompTeleOp extends OpMode {
 
         mainController = new GamepadEx(gamepad1);
         backupController = new GamepadEx(gamepad2);
-
+        mainControllerKeys = new MainControllerKeys();
+        backupControllerKeys = new BackupControllerKeys();
         mainControllerKeys.addMainController(mainController, robotBase, follower);
 
         /*mainController.getGamepadButton(GamepadKeys.Button.OPTIONS)
@@ -308,7 +310,7 @@ public class ThwompTeleOp extends OpMode {
             hub.clearBulkCache();
         }
 
-        readyToLaunch = robotBase.sorterCameraSubsystem.hasThreeArtifacts() && Math.abs(robotBase.chassisSubsystem.targetHeading - robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.RADIANS)) < 0.5 && (robotZone.isInside(closeLaunchZone) || robotZone.isInside(farLaunchZone)) && robotBase.chassisSubsystem.bolSnapToTarget;
+        readyToLaunch = robotBase.sorterCameraSubsystem.hasThreeArtifacts() && Math.abs(robotBase.chassisSubsystem.targetHeading - robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.RADIANS)) < 0.05 && (robotZone.isInside(closeLaunchZone) || robotZone.isInside(farLaunchZone)) && robotBase.chassisSubsystem.bolSnapToTarget;
 
         loopTime = timer.milliseconds() - previousLoop;
         previousLoop = timer.milliseconds();
