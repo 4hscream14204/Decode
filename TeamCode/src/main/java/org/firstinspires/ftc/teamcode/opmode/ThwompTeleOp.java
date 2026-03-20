@@ -344,9 +344,9 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Launch Zone", DataStorage.launchZone);
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
         //telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
-        /*telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
+        telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
-        telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());*/
+        telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
         //telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
         //telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
         telemetry.addData("Limelight Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
