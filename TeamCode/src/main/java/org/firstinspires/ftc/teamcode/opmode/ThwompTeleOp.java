@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleLaunchZoneComm
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.opmode.Controllers.BackupControllerKeys;
 import org.firstinspires.ftc.teamcode.opmode.Controllers.MainControllerKeys;
+import org.firstinspires.ftc.teamcode.opmode.Triggers.RGBLights;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
@@ -72,6 +73,7 @@ public class ThwompTeleOp extends OpMode {
 
     MainControllerKeys mainControllerKeys;
     BackupControllerKeys backupControllerKeys;
+    RGBLights rgbLights;
 
     List<LynxModule> allHubs;
 
@@ -205,9 +207,9 @@ public class ThwompTeleOp extends OpMode {
         backupController.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))));*/
 
-        //Custom Triggers for Sorter and such
+        rgbLights.createRGBTriggers(robotBase);
 
-        new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
+        /*new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_PURPLE)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE))));
 
         new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchLeft() == PredominantColorProcessor.Swatch.ARTIFACT_GREEN)
@@ -241,7 +243,7 @@ public class ThwompTeleOp extends OpMode {
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.RED))));
 
         new Trigger(()->robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_PURPLE && robotBase.sorterCameraSubsystem.getClosestSwatchRight() != PredominantColorProcessor.Swatch.ARTIFACT_GREEN && robotBase.ejectorRightSubsystem.getPosition() != SorterServo.ServoPosition.LAUNCH && DataStorage.alliance == DecodeEnums.Alliance.RED)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.RED))));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.RGBLightRightSubsystem.setColor(RGBLightSubsystem.Colors.RED))));*/
 
         new Trigger(()-> timer.seconds() > 110)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(1000)), new InstantCommand(()->backupController.gamepad.rumble(1000)), new InstantCommand(()->prism.setPosition(0.894))));
