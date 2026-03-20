@@ -35,7 +35,7 @@ public class MainControllerKeys {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.CROSS)
-                .whenPressed(() -> CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)));
+                .whenPressed(() -> CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower, robotBase.chassisSubsystem.isLockingToGate)));
 
         mainController.getGamepadButton(GamepadKeys.Button.CIRCLE)
                 .whenPressed(() -> CommandScheduler.getInstance().schedule(new TransferPurpleBallCommandGroup(robotBase)));
@@ -55,7 +55,7 @@ public class MainControllerKeys {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR))));
 
         mainController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
-                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(54))));
+                        .toggleWhenPressed(new InstantCommand(()->robotBase.chassisSubsystem.isLockingToGate = false), new InstantCommand(()->robotBase.chassisSubsystem.isLockingToGate = true));
 
         mainController.getGamepadButton(GamepadKeys.Button.PS)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTiltCommandGroup(robotBase)));

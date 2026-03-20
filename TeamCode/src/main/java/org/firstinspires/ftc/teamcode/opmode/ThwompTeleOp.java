@@ -142,7 +142,7 @@ public class ThwompTeleOp extends OpMode {
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.444))));
 
         new Trigger(()->readyToLaunch)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower)));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower, robotBase.chassisSubsystem.isLockingToGate)));
 
         new Trigger(()->robotBase.sorterCameraSubsystem.hasThreeArtifacts())
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.bolSnapToTarget = true)));
@@ -220,13 +220,14 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Launch Zone", DataStorage.launchZone);
         telemetry.addData("Is Field Centric", robotBase.chassisSubsystem.isFieldCentric);
+        telemetry.addData("Limelight Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
+        telemetry.addData("Is Locking to Gate", robotBase.chassisSubsystem.isLockingToGate);
         //telemetry.addData("Intake Power", robotBase.intakeSubsystem.intakeMotor.getPower());
         telemetry.addData("Left Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchLeft());
         telemetry.addData("Middle Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchMiddle());
         telemetry.addData("Right Closest Swatch", robotBase.sorterCameraSubsystem.getClosestSwatchRight());
         //telemetry.addData("Distance", robotBase.limelightSubsystem.getHorizontalDistance(-18.5));
         //telemetry.addData("Odometry Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
-        telemetry.addData("Limelight Heading Lock", robotBase.chassisSubsystem.bolSnapToTarget);
         //telemetry.addData("Left", robotBase.launcherSubsystemLeft.getVelocity());
         //telemetry.addData("Middle", robotBase.launcherSubsystemMiddle.getVelocity());
         //telemetry.addData("Right", robotBase.launcherSubsystemRight.getVelocity());

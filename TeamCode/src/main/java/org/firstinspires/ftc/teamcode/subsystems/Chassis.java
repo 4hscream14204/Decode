@@ -24,7 +24,8 @@ public class Chassis extends SubsystemBase {
         double dblFrontRightPower;
         double dblBackLeftPower;
         double dblBackRightPower;
-        public boolean isFieldCentric;
+        public boolean isFieldCentric = true;
+        public boolean isLockingToGate = true;
 
         //PIDFController headingControl = new PIDFController(0.02, 0, 0.002, 0.05);
         PIDFController driveHeadingControl = new PIDFController(2, 0, 0.1, 0.1);
