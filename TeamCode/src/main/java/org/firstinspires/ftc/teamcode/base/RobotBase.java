@@ -9,17 +9,20 @@ import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
+import org.firstinspires.ftc.teamcode.subsystems.Turret;
 
 public class RobotBase {
     public Intake intakeSubsystem;
     public Chassis chassisSubsystem;
     public IntakePivot intakePivotSubsystem;
     public Launcher launcherSubsystem;
+    public Turret turretSubsystem;
 
     public RobotBase(HardwareMap hwMap){
         intakeSubsystem = new Intake(hwMap.dcMotor.get("intakeMotor"), hwMap.dcMotor.get("intakeMotor2"));
         chassisSubsystem = new Chassis(hwMap.dcMotor.get("frontRightMotor"), hwMap.dcMotor.get("frontLeftMotor"), hwMap.dcMotor.get("backRightMotor"), hwMap.dcMotor.get("backLeftMotor"), hwMap.get(GoBildaPinpointDriver.class, "pinpoint"));
         intakePivotSubsystem = new IntakePivot(hwMap.servo.get("intakePivotServo"));
         launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"));
+        turretSubsystem = new Turret(hwMap.servo.get("turretServoL"), hwMap.servo.get("turretServoR"));
     }
 }

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
 
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
@@ -13,12 +14,14 @@ public class SamusTeleOp extends OpMode {
     Follower follower;
     @Override
     public void init() {
+        CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
         follower = Constants.createFollower(hardwareMap);
     }
 
     @Override
     public void loop() {
+        CommandScheduler.getInstance().run();
         follower.update();
     }
 }
