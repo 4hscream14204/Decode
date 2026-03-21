@@ -26,6 +26,8 @@ import org.firstinspires.ftc.teamcode.commandgroups.general.DynamicVelocityComma
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferResetCommandGroup;
 import org.firstinspires.ftc.teamcode.opmode.Controllers.BackupControllerKeys;
+import org.firstinspires.ftc.teamcode.opmode.Controllers.ChassisControllerKeys;
+import org.firstinspires.ftc.teamcode.opmode.Controllers.LauncherControllerKeys;
 import org.firstinspires.ftc.teamcode.opmode.Controllers.MainControllerKeys;
 import org.firstinspires.ftc.teamcode.opmode.Triggers.RGBLights;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
@@ -64,8 +66,10 @@ public class ThwompTeleOp extends OpMode {
     PolygonZone closeLaunchZone;
     PolygonZone farLaunchZone;
 
-    MainControllerKeys mainControllerKeys;
-    BackupControllerKeys backupControllerKeys;
+    /*MainControllerKeys mainControllerKeys;
+    BackupControllerKeys backupControllerKeys;*/
+    ChassisControllerKeys chassisControllerKeys;
+    LauncherControllerKeys launcherControllerKeys;
     RGBLights rgbLights;
 
     List<LynxModule> allHubs;
@@ -110,7 +114,11 @@ public class ThwompTeleOp extends OpMode {
 
         mainController = new GamepadEx(gamepad1);
         backupController = new GamepadEx(gamepad2);
-        mainControllerKeys = new MainControllerKeys();
+        chassisControllerKeys = new ChassisControllerKeys();
+        launcherControllerKeys = new LauncherControllerKeys();
+        chassisControllerKeys.addMainController(mainController, robotBase);
+        launcherControllerKeys.addLauncherDriver(backupController, robotBase, follower);
+        /*mainControllerKeys = new MainControllerKeys();
         backupControllerKeys = new BackupControllerKeys();
         mainControllerKeys.addMainController(mainController, robotBase, follower);
 
@@ -120,7 +128,7 @@ public class ThwompTeleOp extends OpMode {
         mainController.getGamepadButton(GamepadKeys.Button.DPAD_DOWN)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new SetAllVelocityCommandGroup(robotBase, (velocity -= 20))));*/
 
-        backupControllerKeys.addBackupController(backupController, robotBase);
+        //backupControllerKeys.addBackupController(backupController, robotBase);
 
         rgbLights.createRGBTriggers(robotBase);
 
@@ -141,8 +149,8 @@ public class ThwompTeleOp extends OpMode {
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->gamepad1.rumble(1, 1, 250)), new InstantCommand(()->prism.setPosition(0.225))))
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.444))));
 
-        new Trigger(()->readyToLaunch)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower, robotBase.chassisSubsystem.isLockingToGate)));
+        /*new Trigger(()->readyToLaunch)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new Launch3ArtifactsDynamicCG(robotBase, follower, robotBase.chassisSubsystem.isLockingToGate)));*/
 
         new Trigger(()->robotBase.sorterCameraSubsystem.hasThreeArtifacts())
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.bolSnapToTarget = true)));
