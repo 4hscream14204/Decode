@@ -211,7 +211,7 @@ public class ThwompTeleOp extends OpMode {
         xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = robotBase.chassisSubsystem.pinpoint.getVelY(DistanceUnit.INCH);
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.limelightTX - dblLockOffset, follower);
+            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.getTargetX() - dblLockOffset, follower);
         }
         else{
             robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), isFieldCentric, timer, robotBase.limelightSubsystem.getTargetX() + dblLockOffset, follower);
