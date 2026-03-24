@@ -58,11 +58,15 @@ public class RedTurretSorted extends OpMode {
         PathChain linesUpToOpenGate;
         PathChain opensGate;
         PathChain goesToShootMiddle;
-        PathChain pgpLinesUpToTopRow;
+        PathChain pgpLinesUpToTopRow1;
         PathChain pgpIntakes1stBallTopRow;
-        PathChain pgpLinesUpToBottomRow;
+        PathChain pgpLinesUpToBottomRow1;
         PathChain pgpIntake2BallsFromBottomRow;
         PathChain pgpGoesToShoot1stTime;
+        PathChain linesUpToTopRow2;
+        PathChain pgpIntakes2BallsFromTopRow;
+        PathChain linesUpToBottomRow2;
+
 
 
 
@@ -102,7 +106,7 @@ public class RedTurretSorted extends OpMode {
                     .addPath(new BezierLine(intakesAllMiddle,launchPose))
                     .setLinearHeadingInterpolation(intakesAllMiddle.getHeading(), launchPose.getHeading())
                     .build();
-            pgpLinesUpToTopRow = follower.pathBuilder()
+            pgpLinesUpToTopRow1 = follower.pathBuilder()
                     .addPath(new BezierLine(launchPose,linesUpToTopRow))
                     .setLinearHeadingInterpolation(launchPose.getHeading(),linesUpToTopRow.getHeading())
                     .build();
@@ -110,7 +114,7 @@ public class RedTurretSorted extends OpMode {
                     .addPath(new BezierLine(linesUpToTopRow,intakesFirstBallFromTopRow))
                     .setLinearHeadingInterpolation(linesUpToTopRow.getHeading(), intakesFirstBallFromTopRow.getHeading())
                     .build();
-            pgpLinesUpToBottomRow = follower.pathBuilder()
+            pgpLinesUpToBottomRow1 = follower.pathBuilder()
                     .addPath(new BezierLine(intakesFirstBallFromTopRow,linesUpToBottomRow))
                     .setLinearHeadingInterpolation(intakesFirstBallFromTopRow.getHeading(),linesUpToBottomRow.getHeading())
                     .build();
@@ -122,6 +126,19 @@ public class RedTurretSorted extends OpMode {
                     .addPath(new BezierLine(intakesFirst2BallsFromBottomRow,launchPose))
                     .setLinearHeadingInterpolation(intakesFirst2BallsFromBottomRow.getHeading(), launchPose.getHeading())
                     .build();
+            linesUpToTopRow2 = follower.pathBuilder()
+                    .addPath(new BezierLine(launchPose,linesUpToTopRow))
+                    .setLinearHeadingInterpolation(launchPose.getHeading(),linesUpToTopRow.getHeading())
+                    .build();
+            pgpIntakes2BallsFromTopRow = follower.pathBuilder()
+                    .addPath(new BezierLine(linesUpToTopRow,intakesLast2BallsFromTop))
+                    .setLinearHeadingInterpolation(linesUpToTopRow.getHeading(),intakesLast2BallsFromTop.getHeading())
+                    .build();
+            linesUpToBottomRow2 = follower.pathBuilder()
+                    .addPath(new BezierLine(intakesLast2BallsFromTop,linesUpToBottomRow))
+                    .setLinearHeadingInterpolation(intakesLast2BallsFromTop.getHeading(), )
+
+
 
             route = new SequentialCommandGroup(
                     new InstantCommand(()->dblTargetLaunchVel = dblPreLaunchVel),
@@ -131,21 +148,26 @@ public class RedTurretSorted extends OpMode {
                     new FollowPath(follower,launchPreload,true,1),
                     new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
                     new FollowPath(follower,linesUpToMiddleRow,true,1),
-                    new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
+                   // new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                     new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                    new FollowPath(follower,intakesMiddleRow,true,1),
+                    new FollowPath(follower, intakesMiddleRow,true,1),
                     new FollowPath(follower,linesUpToOpenGate,true,1),
                     new FollowPath(follower,opensGate,true,1),
                     new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                     new FollowPath(follower,goesToShootMiddle,true,1),
                     new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
-                    new FollowPath(follower,pgpLinesUpToTopRow,true,1),
+                    new FollowPath(follower, pgpLinesUpToTopRow1,true,1),
                     new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
                     new FollowPath(follower,pgpIntakes1stBallTopRow,true,1),
-                    new FollowPath(follower,pgpLinesUpToBottomRow,true,1),
+                    new FollowPath(follower, pgpLinesUpToBottomRow1,true,1),
                     new FollowPath(follower,pgpIntake2BallsFromBottomRow,true,1),
                     new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                    new FollowPath(follower,pgpGoesToShoot1stTime,true,1)
+                    new FollowPath(follower,pgpGoesToShoot1stTime,true,1),
+                    new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
+                    new FollowPath(follower, linesUpToTopRow2,true,1),
+                    new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
+                    new FollowPath(follower,pgpIntakes2BallsFromTopRow,true,1),
+                    new
 
 
             );
