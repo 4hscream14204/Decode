@@ -134,9 +134,9 @@ public class RedTurretSorted extends OpMode {
                     .addPath(new BezierLine(linesUpToTopRow,intakesLast2BallsFromTop))
                     .setLinearHeadingInterpolation(linesUpToTopRow.getHeading(),intakesLast2BallsFromTop.getHeading())
                     .build();
-            linesUpToBottomRow2 = follower.pathBuilder()
+            /*linesUpToBottomRow2 = follower.pathBuilder()
                     .addPath(new BezierLine(intakesLast2BallsFromTop,linesUpToBottomRow))
-                    .setLinearHeadingInterpolation(intakesLast2BallsFromTop.getHeading(), )
+                    .setLinearHeadingInterpolation(intakesLast2BallsFromTop.getHeading(), )*/
 
 
 
@@ -166,8 +166,8 @@ public class RedTurretSorted extends OpMode {
                     new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
                     new FollowPath(follower, linesUpToTopRow2,true,1),
                     new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                    new FollowPath(follower,pgpIntakes2BallsFromTopRow,true,1),
-                    new
+                    new FollowPath(follower,pgpIntakes2BallsFromTopRow,true,1)
+                    //new
 
 
             );

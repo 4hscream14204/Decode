@@ -13,7 +13,7 @@ public class AlignToGateHeadingLock extends SequentialCommandGroup {
     public AlignToGateHeadingLock(RobotBase m_robotBase){
         robotBase = m_robotBase;
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            heading = 54;
+            heading = 30;
         }
         else{
             heading = 144;
