@@ -61,6 +61,7 @@ public class ThwompTeleOp extends OpMode {
     double xSpeed;
     double ySpeed;
     boolean readyToLaunch;
+    double farZoneHeadingOffset = -1;
 
     PolygonZone robotZone;
     PolygonZone closeLaunchZone;
@@ -141,8 +142,8 @@ public class ThwompTeleOp extends OpMode {
                 ;
 
         new Trigger(()->robotZone.isInside(farLaunchZone))
-                .and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
-                .whenActive(new InstantCommand(()->dblLockOffset = -2))
+                //.and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
+                .whenActive(new InstantCommand(()->dblLockOffset = Math.toRadians(farZoneHeadingOffset)))
                 .whenInactive(new InstantCommand(()->dblLockOffset = 0));
 
         new Trigger(()-> robotBase.chassisSubsystem.bolSnapToTarget)
