@@ -7,7 +7,7 @@ public class IntakePivot {
 
     public enum PivotPosition{
         BLOCK(0),
-        RELEASE(1);
+        INTAKE(1);
         public final double value;
 
         PivotPosition(double pos){

@@ -22,4 +22,12 @@ public class Intake {
     public void intake(double m_Power) {
         setPower(m_Power);
     }
+
+    public void intake(){
+        setPower(1);
+    }
+
+    public void outtake(){
+        setPower(-1);
+    }
 }
