@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 public class Turret {
     Servo turretServoL;
     Servo turretServoR;
+    AnalogInput servoEncoder;
     double turretServoPosition;
     Pose goalPose;
     double xSpeed;
@@ -23,13 +25,21 @@ public class Turret {
     double turretOffset;
     double rotationLead;
     double maxDegrees;
+
     public Turret(Servo m_turretServoL, Servo m_turretServoR){
         turretServoL = m_turretServoL;
         turretServoR = m_turretServoR;
     }
 
     public double convertDegToServoPos(double degree){
-        return (degree / 360);
+        double degreeModulus = degree % 360;
+        if(degreeModulus < 0){
+            degreeModulus += 360;
+        }
+        if(degreeModulus > 350){
+            degreeModulus = 350;
+        }
+        return (degreeModulus / 350);
     }
 
     public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower){
@@ -57,15 +67,12 @@ public class Turret {
     }
 
     public void setPosition(double positionDeg){
-        if(convertDegToServoPos(positionDeg) > 270 && convertDegToServoPos(positionDeg) < 300){
-            turretServoL.setPosition(convertDegToServoPos(270));
-            turretServoR.setPosition(convertDegToServoPos(270));
-            turretServoPosition = convertDegToServoPos(270);
-        }
-        else{
             turretServoL.setPosition(convertDegToServoPos(positionDeg));
             turretServoR.setPosition(convertDegToServoPos(positionDeg));
             turretServoPosition = convertDegToServoPos(positionDeg);
-        }
+    }
+
+    public double getPosition(){
+        return servoEncoder.getVoltage() / servoEncoder.getMaxVoltage();
     }
 }
