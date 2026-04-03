@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeDistanceSensor;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeTransfer;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftDistanceSensor;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
 
 public class RobotBase {
-    public Intake intakeSubsystem;
+    public IntakeTransfer intakeTransferSubsystem;
     public Chassis chassisSubsystem;
     public IntakePivot intakePivotSubsystem;
     public Launcher launcherSubsystem;
@@ -25,7 +25,7 @@ public class RobotBase {
     public Lift liftSubsystem;
 
     public RobotBase(HardwareMap hwMap){
-        intakeSubsystem = new Intake(hwMap.dcMotor.get("intakeMotor"), hwMap.dcMotor.get("intakeMotor2"));
+        intakeTransferSubsystem = new IntakeTransfer(hwMap.dcMotor.get("intakeMotor"), hwMap.dcMotor.get("transferMotor"));
         chassisSubsystem = new Chassis(hwMap.dcMotor.get("frontRightMotor"), hwMap.dcMotor.get("frontLeftMotor"), hwMap.dcMotor.get("backRightMotor"), hwMap.dcMotor.get("backLeftMotor"), hwMap.get(GoBildaPinpointDriver.class, "pinpoint"));
         intakePivotSubsystem = new IntakePivot(hwMap.servo.get("intakePivotServo"));
         launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"));
