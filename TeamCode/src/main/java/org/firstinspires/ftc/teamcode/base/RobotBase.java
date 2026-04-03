@@ -33,6 +33,6 @@ public class RobotBase {
         liftDistanceSensorSubsystem = new LiftDistanceSensor(hwMap.analogInput.get("liftDistanceSensor"));
         intakeLIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.digitalChannel.get("intakeLDistanceSensor"));
         intakeRIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.digitalChannel.get("intakeRDistanceSensor"));
-        liftSubsystem = new Lift(hwMap.servo.get("liftServoL"));
+        //liftSubsystem = new Lift(hwMap.servo.get("liftServoL"));
     }
 }
