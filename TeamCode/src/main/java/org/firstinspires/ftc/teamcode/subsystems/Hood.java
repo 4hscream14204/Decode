@@ -25,4 +25,12 @@ public class Hood {
     public void setPosition(HoodPosition position){
         setPosition(position.value);
     }
+
+    public void close(){
+        setPosition(HoodPosition.CLOSE);
+    }
+
+    public void far(){
+        setPosition(HoodPosition.FAR);
+    }
 }
