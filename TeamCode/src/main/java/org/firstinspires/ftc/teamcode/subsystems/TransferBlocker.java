@@ -6,7 +6,7 @@ public class TransferBlocker {
     public Servo transferBlockerServo;
 
     public enum TransferBlockerPosition{
-        BLOCK(0),
+        BLOCK(0.375),
         RELEASE(1);
         public final double value;
         TransferBlockerPosition(double pos){

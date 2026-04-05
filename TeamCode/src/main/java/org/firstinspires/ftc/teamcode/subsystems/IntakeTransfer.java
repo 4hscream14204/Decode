@@ -22,11 +22,13 @@ public class IntakeTransfer {
     }
 
     public void intake(){
-        setPower(1);
+        setPower(-1);
+        transfer(0.75);
     }
 
     public void outtake(){
-        setPower(-1);
+        setPower(1);
+        transfer(-0.75);
     }
 
     public void transfer(double m_power){

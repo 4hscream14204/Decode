@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class Launcher{
     public final double launchVar1 = 2.2787;
     public final double launchVar2 = 1770.4;
     public DcMotorEx launcherMotor;
+    public DcMotorEx launcherMotor2;
     public double dblTargetVel = 0;
     double maximum = 2500;
     double changeThresholdPower = 0.001;
@@ -21,10 +23,15 @@ public class Launcher{
     PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
     List<Double> velStorage = new ArrayList<>();
 
-    public Launcher(DcMotorEx m_Launcher){
+    public Launcher(DcMotorEx m_Launcher, DcMotorEx m_launcher2){
     launcherMotor = m_Launcher;
     launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    launcherMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    launcherMotor2 = m_launcher2;
+    launcherMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    launcherMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    //launcherMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
     //launcherMotor.setVelocityPIDFCoefficients(9, 0.8, 0, 0.7);
 
     for (int i = 0; i < velStorageSize; i++) {
@@ -35,11 +42,13 @@ public class Launcher{
 public void setPower(double power){
     if(Math.abs(power - launcherMotor.getPower()) > changeThresholdPower){
         launcherMotor.setPower(power);
+        launcherMotor2.setPower(power);
     }
 }
 
 public void setVelocity(double m_velocity) {
     launcherMotor.setPower(launcherPIDF.calculate(getVelocity(), m_velocity));
+    launcherMotor2.setPower(launcherPIDF.calculate(getVelocity(), m_velocity));
     velStorage.add(getVelocity());
     velStorage.remove(0);
     dblTargetVel = m_velocity;
@@ -48,6 +57,7 @@ public void setVelocity(double m_velocity) {
 public void setVelocitySimple(double m_velocity) {
     if(Math.abs(m_velocity - launcherMotor.getVelocity()) > changeThresholdVelocity) {
         launcherMotor.setVelocity(m_velocity);
+        launcherMotor2.setVelocity(m_velocity);
     }
 }
 

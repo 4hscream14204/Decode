@@ -24,7 +24,7 @@ public class Chassis{
     double dblFrontRightPower;
     double dblBackLeftPower;
     double dblBackRightPower;
-    public boolean isFieldCentric;
+    public boolean isFieldCentric = true;
 
     PIDFController headingControl = new PIDFController(0.02, 0, 0.002, 0.05);
     PIDFController driveHeadingControl = new PIDFController(2, 0, 0.1, 0.1);
@@ -61,10 +61,7 @@ public class Chassis{
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer, Follower m_follower) {
-        follower = m_follower;
-        timer = m_timer;
-        currentTime = timer.milliseconds();
+    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric) {
         double dblDenominator;
         double y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY); // Remember, Y stick value is reversed
         double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
@@ -72,21 +69,10 @@ public class Chassis{
         double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
         isFieldCentric = m_isFieldCentric;
         if (isFieldCentric) {
+            y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY);
             double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
             double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
-                //targetHeading = botHeading;
-                if (Math.abs(m_gamepadOneRSX) > 0.1) {
-                    rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
-                    lastStickTime = currentTime;
-                } else if ((currentTime - lastStickTime) < delayTime) {
-                    targetHeading = botHeading;
-                }
-                else if(!bolSnapToTarget){
-                    headingDeviation = (botHeading - targetHeading) * -1;
-                    headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
-                    dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
-                    rx = dblHeadingOutput;
-                }
+            rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
             dblFrontLeftPower = (rotY + rotX + rx) / denominator;
             dblBackLeftPower = (rotY - rotX + rx) / denominator;
