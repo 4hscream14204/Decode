@@ -406,6 +406,21 @@ public class RedTurretSorted extends OpMode {
             CommandScheduler.getInstance().schedule(
                     new SetAllVelocityCommandGroup(robotBase, dblPreLaunchVel)
             );
+            robotBase.limelightSubsystem.updateLimelight();
+            robotBase.sorterCameraSubsystem.getAnalysis();
+            follower.update();
+            if(robotBase.limelightSubsystem.id == 23){
+                DataStorage.pattern = DecodeEnums.Patterns.PPG;
+            }
+            else if(robotBase.limelightSubsystem.id == 22){
+                DataStorage.pattern = DecodeEnums.Patterns.PGP;
+            }
+            else if (robotBase.limelightSubsystem.id == 21){
+                DataStorage.pattern = DecodeEnums.Patterns.GPP;
+            }
+            else{
+                DataStorage.pattern = DecodeEnums.Patterns.PPG;
+            }
             follower.update();
             telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getVelocity());
             telemetry.addData("Limelight Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));
