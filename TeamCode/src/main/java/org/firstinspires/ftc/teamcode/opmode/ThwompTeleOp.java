@@ -57,6 +57,7 @@ public class ThwompTeleOp extends OpMode {
     ElapsedTime timer;
     Follower follower;
     double velocity;
+    double driveDamping = 2;
     Supplier<PathChain> pathChain;
     Pose gatePose = new Pose(126, 73, Math.toRadians(0));
     boolean automatedDrive;
@@ -71,7 +72,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.chassisSubsystem.backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         if(DataStorage.alliance == DecodeEnums.Alliance.BLUE){
-            robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEGOAL);
+            robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEREDGOAL);
             /*pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose.mirror())))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
@@ -79,7 +80,7 @@ public class ThwompTeleOp extends OpMode {
             robotBase.chassisSubsystem.pinpoint.setPosition(PoseConverter.poseToPose2D(new Pose(DataStorage.endPosition.getX(), DataStorage.endPosition.getY(), (DataStorage.endPosition.getHeading() + Math.toRadians(180))), PedroCoordinates.INSTANCE));
         }
         else{
-            robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.REDGOAL);
+            robotBase.limelightSubsystem.initLimelight(Limelight.limelightPipelines.BLUEREDGOAL);
             /*pathChain = ()-> follower.pathBuilder() //Lazy Curve Generation
                     .addPath(new Path(new BezierLine(follower::getPose, gatePose)))
                     .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, gatePose.getHeading(), 1))
@@ -235,7 +236,7 @@ public class ThwompTeleOp extends OpMode {
         //robotBase.RGBLightMiddleSubsystem.setColor(RGBLightSubsystem.Colors.PURPLE);
         //robotBase.RGBLightLeftSubsystem.setColor(RGBLightSubsystem.Colors.NO);
         //new UpdateLightsCommandGroup(robotBase);
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
+        robotBase.chassisSubsystem.drive(mainController.getLeftY() / driveDamping, mainController.getLeftX() / driveDamping, mainController.getRightX(), robotBase.chassisSubsystem.bolSnapToTarget, isFieldCentric, robotBase.limelightSubsystem.getTargetX());
         //telemetry.addData("This is new code 7", true);
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));

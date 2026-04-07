@@ -17,6 +17,7 @@ public class Limelight extends SubsystemBase {
         GREENARTIFACT(1),
         REDGOAL(4),
         BLUEGOAL(3),
+        BLUEREDGOAL(5),
         PURPLEARTIFACT(0);
         public final int value;
         limelightPipelines(int m_val){
@@ -185,5 +186,9 @@ public class Limelight extends SubsystemBase {
 
     public double getTargetArea() {
         return limelightTa;
+    }
+
+    public boolean goalInSight(){
+        return !result.getFiducialResults().isEmpty();
     }
 }
