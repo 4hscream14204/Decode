@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
+import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
@@ -27,6 +29,7 @@ public class SamusTeleOp extends OpMode {
         CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
         mainController = new GamepadEx(gamepad1);
+        follower = Constants.createFollower(hardwareMap);
 
         robotBase.chassisSubsystem.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -42,6 +45,9 @@ public class SamusTeleOp extends OpMode {
         mainController.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
 
+        mainController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPosition(270))));
+
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
@@ -54,16 +60,18 @@ public class SamusTeleOp extends OpMode {
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.prismSubsystem.rainbow();
-        robotBase.launcherSubsystem.setVelocity(2000);
+        //robotBase.launcherSubsystem.setVelocity(2000);
         robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
+        follower.setStartingPose(new Pose(88, 8, Math.toRadians(0)));
     }
 
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
+        follower.update();
         mainController.readButtons();
         robotBase.chassisSubsystem.pinpoint.update();
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true);
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), (mainController.getRightX() / 2), true);
 
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
     }

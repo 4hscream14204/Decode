@@ -59,10 +59,10 @@ public class Turret {
         else{
             turretOffset = botHeading - turretHeading;
         }
-        rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
-        turretOffset += rotationLead;
-        turretOffset = ((turretOffset + 180) % 360) -180;
-        turretOffset = Math.max(-maxDegrees, Math.min(maxDegrees, turretOffset));
+        //rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
+        //turretOffset += rotationLead;
+        //turretOffset = ((turretOffset + 180) % 360) -180;
+        //turretOffset = Math.max(-maxDegrees, Math.min(maxDegrees, turretOffset));
         return turretOffset;
     }
 
