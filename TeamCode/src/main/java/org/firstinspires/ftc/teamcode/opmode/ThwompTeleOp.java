@@ -61,10 +61,12 @@ public class ThwompTeleOp extends OpMode {
     double xSpeed;
     double ySpeed;
     boolean readyToLaunch;
+    double farZoneHeadingOffset = -1;
 
     PolygonZone robotZone;
     PolygonZone closeLaunchZone;
     PolygonZone farLaunchZone;
+    PolygonZone farLaunchZoneBuffer;
 
     /*MainControllerKeys mainControllerKeys;
     BackupControllerKeys backupControllerKeys;*/
@@ -83,6 +85,7 @@ public class ThwompTeleOp extends OpMode {
         robotZone = new PolygonZone(18, 18);
         closeLaunchZone = new PolygonZone(new Point(144, 130), new Point(72, 65), new Point(0, 130));
         farLaunchZone = new PolygonZone(new Point(45, 0), new Point(72, 36), new Point(100, 0));
+        farLaunchZoneBuffer = new PolygonZone(new Point(40, 0), new Point(72, 41), new Point(105, 0));
         CommandScheduler.getInstance().schedule(new InstantCommand(()->prism.setPosition(0.225)));
         robotBase.sorterCameraSubsystem.getAnalysis();
         robotBase.chassisSubsystem.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -141,9 +144,13 @@ public class ThwompTeleOp extends OpMode {
                 ;
 
         new Trigger(()->robotZone.isInside(farLaunchZone))
-                .and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
-                .whenActive(new InstantCommand(()->dblLockOffset = -2))
-                .whenInactive(new InstantCommand(()->dblLockOffset = 0));
+                //.and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
+                .whenActive(new InstantCommand(()->dblLockOffset = Math.toRadians(farZoneHeadingOffset)))
+                //.whenInactive(new InstantCommand(()->dblLockOffset = 0))
+                ;
+
+        new Trigger(()->!robotZone.isInside(farLaunchZoneBuffer))
+                .whileActiveContinuous(new InstantCommand(()->dblLockOffset = Math.toRadians(0)));
 
         new Trigger(()-> robotBase.chassisSubsystem.bolSnapToTarget)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->gamepad1.rumble(1, 1, 250)), new InstantCommand(()->prism.setPosition(0.225))))
@@ -223,6 +230,7 @@ public class ThwompTeleOp extends OpMode {
                 .build();*/
 
         //telemetry.addData("This is new code 7", true);
+        telemetry.addData("HeadingOffset", dblLockOffset);
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Target Heading", Math.toDegrees(robotBase.chassisSubsystem.targetHeading));
         telemetry.addData("Heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));

@@ -62,7 +62,7 @@ public class Chassis extends SubsystemBase {
             backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
 
-        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer, double m_TX, Follower m_follower) {
+        public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, ElapsedTime m_timer, double m_headingOffset, Follower m_follower) {
             follower = m_follower;
             timer = m_timer;
             currentTime = timer.milliseconds();
@@ -89,14 +89,14 @@ public class Chassis extends SubsystemBase {
                     if(Math.abs(m_gamepadOneLSX) > 0.1 || Math.abs(m_gamepadOneLSY) > 0.1){
                         distance = follower.getPose().distanceFrom(goalPose) * 2.54;
                         timeOfFlight = distance * timeOfFlightMultiplier;
-                        targetHeading = Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight)));
+                        targetHeading = (Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight)))) - m_headingOffset;
                         headingDeviation = (botHeading - targetHeading) * -1;
                         headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
                         dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
                         rx = dblHeadingOutput;
                     }
                     else{
-                        targetHeading = Math.atan2((goalPose.getY() - follower.getPose().getY()), (goalPose.getX() - follower.getPose().getX()));
+                        targetHeading = (Math.atan2((goalPose.getY() - follower.getPose().getY()), (goalPose.getX() - follower.getPose().getX()))) - m_headingOffset;
                         headingDeviation = (botHeading - targetHeading) * -1;
                         headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
                         dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
