@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
@@ -45,8 +46,8 @@ public class SamusTeleOp extends OpMode {
         mainController.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
 
-        mainController.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPosition(270))));
+        /*mainController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower)));*/
 
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -60,9 +61,10 @@ public class SamusTeleOp extends OpMode {
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.prismSubsystem.rainbow();
-        //robotBase.launcherSubsystem.setVelocity(2000);
+        robotBase.launcherSubsystem.setVelocity(1700);
         robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
         follower.setStartingPose(new Pose(88, 8, Math.toRadians(0)));
+        robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.TEST);
     }
 
     @Override
@@ -71,7 +73,8 @@ public class SamusTeleOp extends OpMode {
         follower.update();
         mainController.readButtons();
         robotBase.chassisSubsystem.pinpoint.update();
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), (mainController.getRightX() / 2), true);
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true);
+        CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
 
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
     }

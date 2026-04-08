@@ -21,7 +21,7 @@ public class Turret {
     double ySpeed;
     double timeOfFlight = 0.03;
     double botHeading;
-    double turretHeading;
+    double targetHeading;
     double turretOffset;
     double rotationLead;
     double maxDegrees;
@@ -39,7 +39,7 @@ public class Turret {
         if(degreeModulus > 350){
             degreeModulus = 350;
         }
-        return (degreeModulus / 350);
+        return ((0.002833 * degreeModulus) - 0.009915);
     }
 
     public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower){
@@ -52,12 +52,12 @@ public class Turret {
         botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
-        turretHeading = Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight)));
+        targetHeading = Math.toDegrees(Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight))));
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            turretOffset = turretHeading - botHeading;
+            turretOffset = targetHeading - botHeading;
         }
         else{
-            turretOffset = botHeading - turretHeading;
+            turretOffset = botHeading - targetHeading;
         }
         //rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
         //turretOffset += rotationLead;

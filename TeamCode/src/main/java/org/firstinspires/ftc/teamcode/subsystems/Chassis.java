@@ -69,17 +69,22 @@ public class Chassis{
         double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
         isFieldCentric = m_isFieldCentric;
         if (isFieldCentric) {
-            y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY);
+            if(m_gamepadOneRSX < -0.1){
+                rx = Math.max(m_gamepadOneRSX * Math.abs(m_gamepadOneRSX), -0.75);
+            }
+            else if(m_gamepadOneRSX > 0.1){
+                rx = Math.min(m_gamepadOneRSX * Math.abs(m_gamepadOneRSX), 0.75);
+            }
+            //y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY);
             double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);
             double rotY = m_gamepadOneLSX * Math.sin(-botHeading) + m_gamepadOneLSY * Math.cos(-botHeading);
-            rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
             dblFrontLeftPower = (rotY + rotX + rx) / denominator;
             dblBackLeftPower = (rotY - rotX + rx) / denominator;
             dblFrontRightPower = (rotY - rotX - rx) / denominator;
             dblBackRightPower = (rotY + rotX - rx) / denominator;
         } else {
-            y = -m_gamepadOneLSY;
+            //y = -m_gamepadOneLSY;
             dblDenominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             dblFrontLeftPower = (y + x + rx) / dblDenominator;
             dblBackLeftPower = (y - x + rx) / dblDenominator;

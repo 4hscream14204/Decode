@@ -7,6 +7,7 @@ public class Hood {
 
     public enum HoodPosition{
         CLOSE(0),
+        TEST(0.5),
         FAR(1);
         public final double value;
         HoodPosition(double pos){
