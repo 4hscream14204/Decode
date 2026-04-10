@@ -20,7 +20,7 @@ public class Launcher{
     double changeThresholdPower = 0.001;
     double changeThresholdVelocity = 3;
     int velStorageSize = 3;
-    PIDFController launcherPIDF = new PIDFController(0.01,0,0,0.0004);
+    PIDFController launcherPIDF = new PIDFController(0.5,0,0,0.0004);
     List<Double> velStorage = new ArrayList<>();
 
     public Launcher(DcMotorEx m_Launcher, DcMotorEx m_launcher2){

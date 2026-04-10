@@ -37,8 +37,8 @@ public class RobotBase {
         launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"), hwMap.get(DcMotorEx.class, "launcherMotor2"));
         turretSubsystem = new Turret(hwMap.servo.get("turretServoL"), hwMap.servo.get("turretServoR"));
         liftDistanceSensorSubsystem = new LiftDistanceSensor(hwMap.analogInput.get("liftDistanceSensor"));
-        intakeLIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.digitalChannel.get("intakeLSensor"));
-        intakeRIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.digitalChannel.get("intakeRSensor"));
+        intakeLIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.analogInput.get("intakeLSensor"));
+        intakeRIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.analogInput.get("intakeRSensor"));
         transferBlockerSubsystem = new TransferBlocker(hwMap.servo.get("transferBlocker"));
         hoodSubsystem = new Hood(hwMap.servo.get("hoodServo"));
         prismSubsystem = new Prism(hwMap.servo.get("prism"));
