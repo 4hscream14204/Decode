@@ -40,10 +40,8 @@ public class Launcher{
 }
 
 public void setPower(double power){
-    if(Math.abs(power - launcherMotor.getPower()) > changeThresholdPower){
-        launcherMotor.setPower(power);
-        launcherMotor2.setPower(power);
-    }
+    launcherMotor.setPower(power);
+    launcherMotor2.setPower(power);
 }
 
 public void setVelocity(double m_velocity) {
