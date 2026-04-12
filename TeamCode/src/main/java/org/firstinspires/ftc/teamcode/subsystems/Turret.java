@@ -5,6 +5,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.seattlesolvers.solverslib.controller.PIDController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 public class Turret {
     Servo turretServoL;
     Servo turretServoR;
-    AnalogInput servoEncoder;
+    public AnalogInput servoEncoder;
     double turretServoPosition;
     Pose goalPose;
     double xSpeed;
@@ -25,13 +26,21 @@ public class Turret {
     double turretOffset;
     double rotationLead;
     double maxDegrees;
+    double pidOutputToServoPos;
+    PIDController turretHeadingPID = new PIDController(0.01, 0, 0.001);
 
-    public Turret(Servo m_turretServoL, Servo m_turretServoR){
+    public Turret(Servo m_turretServoL, Servo m_turretServoR, AnalogInput m_servoEncoder){
         turretServoL = m_turretServoL;
         turretServoR = m_turretServoR;
+        servoEncoder = m_servoEncoder;
     }
 
-    public double convertDegToServoPos(double degree){
+    public void setPosition(double position){
+        turretServoL.setPosition(position);
+        turretServoR.setPosition(position);
+    }
+
+    /*public double convertDegToServoPos(double degree){
         double degreeModulus = degree % 360;
         if(degreeModulus < 0){
             degreeModulus += 360;
@@ -40,7 +49,7 @@ public class Turret {
             degreeModulus = 350;
         }
         return ((0.002833 * degreeModulus) - 0.009915);
-    }
+    }*/
 
     public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
@@ -66,13 +75,20 @@ public class Turret {
         return turretOffset;
     }
 
-    public void setPosition(double positionDeg){
+    /*public void setPosition(double positionDeg){
             turretServoL.setPosition(convertDegToServoPos(positionDeg));
             turretServoR.setPosition(convertDegToServoPos(positionDeg));
             turretServoPosition = convertDegToServoPos(positionDeg);
+    }*/
+
+    public void updatePosition(double headingDeg){
+        double error = (headingDeg - getPositionDegrees());
+        double pidOutput = turretHeadingPID.calculate(error);
+        pidOutputToServoPos = ((pidOutput + 1) / 2);
+        setPosition(pidOutputToServoPos);
     }
 
-    public double getPosition(){
-        return servoEncoder.getVoltage() / servoEncoder.getMaxVoltage();
+    public double getPositionDegrees(){
+        return ((-121.454393 * servoEncoder.getVoltage()) + 357.565175);
     }
 }

@@ -46,6 +46,8 @@ public class SamusTeleOp extends OpMode {
         mainController.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
 
+        mainController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.updatePosition(90))));
         /*mainController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower)));*/
 
@@ -61,7 +63,7 @@ public class SamusTeleOp extends OpMode {
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.prismSubsystem.rainbow();
-        robotBase.launcherSubsystem.setVelocity(1850);
+        //robotBase.launcherSubsystem.setVelocity(1900);
         robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
         follower.setStartingPose(new Pose(88, 8, Math.toRadians(0)));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.TEST);
@@ -77,9 +79,14 @@ public class SamusTeleOp extends OpMode {
         robotBase.chassisSubsystem.pinpoint.update();
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true);
         CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1900)));
+        //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.updatePosition(90)));
 
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Intake Left: ", robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance());
         telemetry.addData("Intake Right: ", robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance());
+        telemetry.addData("Servo Encoder Max Voltage", robotBase.turretSubsystem.servoEncoder.getMaxVoltage());
+        telemetry.addData("Telemetry Voltage", robotBase.turretSubsystem.servoEncoder.getVoltage());
+        telemetry.addData("Voltage / Max Voltage", robotBase.turretSubsystem.getPositionDegrees());
     }
 }

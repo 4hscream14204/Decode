@@ -15,7 +15,7 @@ public class TurretHeadingControlCommandGroup extends SequentialCommandGroup {
         follower = m_follower;
         addCommands(
                 new InstantCommand(()->turretAngle = robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower)),
-                new InstantCommand(()->robotBase.turretSubsystem.setPosition(turretAngle))
+                new InstantCommand(()->robotBase.turretSubsystem.updatePosition(turretAngle))
         );
     }
 }

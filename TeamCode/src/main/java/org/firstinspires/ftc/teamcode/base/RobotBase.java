@@ -42,7 +42,7 @@ public class RobotBase {
         chassisSubsystem = new Chassis(hwMap.dcMotor.get("frontRightMotor"), hwMap.dcMotor.get("frontLeftMotor"), hwMap.dcMotor.get("backRightMotor"), hwMap.dcMotor.get("backLeftMotor"), hwMap.get(GoBildaPinpointDriver.class, "pinpoint"));
         intakePivotSubsystem = new IntakePivot(hwMap.servo.get("intakePivotServo"));
         launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"), hwMap.get(DcMotorEx.class, "launcherMotor2"), controlHubVoltageSensor);
-        turretSubsystem = new Turret(hwMap.servo.get("turretServoL"), hwMap.servo.get("turretServoR"));
+        turretSubsystem = new Turret(hwMap.servo.get("turretServoL"), hwMap.servo.get("turretServoR"), hwMap.analogInput.get("turretEncoder"));
         liftDistanceSensorSubsystem = new LiftDistanceSensor(hwMap.analogInput.get("liftDistanceSensor"));
         intakeLIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.analogInput.get("intakeLSensor"));
         intakeRIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.analogInput.get("intakeRSensor"));
