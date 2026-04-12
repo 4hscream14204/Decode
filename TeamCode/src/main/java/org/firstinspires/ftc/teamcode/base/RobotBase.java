@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.base;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.subsystems.Chassis;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
@@ -15,6 +16,8 @@ import org.firstinspires.ftc.teamcode.subsystems.LiftDistanceSensor;
 import org.firstinspires.ftc.teamcode.subsystems.Prism;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 import org.firstinspires.ftc.teamcode.subsystems.Turret;
+
+import java.util.List;
 
 public class RobotBase {
     public IntakeTransfer intakeTransferSubsystem;
@@ -29,12 +32,16 @@ public class RobotBase {
     public TransferBlocker transferBlockerSubsystem;
     public Hood hoodSubsystem;
     public Prism prismSubsystem;
+    public List<VoltageSensor> voltageSensor;
+    VoltageSensor controlHubVoltageSensor;
 
     public RobotBase(HardwareMap hwMap){
+        voltageSensor = hwMap.getAll(VoltageSensor.class);
+        controlHubVoltageSensor = voltageSensor.get(0);
         intakeTransferSubsystem = new IntakeTransfer(hwMap.dcMotor.get("intakeMotor"), hwMap.dcMotor.get("transferMotor"));
         chassisSubsystem = new Chassis(hwMap.dcMotor.get("frontRightMotor"), hwMap.dcMotor.get("frontLeftMotor"), hwMap.dcMotor.get("backRightMotor"), hwMap.dcMotor.get("backLeftMotor"), hwMap.get(GoBildaPinpointDriver.class, "pinpoint"));
         intakePivotSubsystem = new IntakePivot(hwMap.servo.get("intakePivotServo"));
-        launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"), hwMap.get(DcMotorEx.class, "launcherMotor2"));
+        launcherSubsystem = new Launcher(hwMap.get(DcMotorEx.class, "launcherMotor"), hwMap.get(DcMotorEx.class, "launcherMotor2"), controlHubVoltageSensor);
         turretSubsystem = new Turret(hwMap.servo.get("turretServoL"), hwMap.servo.get("turretServoR"));
         liftDistanceSensorSubsystem = new LiftDistanceSensor(hwMap.analogInput.get("liftDistanceSensor"));
         intakeLIntakeDistanceSensorSubsystem = new IntakeDistanceSensor(hwMap.analogInput.get("intakeLSensor"));

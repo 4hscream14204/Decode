@@ -61,10 +61,11 @@ public class SamusTeleOp extends OpMode {
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.prismSubsystem.rainbow();
-        robotBase.launcherSubsystem.setVelocity(1300);
+        robotBase.launcherSubsystem.setVelocity(1850);
         robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
         follower.setStartingPose(new Pose(88, 8, Math.toRadians(0)));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.TEST);
+        robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         //robotBase.turretSubsystem.setPosition(180);
     }
 
@@ -75,7 +76,7 @@ public class SamusTeleOp extends OpMode {
         mainController.readButtons();
         robotBase.chassisSubsystem.pinpoint.update();
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true);
-        //CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
 
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Intake Left: ", robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance());

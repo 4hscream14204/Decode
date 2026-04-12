@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.seattlesolvers.solverslib.controller.PIDFController;
 
 import java.util.ArrayList;
@@ -22,8 +23,14 @@ public class Launcher{
     int velStorageSize = 3;
     PIDFController launcherPIDF = new PIDFController(0.5,0,0,0.0004);
     List<Double> velStorage = new ArrayList<>();
+    VoltageSensor voltageSensor;
+    double voltage;
+    double adjustedVelocity;
+    double power;
+    double proportional = 0.015;
+    double error;
 
-    public Launcher(DcMotorEx m_Launcher, DcMotorEx m_launcher2){
+    public Launcher(DcMotorEx m_Launcher, DcMotorEx m_launcher2, VoltageSensor m_voltageSensor){
     launcherMotor = m_Launcher;
     launcherMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -31,6 +38,7 @@ public class Launcher{
     launcherMotor2 = m_launcher2;
     launcherMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     launcherMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    voltageSensor = m_voltageSensor;
     //launcherMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
     //launcherMotor.setVelocityPIDFCoefficients(9, 0.8, 0, 0.7);
 
@@ -39,17 +47,26 @@ public class Launcher{
     }
 }
 
+public double calculatePower(double targetVelocity){
+    voltage = voltageSensor.getVoltage();
+    adjustedVelocity = (targetVelocity / (voltage / 12));
+    power = ((0.000380 * adjustedVelocity) + 0.057776);
+    error = targetVelocity - getVelocity();
+    power += (proportional * error);
+    return power;
+}
+
 public void setPower(double power){
     launcherMotor.setPower(power);
     launcherMotor2.setPower(power);
 }
 
 public void setVelocity(double m_velocity) {
-    launcherMotor.setPower(launcherPIDF.calculate(getVelocity(), m_velocity));
-    launcherMotor2.setPower(launcherPIDF.calculate(getVelocity(), m_velocity));
+    dblTargetVel = m_velocity;
+    setPower(calculatePower(dblTargetVel));
     velStorage.add(getVelocity());
     velStorage.remove(0);
-    dblTargetVel = m_velocity;
+    //dblTargetVel = m_velocity;
 }
 
 public void setVelocitySimple(double m_velocity) {
