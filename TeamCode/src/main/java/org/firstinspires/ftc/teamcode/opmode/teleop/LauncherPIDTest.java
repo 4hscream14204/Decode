@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -12,6 +14,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
+import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
 import java.util.List;
@@ -23,12 +26,14 @@ public class LauncherPIDTest extends OpMode {
     GamepadEx mainController;
     double power = 0;
     double velocity;
+    Follower follower;
     @Override
     public void init() {
         robotBase = new RobotBase(hardwareMap);
         List <VoltageSensor> voltageSensors = hardwareMap.getAll(VoltageSensor.class);
         controlHubVoltageSensor = voltageSensors.get(0);
         mainController = new GamepadEx(gamepad1);
+        follower = Constants.createFollower(hardwareMap);
 
         mainController.getGamepadButton(GamepadKeys.Button.DPAD_UP)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->velocity += 100)));
@@ -62,16 +67,20 @@ public class LauncherPIDTest extends OpMode {
     public void start() {
         robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
+        robotBase.turretSubsystem.setPositionDeg(90);
+        follower.setStartingPose(new Pose(92, 10, 0));
     }
 
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
         mainController.readButtons();
-        robotBase.chassisSubsystem.pinpoint.update();
+        //robotBase.chassisSubsystem.pinpoint.update();
+        follower.update();
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true);
         CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(velocity)));
 
+        telemetry.addData("Distance", follower.getPose().distanceFrom(new Pose(144, 138)));
         telemetry.addData("Voltage: ", controlHubVoltageSensor.getVoltage());
         telemetry.addData("Velocity Variable: ", velocity);
         telemetry.addData("Velocity: ", robotBase.launcherSubsystem.launcherMotor.getVelocity());
