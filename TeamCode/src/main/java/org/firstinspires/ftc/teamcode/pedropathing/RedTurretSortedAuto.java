@@ -10,6 +10,7 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
+import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.DecodeEnums;
@@ -290,35 +291,35 @@ public class RedTurretSortedAuto extends OpMode {
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                 //new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
-                new FollowPath(follower,launchPreload,true,1),
+                new FollowPathCommand(follower,launchPreload,true,1),
                 //new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,linesUpToMiddleRow,true,1),
+                new FollowPathCommand(follower,linesUpToMiddleRow,true,1),
                 // new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesMiddleRow,true,1),
-                new FollowPath(follower,linesUpToOpenGate,true,1),
-                new FollowPath(follower,opensGate,true,1),
+                new FollowPathCommand(follower, intakesMiddleRow,true,1),
+                new FollowPathCommand(follower,linesUpToOpenGate,true,1),
+                new FollowPathCommand(follower,opensGate,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new FollowPath(follower,goesToShootMiddle,true,1),
+                new FollowPathCommand(follower,goesToShootMiddle,true,1),
                 //new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower, pgpLinesUpToTopRow1,true,1),
+                new FollowPathCommand(follower, pgpLinesUpToTopRow1,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower,pgpIntakes1stBallTopRow,true,1),
-                new FollowPath(follower, pgpLinesUpToBottomRow1,true,1),
-                new FollowPath(follower,pgpIntake2BallsFromBottomRow,true,1),
+                new FollowPathCommand(follower,pgpIntakes1stBallTopRow,true,1),
+                new FollowPathCommand(follower, pgpLinesUpToBottomRow1,true,1),
+                new FollowPathCommand(follower,pgpIntake2BallsFromBottomRow,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new FollowPath(follower,pgpGoesToShoot1stTime,true,1),
+                new FollowPathCommand(follower,pgpGoesToShoot1stTime,true,1),
                 //new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower, linesUpToTopRow2,true,1),
+                new FollowPathCommand(follower, linesUpToTopRow2,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower,pgpIntakes2BallsFromTopRow,true,1),
-                new FollowPath(follower, linesUpToBottomRow2,true,1),
-                new FollowPath(follower, pgpIntakesBallFromBottomRow,true,1),
+                new FollowPathCommand(follower,pgpIntakes2BallsFromTopRow,true,1),
+                new FollowPathCommand(follower, linesUpToBottomRow2,true,1),
+                new FollowPathCommand(follower, pgpIntakesBallFromBottomRow,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new FollowPath(follower,pgpGoesToShoot2ndTime,true,1),
+                new FollowPathCommand(follower,pgpGoesToShoot2ndTime,true,1),
                 //new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,pgpPushesOtherRobot,true,1),
-                new FollowPath(follower,pgpPark,true,1)
+                new FollowPathCommand(follower,pgpPushesOtherRobot,true,1),
+                new FollowPathCommand(follower,pgpPark,true,1)
 
         );
 
@@ -327,34 +328,34 @@ public class RedTurretSortedAuto extends OpMode {
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                 //new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
-                new FollowPath(follower,launchPreload,true,1),
+                new FollowPathCommand(follower,launchPreload,true,1),
                 // new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,linesUpToMiddleRow,true,1),
+                new FollowPathCommand(follower,linesUpToMiddleRow,true,1),
                 // new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesMiddleRow,true,1),
-                new FollowPath(follower,linesUpToOpenGate,true,1),
-                new FollowPath(follower,opensGate,true,1),
+                new FollowPathCommand(follower, intakesMiddleRow,true,1),
+                new FollowPathCommand(follower,linesUpToOpenGate,true,1),
+                new FollowPathCommand(follower,opensGate,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new FollowPath(follower,goesToShootMiddle,true,1),
+                new FollowPathCommand(follower,goesToShootMiddle,true,1),
                 //new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,ppgLinesUpToTopRow1,true,1),
-                new FollowPath(follower,ppgIntakes2BallsFromTopRow,true,1),
+                new FollowPathCommand(follower,ppgLinesUpToTopRow1,true,1),
+                new FollowPathCommand(follower,ppgIntakes2BallsFromTopRow,true,1),
                // new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, ppgLinesUpToBottomRow1,true,1),
-                new FollowPath(follower,ppgIntakes1stBallBottomRow,true,1),
+                new FollowPathCommand(follower, ppgLinesUpToBottomRow1,true,1),
+                new FollowPathCommand(follower,ppgIntakes1stBallBottomRow,true,1),
                // new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new FollowPath(follower,ppgGoesToShoot1stTime,true,1),
+                new FollowPathCommand(follower,ppgGoesToShoot1stTime,true,1),
                // new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,ppgLinesUpToBottomRow2,true,1),
-                new FollowPath(follower,ppgIntakes2BallsFromBottom,true,1),
+                new FollowPathCommand(follower,ppgLinesUpToBottomRow2,true,1),
+                new FollowPathCommand(follower,ppgIntakes2BallsFromBottom,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower,ppgLinesUpToTopRow2,true,1),
-                new FollowPath(follower,ppgIntakesLastBallTopRow, true,1),
-                new FollowPath(follower,ppgGoesToShoot2ndTime,true,1),
+                new FollowPathCommand(follower,ppgLinesUpToTopRow2,true,1),
+                new FollowPathCommand(follower,ppgIntakesLastBallTopRow, true,1),
+                new FollowPathCommand(follower,ppgGoesToShoot2ndTime,true,1),
                // new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,ppgPushesOtherRobot,true,1),
-                new FollowPath(follower,ppgPark,true,1)
+                new FollowPathCommand(follower,ppgPushesOtherRobot,true,1),
+                new FollowPathCommand(follower,ppgPark,true,1)
 
 
 
@@ -365,34 +366,34 @@ public class RedTurretSortedAuto extends OpMode {
                 new WaitUntilCommand(()->(secondsToWait) <= timer.milliseconds()),
                // new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
-                new FollowPath(follower,launchPreload,true,1),
+                new FollowPathCommand(follower,launchPreload,true,1),
                 //new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,linesUpToMiddleRow,true,1),
+                new FollowPathCommand(follower,linesUpToMiddleRow,true,1),
                 // new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                // new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesMiddleRow,true,1),
-                new FollowPath(follower,linesUpToOpenGate,true,1),
-                new FollowPath(follower,opensGate,true,1),
+                new FollowPathCommand(follower, intakesMiddleRow,true,1),
+                new FollowPathCommand(follower,linesUpToOpenGate,true,1),
+                new FollowPathCommand(follower,opensGate,true,1),
                // new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new FollowPath(follower,goesToShootMiddle,true,1),
+                new FollowPathCommand(follower,goesToShootMiddle,true,1),
                 //new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower, gppLinesUpToBottomRow1,true,1),
-                new FollowPath(follower,gppIntakes1stBallBottomRow,true,1),
+                new FollowPathCommand(follower, gppLinesUpToBottomRow1,true,1),
+                new FollowPathCommand(follower,gppIntakes1stBallBottomRow,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, gppLinesUpToTopRow1,true,1),
-                new FollowPath(follower,gppIntakes2FromTopRow,true,1),
+                new FollowPathCommand(follower, gppLinesUpToTopRow1,true,1),
+                new FollowPathCommand(follower,gppIntakes2FromTopRow,true,1),
                 //new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
-                new FollowPath(follower,gppGoesToShoot1stTime,true,1),
+                new FollowPathCommand(follower,gppGoesToShoot1stTime,true,1),
                // new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,gppLinesUpToTopRow2,true,1),
-                new FollowPath(follower,gppIntakesLastBallTop,true,1),
+                new FollowPathCommand(follower,gppLinesUpToTopRow2,true,1),
+                new FollowPathCommand(follower,gppIntakesLastBallTop,true,1),
                // new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower,gppLinesUpToBottomRow2,true,1),
-                new FollowPath(follower,gppIntakes2BallsBottomRow,true,1),
-                new FollowPath(follower,gppGoesToShoot2ndTime,true,1),
+                new FollowPathCommand(follower,gppLinesUpToBottomRow2,true,1),
+                new FollowPathCommand(follower,gppIntakes2BallsBottomRow,true,1),
+                new FollowPathCommand(follower,gppGoesToShoot2ndTime,true,1),
                // new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
-                new FollowPath(follower,gppPushesOtherRobot,true,1),
-                new FollowPath(follower,gppPark,true,1)
+                new FollowPathCommand(follower,gppPushesOtherRobot,true,1),
+                new FollowPathCommand(follower,gppPark,true,1)
 
 
 
@@ -434,9 +435,9 @@ public class RedTurretSortedAuto extends OpMode {
         //else if (robotBase.limelightSubsystem.id == 21){
 //            DataStorage.pattern = DecodeEnums.Patterns.GPP;
        // }//
-      else{
+      //else{
         DataStorage.pattern = DecodeEnums.Patterns.PPG;
-        }
+        //}
         follower.update();
        // telemetry.addData("Launch Velocity", robotBase.launcherSubsystemLeft.getVelocity());
       //  telemetry.addData("Limelight Distance", robotBase.limelightSubsystem.getHorizontalDistance(follower));

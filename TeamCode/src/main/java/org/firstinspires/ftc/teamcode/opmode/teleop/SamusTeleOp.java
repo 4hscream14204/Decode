@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,13 +23,22 @@ import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
+import java.util.List;
+
 @TeleOp(name = "Samus TeleOp")
 public class SamusTeleOp extends OpMode {
     RobotBase robotBase;
     Follower follower;
     GamepadEx mainController;
+    TelemetryManager telemetryM;
+    List<LynxModule> allHubs;
     @Override
     public void init() {
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for(LynxModule hub : allHubs){
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
         CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
         mainController = new GamepadEx(gamepad1);
@@ -54,9 +66,9 @@ public class SamusTeleOp extends OpMode {
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)))))
+                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER))), new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer((mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER))/2))))
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(0))));
+                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(0)), new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0))));
     }
 
     @Override
@@ -64,23 +76,27 @@ public class SamusTeleOp extends OpMode {
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.prismSubsystem.rainbow();
         //robotBase.launcherSubsystem.setVelocity(1900);
-        robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
-        follower.setStartingPose(new Pose(88, 8, Math.toRadians(0)));
+        //robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
+        follower.setStartingPose(new Pose(92, 10, Math.toRadians(0)));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.TEST);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
-        //robotBase.turretSubsystem.setPosition(180);
+        CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
+        //robotBase.turretSubsystem.setPositionDeg(90);
     }
 
     @Override
     public void loop() {
-        CommandScheduler.getInstance().run();
+
+        for(LynxModule hub : allHubs){
+            hub.clearBulkCache();
+        }
+
         follower.update();
         mainController.readButtons();
-        robotBase.chassisSubsystem.pinpoint.update();
+        //robotBase.chassisSubsystem.pinpoint.update();
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true);
-        CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
-        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1900)));
-        //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.updatePosition(90)));
+        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1800)));
+        //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90)));
 
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Intake Left: ", robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance());
@@ -88,5 +104,14 @@ public class SamusTeleOp extends OpMode {
         telemetry.addData("Servo Encoder Max Voltage", robotBase.turretSubsystem.servoEncoder.getMaxVoltage());
         telemetry.addData("Telemetry Voltage", robotBase.turretSubsystem.servoEncoder.getVoltage());
         telemetry.addData("Voltage / Max Voltage", robotBase.turretSubsystem.getPositionDegrees());
+        telemetry.addData("Calc Turret Angle", robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower));
+        telemetry.addData("Servo position: ", robotBase.turretSubsystem.convertDegToServoPos(robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower)));
+        telemetry.addData("X", follower.getPose().getX());
+        telemetry.addData("Y", follower.getPose().getY());
+
+        telemetryM.addData("Launcher Velocity", robotBase.launcherSubsystem.launcherMotor.getVelocity());
+        telemetryM.addData("Launcher Power", robotBase.launcherSubsystem.launcherMotor.getPower());
+        telemetryM.update(telemetry);
+        CommandScheduler.getInstance().run();
     }
 }

@@ -40,16 +40,19 @@ public class Turret {
         turretServoR.setPosition(position);
     }
 
-    /*public double convertDegToServoPos(double degree){
+    public double convertDegToServoPos(double degree){
         double degreeModulus = degree % 360;
         if(degreeModulus < 0){
             degreeModulus += 360;
         }
-        if(degreeModulus > 350){
-            degreeModulus = 350;
+        if(degreeModulus < 5){
+            degreeModulus = 5;
         }
-        return ((0.002833 * degreeModulus) - 0.009915);
-    }*/
+        if(degreeModulus > 150){
+            degreeModulus = 150;
+        }
+        return ((0.002844 * degreeModulus) - 0.029);
+    }
 
     public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
@@ -75,11 +78,11 @@ public class Turret {
         return turretOffset;
     }
 
-    /*public void setPosition(double positionDeg){
-            turretServoL.setPosition(convertDegToServoPos(positionDeg));
-            turretServoR.setPosition(convertDegToServoPos(positionDeg));
+    public void setPositionDeg(double positionDeg){
+            setPosition(convertDegToServoPos(positionDeg));
+            //turretServoR.setPosition(convertDegToServoPos(positionDeg));
             turretServoPosition = convertDegToServoPos(positionDeg);
-    }*/
+    }
 
     public void updatePosition(double headingDeg){
         double error = (headingDeg - getPositionDegrees());

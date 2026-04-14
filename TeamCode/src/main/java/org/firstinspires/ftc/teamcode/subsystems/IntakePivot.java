@@ -6,8 +6,8 @@ public class IntakePivot {
     public Servo intakePivotServo;
 
     public enum PivotPosition{
-        BLOCK(0),
-        INTAKE(0.3167);
+        BLOCK(0.333),
+        INTAKE(0.566);
         public final double value;
 
         PivotPosition(double pos){

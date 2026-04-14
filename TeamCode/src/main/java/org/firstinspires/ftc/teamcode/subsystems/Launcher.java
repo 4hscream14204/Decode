@@ -27,7 +27,7 @@ public class Launcher{
     double voltage;
     double adjustedVelocity;
     double power;
-    double proportional = 0.015;
+    double proportional = 0.005;
     double error;
 
     public Launcher(DcMotorEx m_Launcher, DcMotorEx m_launcher2, VoltageSensor m_voltageSensor){
