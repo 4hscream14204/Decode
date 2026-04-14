@@ -26,7 +26,8 @@ public class RedTurretSorted extends OpMode {
         RobotBase robotBase;
         Follower follower;
         Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
-        Pose parkingPose = new Pose(106,74,Math.toRadians(0));
+        Pose pushOtherBot =  new Pose (84, 10 ,Math.toRadians(90));
+        Pose parkingPose = new Pose(117,10,Math.toRadians(90));
         Pose preLaunchPose = new Pose(88,91,Math.toRadians(49));
         Pose launchPose = new Pose(88,91 ,Math.toRadians(49));
         Pose linesUpToOpenRamp = new Pose(121,78,Math.toRadians(90));
@@ -68,6 +69,7 @@ public class RedTurretSorted extends OpMode {
         PathChain linesUpToBottomRow2;
         PathChain pgpIntakesBallFromBottomRow;
         PathChain pgpGoesToShoot2ndTime;
+        PathChain pgpPushesOtherRobot;
         PathChain pgpPark;
      //   PGP Ends PPG starts
         PathChain ppgLinesUpToTopRow1;
@@ -80,6 +82,7 @@ public class RedTurretSorted extends OpMode {
         PathChain ppgLinesUpToTopRow2;
         PathChain ppgIntakesLastBallTopRow;
         PathChain ppgGoesToShoot2ndTime;
+        PathChain ppgPushesOtherRobot;
         PathChain ppgPark;
       // PPG Ends GPP starts
         PathChain gppLinesUpToBottomRow1;
@@ -92,6 +95,7 @@ public class RedTurretSorted extends OpMode {
         PathChain gppLinesUpToBottomRow2;
         PathChain gppIntakes2BallsBottomRow;
         PathChain gppGoesToShoot2ndTime;
+        PathChain gppPushesOtherRobot;
         PathChain gppPark;
 
 
@@ -177,9 +181,13 @@ public class RedTurretSorted extends OpMode {
                     .addPath(new BezierLine(intakesLastBallFromBottom,launchPose))
                     .setLinearHeadingInterpolation(intakesLastBallFromBottom.getHeading(),launchPose.getHeading())
                     .build();
+            pgpPushesOtherRobot = follower.pathBuilder()
+                    .addPath(new BezierLine(launchPose,pushOtherBot))
+                    .setLinearHeadingInterpolation(launchPose.getHeading(),pushOtherBot.getHeading())
+                    .build();
             pgpPark = follower.pathBuilder()
-                    .addPath(new BezierLine(launchPose,parkingPose))
-                    .setLinearHeadingInterpolation(launchPose.getHeading(),parkingPose.getHeading())
+                    .addPath(new BezierLine(pushOtherBot,parkingPose))
+                    .setLinearHeadingInterpolation(pushOtherBot.getHeading(),parkingPose.getHeading())
                     .build();
            //PPG Starts
             ppgLinesUpToTopRow1 = follower.pathBuilder()
@@ -221,6 +229,10 @@ public class RedTurretSorted extends OpMode {
             ppgGoesToShoot2ndTime = follower.pathBuilder()
                     .addPath(new BezierLine(intakesLastBallFromTop,launchPose))
                     .setLinearHeadingInterpolation(intakesLastBallFromTop.getHeading(),launchPose.getHeading())
+                    .build();
+            ppgPushesOtherRobot = follower.pathBuilder()
+                    .addPath(new BezierLine(launchPose, pushOtherBot))
+                    .setLinearHeadingInterpolation(launchPose.getHeading(), pushOtherBot.getHeading())
                     .build();
             ppgPark = follower.pathBuilder()
                     .addPath(new BezierLine(launchPose,parkingPose))
@@ -267,6 +279,10 @@ public class RedTurretSorted extends OpMode {
                     .addPath(new BezierLine(intakesLast2BallsFromBottom,launchPose))
                     .setLinearHeadingInterpolation(intakesLast2BallsFromBottom.getHeading(),launchPose.getHeading())
                     .build();
+            gppPushesOtherRobot = follower.pathBuilder()
+                    .addPath(new BezierLine(launchPose,pushOtherBot))
+                    .setLinearHeadingInterpolation(launchPose.getHeading(), pushOtherBot.getHeading())
+                    .build();
             gppPark = follower.pathBuilder()
                     .addPath(new BezierLine(launchPose,parkingPose))
                     .setLinearHeadingInterpolation(launchPose.getHeading(),parkingPose.getHeading())
@@ -307,6 +323,7 @@ public class RedTurretSorted extends OpMode {
                     new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
                     new FollowPath(follower,pgpGoesToShoot2ndTime,true,1),
                     new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
+                    new FollowPath(follower,pgpPushesOtherRobot,true,1),
                     new FollowPath(follower,pgpPark,true,1)
 
             );
@@ -342,6 +359,7 @@ public class RedTurretSorted extends OpMode {
                     new FollowPath(follower,ppgIntakesLastBallTopRow, true,1),
                     new FollowPath(follower,ppgGoesToShoot2ndTime,true,1),
                     new AutoTransferAndLaunchCommandGroup(robotBase, dblTargetLaunchVel),
+                    new FollowPath(follower,ppgPushesOtherRobot,true,1),
                     new FollowPath(follower,ppgPark,true,1)
 
 
@@ -379,6 +397,7 @@ public class RedTurretSorted extends OpMode {
                     new FollowPath(follower,gppIntakes2BallsBottomRow,true,1),
                     new FollowPath(follower,gppGoesToShoot2ndTime,true,1),
                     new AutoTransferAndLaunchNoPatternCG(robotBase, dblTargetLaunchVel),
+                    new FollowPath(follower,gppPushesOtherRobot,true,1),
                     new FollowPath(follower,gppPark,true,1)
 
 
