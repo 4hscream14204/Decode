@@ -8,7 +8,7 @@ public class Hood {
     public enum HoodPosition{
         CLOSE(0.54166),
         TEST(0.5),
-        FAR(0.852);
+        FAR(0.775);
         public final double value;
         HoodPosition(double pos){
             this.value = pos;

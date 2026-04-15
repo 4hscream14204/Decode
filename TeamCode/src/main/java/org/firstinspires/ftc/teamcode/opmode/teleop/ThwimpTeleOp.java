@@ -25,8 +25,8 @@ import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
 import java.util.List;
 
-@TeleOp(name = "Samus TeleOp")
-public class SamusTeleOp extends OpMode {
+@TeleOp(name = "Thwimp TeleOp")
+public class ThwimpTeleOp extends OpMode {
     RobotBase robotBase;
     Follower follower;
     GamepadEx mainController;

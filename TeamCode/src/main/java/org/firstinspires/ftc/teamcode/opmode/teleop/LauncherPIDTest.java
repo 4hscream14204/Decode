@@ -73,7 +73,6 @@ public class LauncherPIDTest extends OpMode {
 
     @Override
     public void loop() {
-        CommandScheduler.getInstance().run();
         mainController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
         follower.update();
@@ -84,5 +83,6 @@ public class LauncherPIDTest extends OpMode {
         telemetry.addData("Voltage: ", controlHubVoltageSensor.getVoltage());
         telemetry.addData("Velocity Variable: ", velocity);
         telemetry.addData("Velocity: ", robotBase.launcherSubsystem.launcherMotor.getVelocity());
+        CommandScheduler.getInstance().run();
     }
 }
