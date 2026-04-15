@@ -7,6 +7,8 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.seattlesolvers.solverslib.controller.PIDFController;
+import com.skeletonarmy.marrow.zones.Point;
+import com.skeletonarmy.marrow.zones.PolygonZone;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -25,6 +27,11 @@ public class Chassis{
     double dblBackLeftPower;
     double dblBackRightPower;
     public boolean isFieldCentric = true;
+    public boolean isInCloseZone;
+    public boolean isInFarZone;
+    PolygonZone closeLaunchZone;
+    PolygonZone farLaunchZone;
+    PolygonZone robotZone;
 
     PIDFController headingControl = new PIDFController(0.02, 0, 0.002, 0.05);
     PIDFController driveHeadingControl = new PIDFController(2, 0, 0.1, 0.1);
@@ -59,6 +66,9 @@ public class Chassis{
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        closeLaunchZone = new PolygonZone(new Point(144, 130), new Point(72, 65), new Point(0, 130));
+        farLaunchZone = new PolygonZone(new Point(45, 0), new Point(72, 36), new Point(100, 0));
+        robotZone = new PolygonZone(13, 10);
     }
 
     public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric) {
@@ -109,5 +119,28 @@ public class Chassis{
 
     public void resetIMU() {
         pinpoint.setHeading(0, AngleUnit.DEGREES);
+    }
+
+    public void updateRobotZone(){
+        robotZone.setRotation(follower.getHeading());
+        robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
+    }
+
+    public boolean isInCloseZone(){
+        if(robotZone.isInside(closeLaunchZone)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean isInFarZone(){
+        if(robotZone.isInside(farLaunchZone)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

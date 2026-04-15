@@ -6,7 +6,7 @@ public class Hood {
     public Servo hoodServo;
 
     public enum HoodPosition{
-        CLOSE(0),
+        CLOSE(0.54166),
         TEST(0.5),
         FAR(0.852);
         public final double value;

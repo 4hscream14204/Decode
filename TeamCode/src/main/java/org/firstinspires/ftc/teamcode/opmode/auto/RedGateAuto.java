@@ -39,9 +39,18 @@ public class RedGateAuto extends OpMode {
             new Pose(133, 55),
             new Pose(85, 83));
 
+    BezierLine launchToGateLine = new BezierLine(
+            new Pose(85, 83), new Pose(133, 61));
+
+    BezierLine gateToLaunchLine = new BezierLine(
+            new Pose(133, 61), new Pose(85, 83)
+    );
+
     PathChain startLaunchAndIntakeSecondRow;
     PathChain preIntakeSecondRowPath;
     PathChain intakeSecondRowPath;
+    PathChain launchToGate;
+    PathChain gateToLaunch;
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -63,14 +72,27 @@ public class RedGateAuto extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
-        intakeSecondRowPath = follower.pathBuilder()
-                .addPath(intakeSecondRow)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+        launchToGate = follower.pathBuilder()
+                .addPath(launchToGateLine)
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(35))
+                .build();
+
+        gateToLaunch = follower.pathBuilder()
+                .addPath(gateToLaunchLine)
+                .setLinearHeadingInterpolation(Math.toRadians(35), Math.toRadians(0))
                 .build();
 
         path = new SequentialCommandGroup(
-          new FollowPathCommand(follower, startLaunchAndIntakeSecondRow, true, 1),
-          new FollowPathCommand(follower, preIntakeSecondRowPath, true, 1)
+            new FollowPathCommand(follower, startLaunchAndIntakeSecondRow, true, 1),
+            new FollowPathCommand(follower, preIntakeSecondRowPath, true, 1),
+            new WaitCommand(500),
+            new FollowPathCommand(follower, launchToGate, true, 1),
+            new WaitCommand(250),
+            new FollowPathCommand(follower, gateToLaunch, true, 1),
+            new WaitCommand(500),
+            new FollowPathCommand(follower, launchToGate, true, 1),
+            new WaitCommand(250),
+            new FollowPathCommand(follower, gateToLaunch, true, 1)
           //new FollowPathCommand(follower, intakeSecondRowPath, true, 1)
         );
     }
