@@ -17,10 +17,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(8.8)
-            .headingPIDFCoefficients(new PIDFCoefficients(0.07, 0, 0.05, 0.01))
+            .mass(9.6)
+            .headingPIDFCoefficients(new PIDFCoefficients(0.9, 0, 0.01, 0.01))
             .centripetalScaling(0)
-            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0, 0.119524691, 0.001777536));
+            .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.08, 0.119524691, 0.001777536));
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
@@ -44,7 +44,7 @@ public class Constants {
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+    public static PathConstraints pathConstraints = new PathConstraints(0.97, 100, 1, 1);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)

@@ -24,20 +24,23 @@ public class RedGateAuto extends OpMode {
 
     Pose startPose = new Pose(125, 131, Math.toRadians(-135));
 
-    BezierLine startToLaunch = new BezierLine(
-            new Pose(125.000, 131.000),
-            new Pose(85.000, 83.500));
+    BezierLine startToLaunch = new BezierLine(startPose, new Pose(85.000, 83.500, Math.toRadians(-135)));
 
     BezierCurve preIntakeSecondRow = new BezierCurve(
             new Pose(85.000, 83.500),
             new Pose(89.054, 68.888),
-            new Pose(103.425, 60.000));
+            new Pose(103.425, 55.000));
 
     BezierLine intakeSecondRow =  new BezierLine(
-            new Pose(103.425, 60.000),
-            new Pose(133.000, 60.000));
+            new Pose(103.425, 55.000),
+            new Pose(133.000, 55.000));
+
+    BezierLine secondRowToLaunch = new BezierLine(
+            new Pose(133, 55),
+            new Pose(85, 83));
 
     PathChain startLaunchAndIntakeSecondRow;
+    PathChain preIntakeSecondRowPath;
     PathChain intakeSecondRowPath;
     @Override
     public void init() {
@@ -47,19 +50,27 @@ public class RedGateAuto extends OpMode {
 
         startLaunchAndIntakeSecondRow = follower.pathBuilder()
                 .addPath(startToLaunch)
-                .setTangentHeadingInterpolation()
+                .setConstantHeadingInterpolation(startPose.getHeading())
                 //.addParametricCallback(0.97, ()->CommandScheduler.getInstance().schedule(new WaitCommand(1000)))
                 .build();
 
-        intakeSecondRowPath = follower.pathBuilder()
+        preIntakeSecondRowPath = follower.pathBuilder()
                 .addPath(preIntakeSecondRow)
-                .setLinearHeadingInterpolation(Math.toRadians(-135), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(-135), Math.toRadians(0), 0.8)
+                .addPath(intakeSecondRow)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addPath(secondRowToLaunch)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .build();
+
+        intakeSecondRowPath = follower.pathBuilder()
                 .addPath(intakeSecondRow)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         path = new SequentialCommandGroup(
-          new FollowPathCommand(follower, startLaunchAndIntakeSecondRow, true, 1)
+          new FollowPathCommand(follower, startLaunchAndIntakeSecondRow, true, 1),
+          new FollowPathCommand(follower, preIntakeSecondRowPath, true, 1)
           //new FollowPathCommand(follower, intakeSecondRowPath, true, 1)
         );
     }
@@ -72,10 +83,11 @@ public class RedGateAuto extends OpMode {
 
     @Override
     public void loop() {
-        follower.update();
         CommandScheduler.getInstance().run();
+        follower.update();
 
         telemetry.addData("X: ", follower.getPose().getX());
         telemetry.addData("Y: ", follower.getPose().getY());
+        telemetry.addData("Heading", Math.toDegrees(follower.getPose().getHeading()));
     }
 }
