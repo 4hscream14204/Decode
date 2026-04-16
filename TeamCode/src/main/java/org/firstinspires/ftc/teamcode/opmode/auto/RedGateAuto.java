@@ -13,6 +13,7 @@ import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.base.RobotBase;
+import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 
 @Autonomous(name = "Red Gate Auto")
@@ -29,28 +30,45 @@ public class RedGateAuto extends OpMode {
     BezierCurve preIntakeSecondRow = new BezierCurve(
             new Pose(85.000, 83.500),
             new Pose(89.054, 68.888),
-            new Pose(103.425, 55.000));
+            new Pose(103.425, 60.000));
 
     BezierLine intakeSecondRow =  new BezierLine(
-            new Pose(103.425, 55.000),
-            new Pose(133.000, 55.000));
+            new Pose(103.425, 60.000),
+            new Pose(124.000, 60.000));
 
     BezierLine secondRowToLaunch = new BezierLine(
-            new Pose(133, 55),
-            new Pose(85, 83));
+            new Pose(124, 60),
+            new Pose(90, 83));
 
     BezierLine launchToGateLine = new BezierLine(
-            new Pose(85, 83), new Pose(133, 61));
+            new Pose(88, 83),
+            new Pose(135, 64));
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(133, 61), new Pose(85, 83)
-    );
+            new Pose(135, 64), new Pose(85, 83));
 
-    PathChain startLaunchAndIntakeSecondRow;
+    BezierLine preIntakeFirstRow = new BezierLine(
+            new Pose(135,64),
+            new Pose(107,84));
+
+    BezierLine intakeFirstRow = new BezierLine(
+            new Pose(107,84),
+            new Pose(122,84));
+
+    BezierLine firstRowToLaunch = new BezierLine(
+            new Pose(122,84),
+            new Pose(88,113));
+
+
+            PathChain startLaunchAndIntakeSecondRow;
     PathChain preIntakeSecondRowPath;
     PathChain intakeSecondRowPath;
     PathChain launchToGate;
     PathChain gateToLaunch;
+    PathChain preIntakeFirstRowPath;
+    PathChain intakeFirstRowPath;
+
+
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
@@ -68,6 +86,8 @@ public class RedGateAuto extends OpMode {
                 .setLinearHeadingInterpolation(Math.toRadians(-135), Math.toRadians(0), 0.8)
                 .addPath(intakeSecondRow)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .build();
+        intakeSecondRowPath = follower.pathBuilder()
                 .addPath(secondRowToLaunch)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
@@ -82,9 +102,21 @@ public class RedGateAuto extends OpMode {
                 .setLinearHeadingInterpolation(Math.toRadians(35), Math.toRadians(0))
                 .build();
 
+        preIntakeFirstRowPath = follower.pathBuilder()
+                .addPath(preIntakeFirstRow)
+                .setLinearHeadingInterpolation(Math.toRadians(-135),Math.toRadians(0), 0.8)
+                .addPath(intakeFirstRow)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .build();
+        intakeFirstRowPath = follower.pathBuilder()
+                .addPath(firstRowToLaunch)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .build();
+
         path = new SequentialCommandGroup(
             new FollowPathCommand(follower, startLaunchAndIntakeSecondRow, true, 1),
             new FollowPathCommand(follower, preIntakeSecondRowPath, true, 1),
+            new FollowPathCommand(follower, intakeSecondRowPath,true,1),
             new WaitCommand(500),
             new FollowPathCommand(follower, launchToGate, true, 1),
             new WaitCommand(250),
@@ -92,7 +124,24 @@ public class RedGateAuto extends OpMode {
             new WaitCommand(500),
             new FollowPathCommand(follower, launchToGate, true, 1),
             new WaitCommand(250),
-            new FollowPathCommand(follower, gateToLaunch, true, 1)
+            new FollowPathCommand(follower, gateToLaunch, true, 1),
+            new WaitCommand(500),
+            new FollowPathCommand(follower,launchToGate,true,1),
+            new WaitCommand(250),
+            new FollowPathCommand(follower,gateToLaunch,true,1),
+            new WaitCommand(500),
+            new FollowPathCommand(follower,launchToGate,true,1),
+            new WaitCommand(250),
+            new FollowPathCommand(follower, gateToLaunch,true,1),
+            new WaitCommand(500),
+            new FollowPathCommand(follower,launchToGate,true,1),
+            new WaitCommand(250),
+            new FollowPathCommand(follower,gateToLaunch,true,1),
+            new WaitCommand(500),
+            new FollowPathCommand(follower,preIntakeFirstRowPath,true,1),
+            new FollowPathCommand(follower,intakeFirstRowPath,true,1)
+
+
           //new FollowPathCommand(follower, intakeSecondRowPath, true, 1)
         );
     }
@@ -101,6 +150,7 @@ public class RedGateAuto extends OpMode {
     public void start() {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(path);
+        CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
     }
 
     @Override
