@@ -25,7 +25,7 @@ public class DynamicVelocityCommand extends CommandBase {
         follower = m_follower;
     }
     @Override
-    public void initialize(){
+    public void execute(){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
             goalPose = new Pose(144, 138);
         }
@@ -41,8 +41,8 @@ public class DynamicVelocityCommand extends CommandBase {
             robotBase.launcherSubsystem.setLaunchVelocity(newDistance);
         }
 
-    /*@Override
+    @Override
     public boolean isFinished(){
         return false;
-    }*/
+    }
     }

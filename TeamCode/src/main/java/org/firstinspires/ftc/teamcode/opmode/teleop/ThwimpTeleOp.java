@@ -82,6 +82,7 @@ public class ThwimpTeleOp extends OpMode {
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
         //robotBase.turretSubsystem.setPositionDeg(90);
+        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
     }
 
     @Override
@@ -96,7 +97,6 @@ public class ThwimpTeleOp extends OpMode {
         //robotBase.chassisSubsystem.pinpoint.update();
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower);
         robotBase.chassisSubsystem.updateRobotZone();
-        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90)));
 
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
