@@ -51,7 +51,7 @@ public class LauncherPIDTest extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))));
 
         mainController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
 
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -59,6 +59,10 @@ public class LauncherPIDTest extends OpMode {
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)))))
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(0))));
+
+        new Trigger(()->robotBase.chassisSubsystem.isInCloseZone())
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.close())))
+                .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));
 
 
     }
@@ -76,7 +80,8 @@ public class LauncherPIDTest extends OpMode {
         mainController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
         follower.update();
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true);
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower);
+        //robotBase.chassisSubsystem.updateRobotZone();
         CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(velocity)));
 
         telemetry.addData("Distance", follower.getPose().distanceFrom(new Pose(144, 138)));

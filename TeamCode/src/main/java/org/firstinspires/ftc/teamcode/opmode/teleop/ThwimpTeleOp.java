@@ -16,6 +16,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
+import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
@@ -32,6 +33,7 @@ public class ThwimpTeleOp extends OpMode {
     GamepadEx mainController;
     TelemetryManager telemetryM;
     List<LynxModule> allHubs;
+    Pose goalPose = new Pose(144, 138);
     @Override
     public void init() {
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -50,13 +52,7 @@ public class ThwimpTeleOp extends OpMode {
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         mainController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase)));
-
-        mainController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))));
-
-        mainController.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
 
         mainController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.updatePosition(90))));
@@ -69,6 +65,10 @@ public class ThwimpTeleOp extends OpMode {
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER))), new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer((mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER))/2))))
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(0)), new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0))));
+
+        new Trigger(()->robotBase.chassisSubsystem.isInCloseZone())
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.close())))
+                .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));
     }
 
     @Override
@@ -94,8 +94,9 @@ public class ThwimpTeleOp extends OpMode {
         follower.update();
         mainController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true);
-        CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1780)));
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower);
+        robotBase.chassisSubsystem.updateRobotZone();
+        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90)));
 
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
@@ -108,6 +109,8 @@ public class ThwimpTeleOp extends OpMode {
         telemetry.addData("Servo position: ", robotBase.turretSubsystem.convertDegToServoPos(robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower)));
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
+        telemetry.addData("Distance: ", follower.getPose().distanceFrom(goalPose));
+        telemetry.addData("Launch Velocity Calc", robotBase.launcherSubsystem.getLaunchVelocity(follower.getPose().distanceFrom(goalPose)));
 
         telemetryM.addData("Launcher Velocity", robotBase.launcherSubsystem.launcherMotor.getVelocity());
         telemetryM.addData("Launcher Power", robotBase.launcherSubsystem.launcherMotor.getPower());

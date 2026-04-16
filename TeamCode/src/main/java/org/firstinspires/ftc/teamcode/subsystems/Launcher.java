@@ -1,10 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.seattlesolvers.solverslib.controller.PIDFController;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.base.DataStorage;
+import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +24,7 @@ public class Launcher{
     public DcMotorEx launcherMotor;
     public DcMotorEx launcherMotor2;
     public double dblTargetVel = 0;
-    double maximum = 2500;
+    double maximum = 2700;
     double changeThresholdPower = 0.001;
     double changeThresholdVelocity = 3;
     int velStorageSize = 3;
@@ -29,6 +36,14 @@ public class Launcher{
     double power;
     double proportional = 0.005;
     double error;
+    double xSpeed;
+    double ySpeed;
+    Pose goalPose;
+    double distance;
+    double timeOfFlight;
+    double timeOfFlightMultiplier = 0.003;
+    Pose futurePose;
+    double newDistance;
 
     public Launcher(DcMotorEx m_Launcher, DcMotorEx m_launcher2, VoltageSensor m_voltageSensor){
     launcherMotor = m_Launcher;
@@ -92,25 +107,15 @@ public double getVelocity(){
     }*/
 
 public void setLaunchVelocity(double m_Distance) {
-
     double velocity = getLaunchVelocity(m_Distance);
-    if(velocity > maximum){
-        setVelocity(maximum);
-    }
-    else if(velocity < 1700){
-        setVelocity(1700);
-    }
-    else{
-        setVelocity(velocity);
-    }
+    setVelocity(velocity);
 }
 
 public double getLaunchVelocity(double m_Distance){
-    //return ((3.1834 * m_Distance) + 1240.5);
-    return ((0.005*(Math.pow(m_Distance, 2))) + (0.5651 * m_Distance) + 1618.2)/*((0.0071*(Math.pow(m_Distance, 2))) + (0.7714 * m_Distance) + 1503.5)*/;
+    return ((6.9121 * m_Distance) + 1137.8);
 }
 
-public boolean isAtSpeed(double velocity){
+public boolean isAtSpeed(){
     double averageSpeed = 0;
     int velStorageIndex = 0;
 
@@ -121,7 +126,23 @@ public boolean isAtSpeed(double velocity){
 
     averageSpeed = averageSpeed / velStorageSize;
 
-    return Math.abs((averageSpeed - dblTargetVel)) <= 10;
+    return Math.abs((averageSpeed - dblTargetVel)) <= 20;
+}
+
+public double getDistance(GoBildaPinpointDriver pinpoint, Follower follower){
+    if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+        goalPose = new Pose(144, 138);
+    }
+    else{
+        goalPose = new Pose(144, 138).mirror();
+    }
+    xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
+    ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
+    distance = follower.getPose().distanceFrom(goalPose);
+    timeOfFlight = distance * timeOfFlightMultiplier;
+    futurePose = new Pose((goalPose.getX() - (xSpeed * timeOfFlight)), (goalPose.getY() - (ySpeed * timeOfFlight)));
+    newDistance = follower.getPose().distanceFrom(futurePose);
+    return newDistance;
 }
 
 public void setMaximum(double m_maximum){

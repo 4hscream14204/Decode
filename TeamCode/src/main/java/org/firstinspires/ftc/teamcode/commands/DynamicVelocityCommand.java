@@ -16,7 +16,7 @@ public class DynamicVelocityCommand extends CommandBase {
     Pose futurePose;
     double distance;
     double newDistance;
-    double timeOfFlightMultiplier = 0.003/*0.003*/;
+    double timeOfFlightMultiplier = 0.003;
     double xSpeed;
     double ySpeed;
     double timeOfFlight;
@@ -27,17 +27,22 @@ public class DynamicVelocityCommand extends CommandBase {
     @Override
     public void initialize(){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            goalPose = new Pose(127.7, 131.7);
+            goalPose = new Pose(144, 138);
         }
         else{
-            goalPose = new Pose(127.7, 131.7).mirror();
+            goalPose = new Pose(144, 138).mirror();
         }
             xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
             ySpeed = robotBase.chassisSubsystem.pinpoint.getVelY(DistanceUnit.INCH);
-            distance = follower.getPose().distanceFrom(goalPose) * 2.54;
+            distance = follower.getPose().distanceFrom(goalPose);
             timeOfFlight = distance * timeOfFlightMultiplier;
             futurePose = new Pose((goalPose.getX() - (xSpeed * timeOfFlight)), (goalPose.getY() - (ySpeed * timeOfFlight)));
-            newDistance = follower.getPose().distanceFrom(futurePose) * 2.54;
+            newDistance = follower.getPose().distanceFrom(futurePose);
             robotBase.launcherSubsystem.setLaunchVelocity(newDistance);
         }
+
+    /*@Override
+    public boolean isFinished(){
+        return false;
+    }*/
     }

@@ -71,12 +71,14 @@ public class Chassis{
         robotZone = new PolygonZone(13, 10);
     }
 
-    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric) {
+    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, Follower m_follower) {
+        follower = m_follower;
         double dblDenominator;
         double y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY); // Remember, Y stick value is reversed
         double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
         double rx = m_gamepadOneRSX * Math.abs(m_gamepadOneRSX);
         double botHeading = pinpoint.getHeading(AngleUnit.RADIANS);
+        updateRobotZone();
         isFieldCentric = m_isFieldCentric;
         if (isFieldCentric) {
             if(m_gamepadOneRSX < -0.1){
