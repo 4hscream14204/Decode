@@ -48,10 +48,10 @@ public class Turret {
         if(degreeModulus < 5){
             degreeModulus = 5;
         }
-        if(degreeModulus > 150){
-            degreeModulus = 150;
+        if(degreeModulus > 350){
+            degreeModulus = 350;
         }
-        return ((0.002844 * degreeModulus) - 0.029);
+        return ((0.002933 * degreeModulus) - 0.07);
     }
 
     public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower){
