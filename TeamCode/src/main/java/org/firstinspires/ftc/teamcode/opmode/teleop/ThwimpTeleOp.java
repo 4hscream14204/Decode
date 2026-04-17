@@ -53,7 +53,7 @@ public class ThwimpTeleOp extends OpMode {
         robotBase.chassisSubsystem.backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        backupController.getGamepadButton(GamepadKeys.Button.A)
+        mainController.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
 
         mainController.getGamepadButton(GamepadKeys.Button.Y)
