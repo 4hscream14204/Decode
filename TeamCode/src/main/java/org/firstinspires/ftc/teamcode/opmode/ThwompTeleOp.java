@@ -70,7 +70,7 @@ public class ThwompTeleOp extends OpMode {
 
     /*MainControllerKeys mainControllerKeys;
     BackupControllerKeys backupControllerKeys;*/
-    ChassisControllerKeys chassisControllerKeys;
+    MainControllerKeys chassisControllerKeys;
     LauncherControllerKeys launcherControllerKeys;
     RGBLights rgbLights;
 
@@ -117,9 +117,9 @@ public class ThwompTeleOp extends OpMode {
 
         mainController = new GamepadEx(gamepad1);
         backupController = new GamepadEx(gamepad2);
-        chassisControllerKeys = new ChassisControllerKeys();
+        chassisControllerKeys = new MainControllerKeys();
         launcherControllerKeys = new LauncherControllerKeys();
-        chassisControllerKeys.addMainController(mainController, robotBase);
+        chassisControllerKeys.addMainController(mainController, robotBase, follower);
         launcherControllerKeys.addLauncherDriver(backupController, robotBase, follower);
         /*mainControllerKeys = new MainControllerKeys();
         backupControllerKeys = new BackupControllerKeys();
