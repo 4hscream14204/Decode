@@ -29,7 +29,7 @@ public class Turret {
     double rotationLead;
     double maxDegrees;
     public double pidOutputToServoPos;
-    PIDController turretHeadingPID = new PIDController(0.001, 0, 0.0005);
+    PIDController turretHeadingPID = new PIDController(0.005, 0, 0.0005);
 
     public Turret(Servo m_turretServoL, Servo m_turretServoR, AnalogInput m_servoEncoder){
         turretServoL = m_turretServoL;
