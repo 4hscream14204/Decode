@@ -34,4 +34,8 @@ public class Hood {
     public void far(){
         setPosition(HoodPosition.FAR);
     }
+
+    public void setDynamicPosition(double distance){
+        setPosition(((8.4 * distance + 861) - 600) / 1800);
+    }
 }

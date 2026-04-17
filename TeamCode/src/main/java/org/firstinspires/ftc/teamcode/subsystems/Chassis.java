@@ -71,8 +71,10 @@ public class Chassis{
         robotZone = new PolygonZone(13, 10);
     }
 
-    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, Follower m_follower) {
+    public void drive(double m_gamepadOneLSY, double m_gamepadOneLSX, double m_gamepadOneRSX, boolean m_isFieldCentric, Follower m_follower, ElapsedTime m_timer) {
         follower = m_follower;
+        timer = m_timer;
+        currentTime = timer.milliseconds();
         double dblDenominator;
         double y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY); // Remember, Y stick value is reversed
         double x = m_gamepadOneLSX * Math.abs(m_gamepadOneLSX);
@@ -86,6 +88,17 @@ public class Chassis{
             }
             else if(m_gamepadOneRSX > 0.1){
                 rx = Math.min(m_gamepadOneRSX * Math.abs(m_gamepadOneRSX), 0.75);
+            }
+            if (Math.abs(m_gamepadOneRSX) > 0.1) {
+                lastStickTime = currentTime;
+            } else if ((currentTime - lastStickTime) < delayTime) {
+                targetHeading = botHeading;
+            }
+            else if(!bolSnapToTarget){
+                headingDeviation = (botHeading - targetHeading) * -1;
+                headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
+                dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
+                rx = dblHeadingOutput;
             }
             //y = -m_gamepadOneLSY * Math.abs(m_gamepadOneLSY);
             double rotX = m_gamepadOneLSX * Math.cos(-botHeading) - m_gamepadOneLSY * Math.sin(-botHeading);

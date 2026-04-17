@@ -8,6 +8,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -17,6 +18,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
+import org.firstinspires.ftc.teamcode.commands.IntakePivotSensorControl;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
@@ -35,8 +37,10 @@ public class ThwimpTeleOp extends OpMode {
     TelemetryManager telemetryM;
     List<LynxModule> allHubs;
     Pose goalPose = new Pose(144, 138);
+    ElapsedTime timer;
     @Override
     public void init() {
+        timer = new ElapsedTime();
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         allHubs = hardwareMap.getAll(LynxModule.class);
         for(LynxModule hub : allHubs){
@@ -57,7 +61,7 @@ public class ThwimpTeleOp extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
 
         mainController.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37))));
         /*mainController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower)));*/
 
@@ -68,9 +72,12 @@ public class ThwimpTeleOp extends OpMode {
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(0)), new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0))));
 
-        new Trigger(()->robotBase.chassisSubsystem.isInCloseZone())
+        /*new Trigger(()->robotBase.chassisSubsystem.isInCloseZone())
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.close())))
-                .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));
+                .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));*/
+
+        /*new Trigger(()->robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower) && robotBase.launcherSubsystem.isAtSpeed() && (robotBase.chassisSubsystem.isInFarZone() || robotBase.chassisSubsystem.isInCloseZone()))
+                .whenActive(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));*/
     }
 
     @Override
@@ -82,9 +89,11 @@ public class ThwimpTeleOp extends OpMode {
         follower.setStartingPose(new Pose(92, 10, Math.toRadians(0)));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
+        //CommandScheduler.getInstance().schedule(new IntakePivotSensorControl(robotBase));
         CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
-        //robotBase.turretSubsystem.setPositionDeg(90);
+        //robotBase.turretSubsystem.updatePosition(90);
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
+        timer.reset();
     }
 
     @Override
@@ -98,8 +107,9 @@ public class ThwimpTeleOp extends OpMode {
         mainController.readButtons();
         backupController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower);
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower, timer);
         robotBase.chassisSubsystem.updateRobotZone();
+        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
         //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90)));
 
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));

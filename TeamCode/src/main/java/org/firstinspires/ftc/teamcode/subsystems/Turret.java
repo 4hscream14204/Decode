@@ -7,6 +7,7 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.controller.PIDController;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -29,7 +30,7 @@ public class Turret {
     double rotationLead;
     double maxDegrees;
     public double pidOutputToServoPos;
-    PIDController turretHeadingPID = new PIDController(0.005, 0, 0.0005);
+    PIDFController turretHeadingPID = new PIDFController(0.005, 0, 0.0005, 0.1);
 
     public Turret(Servo m_turretServoL, Servo m_turretServoR, AnalogInput m_servoEncoder){
         turretServoL = m_turretServoL;
@@ -100,6 +101,13 @@ public class Turret {
     }
 
     public double getPositionDegrees(){
-        return ((-121.454393 * servoEncoder.getVoltage()) + 357.565175);
+        return ((-121.448569 * servoEncoder.getVoltage()) + 366.747416);
+    }
+
+    public boolean isAtPosition(GoBildaPinpointDriver pinpoint, Follower follower){
+        if(Math.abs(getTurretAngle(pinpoint, follower) - getPositionDegrees()) < 0.5){
+            return true;
+        }
+        return false;
     }
 }

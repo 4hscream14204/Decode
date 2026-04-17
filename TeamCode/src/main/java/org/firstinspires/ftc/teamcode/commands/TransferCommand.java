@@ -23,7 +23,8 @@ public class TransferCommand extends SequentialCommandGroup {
             new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
             new WaitCommand(500),
             new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
-            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
+            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+            new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37))
         );
     }
 }

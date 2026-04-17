@@ -11,11 +11,15 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.base.RobotBase;
+import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
+import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
 @Autonomous(name = "Red Gate Auto")
 public class RedGateAuto extends OpMode {
@@ -26,7 +30,7 @@ public class RedGateAuto extends OpMode {
 
     Pose startPose = new Pose(125, 131, Math.toRadians(-135));
 
-    BezierLine startToLaunch = new BezierLine(startPose, new Pose(88.000, 83.500, Math.toRadians(-135)));
+    BezierLine startToLaunch = new BezierLine(startPose, new Pose(91.000, 83.500, Math.toRadians(-135)));
 
     BezierCurve preIntakeSecondRow = new BezierCurve(
             new Pose(88.000, 83.500),
@@ -35,15 +39,15 @@ public class RedGateAuto extends OpMode {
 
     BezierLine intakeSecondRow =  new BezierLine(
             new Pose(103.425, 60.000),
-            new Pose(124.000, 60.000));
+            new Pose(128.000, 60.000));
 
     BezierLine secondRowToLaunch = new BezierLine(
-            new Pose(124, 60),
+            new Pose(128, 60),
             new Pose(90, 83));
 
     BezierLine launchToGateLine = new BezierLine(
             new Pose(88, 83),
-            new Pose(135, 64));
+            new Pose(135, 63, Math.toRadians(37)));
 
     BezierLine gateToLaunchLine = new BezierLine(
             new Pose(135, 64), new Pose(85, 83));
@@ -95,7 +99,7 @@ public class RedGateAuto extends OpMode {
 
         launchToGate = follower.pathBuilder()
                 .addPath(launchToGateLine)
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(35))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(37))
                 .build();
 
         gateToLaunch = follower.pathBuilder()
@@ -115,24 +119,37 @@ public class RedGateAuto extends OpMode {
                 .build();
 
         path = new SequentialCommandGroup(
-                new InstantCommand(()->robotBase.hoodSubsystem.close()),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
+            new InstantCommand(()->robotBase.hoodSubsystem.close()),
+            //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1740)),
+            new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
             new FollowPathCommand(follower, startLaunchAndIntakeSecondRow, true, 1),
-            new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-1)),
+            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
+            new WaitCommand(500),
+            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+            //new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-1)),
             new FollowPathCommand(follower, preIntakeSecondRowPath, true, 1),
             new FollowPathCommand(follower, intakeSecondRowPath,true,1),
-            new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
-            new WaitCommand(500),
+                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
+                new WaitCommand(500),
+                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+            //new TransferCommand(robotBase, follower),
+            //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
+            //new WaitCommand(1000),
             new FollowPathCommand(follower, launchToGate, true, 1),
             new WaitCommand(250),
             new FollowPathCommand(follower, gateToLaunch, true, 1),
-            new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
-            new WaitCommand(500),
-           new FollowPathCommand(follower, launchToGate, true, 1),
+                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
+                new WaitCommand(500),
+                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+            //new TransferCommand(robotBase, follower),
+            //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
+            //new WaitCommand(500),
+            new FollowPathCommand(follower, launchToGate, true, 1),
             new WaitCommand(250),
-                new FollowPathCommand(follower, gateToLaunch, true, 1),
-                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
-           new WaitCommand(500)
+            new FollowPathCommand(follower, gateToLaunch, true, 1),
+            //new TransferCommand(robotBase, follower),
+                //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
+            new WaitCommand(500)
            // new FollowPathCommand(follower,launchToGate,true,1),
           //  new WaitCommand(250),
             //new FollowPathCommand(follower,gateToLaunch,true,1),
@@ -153,6 +170,7 @@ public class RedGateAuto extends OpMode {
 
           //new FollowPathCommand(follower, intakeSecondRowPath, true, 1)
                 );
+        robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
     }
 
     @Override
@@ -160,6 +178,7 @@ public class RedGateAuto extends OpMode {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(path);
         CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
     }
 
     @Override
