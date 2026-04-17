@@ -19,7 +19,7 @@ public class TurretHeadingControlCommandGroup extends CommandBase {
     @Override
     public void execute(){
         turretAngle = robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower);
-        robotBase.turretSubsystem.setPositionDeg(turretAngle);
+        robotBase.turretSubsystem.updatePosition(turretAngle);
     }
 
     @Override

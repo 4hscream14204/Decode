@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 
+@Configurable
 public class Turret {
     Servo turretServoL;
     Servo turretServoR;
@@ -26,8 +28,8 @@ public class Turret {
     double turretOffset;
     double rotationLead;
     double maxDegrees;
-    double pidOutputToServoPos;
-    PIDController turretHeadingPID = new PIDController(0.01, 0, 0.001);
+    public double pidOutputToServoPos;
+    PIDController turretHeadingPID = new PIDController(0.001, 0, 0.0005);
 
     public Turret(Servo m_turretServoL, Servo m_turretServoR, AnalogInput m_servoEncoder){
         turretServoL = m_turretServoL;
@@ -85,6 +87,12 @@ public class Turret {
     }
 
     public void updatePosition(double headingDeg){
+        if(headingDeg < 5){
+            headingDeg = 5;
+        }
+        if(headingDeg > 350){
+            headingDeg = 350;
+        }
         double error = (headingDeg - getPositionDegrees());
         double pidOutput = turretHeadingPID.calculate(error);
         pidOutputToServoPos = ((pidOutput + 1) / 2);

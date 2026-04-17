@@ -31,6 +31,7 @@ public class ThwimpTeleOp extends OpMode {
     RobotBase robotBase;
     Follower follower;
     GamepadEx mainController;
+    GamepadEx backupController;
     TelemetryManager telemetryM;
     List<LynxModule> allHubs;
     Pose goalPose = new Pose(144, 138);
@@ -44,6 +45,7 @@ public class ThwimpTeleOp extends OpMode {
         CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
         mainController = new GamepadEx(gamepad1);
+        backupController = new GamepadEx(gamepad2);
         follower = Constants.createFollower(hardwareMap);
 
         robotBase.chassisSubsystem.frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -51,11 +53,11 @@ public class ThwimpTeleOp extends OpMode {
         robotBase.chassisSubsystem.backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        mainController.getGamepadButton(GamepadKeys.Button.A)
+        backupController.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
 
         mainController.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.updatePosition(90))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90))));
         /*mainController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower)));*/
 
@@ -94,6 +96,7 @@ public class ThwimpTeleOp extends OpMode {
 
         follower.update();
         mainController.readButtons();
+        backupController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower);
         robotBase.chassisSubsystem.updateRobotZone();
@@ -111,6 +114,7 @@ public class ThwimpTeleOp extends OpMode {
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Distance: ", follower.getPose().distanceFrom(goalPose));
         telemetry.addData("Launch Velocity Calc", robotBase.launcherSubsystem.getLaunchVelocity(follower.getPose().distanceFrom(goalPose)));
+        telemetry.addData("PID Output to Servo Pos", robotBase.turretSubsystem.pidOutputToServoPos);
 
         telemetryM.addData("Launcher Velocity", robotBase.launcherSubsystem.launcherMotor.getVelocity());
         telemetryM.addData("Launcher Power", robotBase.launcherSubsystem.launcherMotor.getPower());
