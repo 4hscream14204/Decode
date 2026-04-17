@@ -8,6 +8,7 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
@@ -25,10 +26,10 @@ public class RedGateAuto extends OpMode {
 
     Pose startPose = new Pose(125, 131, Math.toRadians(-135));
 
-    BezierLine startToLaunch = new BezierLine(startPose, new Pose(85.000, 83.500, Math.toRadians(-135)));
+    BezierLine startToLaunch = new BezierLine(startPose, new Pose(88.000, 83.500, Math.toRadians(-135)));
 
     BezierCurve preIntakeSecondRow = new BezierCurve(
-            new Pose(85.000, 83.500),
+            new Pose(88.000, 83.500),
             new Pose(89.054, 68.888),
             new Pose(103.425, 60.000));
 
@@ -114,36 +115,44 @@ public class RedGateAuto extends OpMode {
                 .build();
 
         path = new SequentialCommandGroup(
+                new InstantCommand(()->robotBase.hoodSubsystem.close()),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
             new FollowPathCommand(follower, startLaunchAndIntakeSecondRow, true, 1),
+            new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-1)),
             new FollowPathCommand(follower, preIntakeSecondRowPath, true, 1),
             new FollowPathCommand(follower, intakeSecondRowPath,true,1),
+            new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
             new WaitCommand(500),
             new FollowPathCommand(follower, launchToGate, true, 1),
             new WaitCommand(250),
             new FollowPathCommand(follower, gateToLaunch, true, 1),
+            new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
             new WaitCommand(500),
-            new FollowPathCommand(follower, launchToGate, true, 1),
+           new FollowPathCommand(follower, launchToGate, true, 1),
             new WaitCommand(250),
-            new FollowPathCommand(follower, gateToLaunch, true, 1),
-            new WaitCommand(500),
-            new FollowPathCommand(follower,launchToGate,true,1),
-            new WaitCommand(250),
-            new FollowPathCommand(follower,gateToLaunch,true,1),
-            new WaitCommand(500),
-            new FollowPathCommand(follower,launchToGate,true,1),
-            new WaitCommand(250),
-            new FollowPathCommand(follower, gateToLaunch,true,1),
-            new WaitCommand(500),
-            new FollowPathCommand(follower,launchToGate,true,1),
-            new WaitCommand(250),
-            new FollowPathCommand(follower,gateToLaunch,true,1),
-            new WaitCommand(500),
-            new FollowPathCommand(follower,preIntakeFirstRowPath,true,1),
-            new FollowPathCommand(follower,intakeFirstRowPath,true,1)
-
+                new FollowPathCommand(follower, gateToLaunch, true, 1),
+                new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
+           new WaitCommand(500)
+           // new FollowPathCommand(follower,launchToGate,true,1),
+          //  new WaitCommand(250),
+            //new FollowPathCommand(follower,gateToLaunch,true,1),
+            //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
+            //new WaitCommand(500),
+            //new FollowPathCommand(follower,launchToGate,true,1),
+            //new WaitCommand(250),
+            //new FollowPathCommand(follower, gateToLaunch,true,1),
+            //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
+            //new WaitCommand(500),
+            //new FollowPathCommand(follower,launchToGate,true,1),
+            //new WaitCommand(250),
+            //new FollowPathCommand(follower,gateToLaunch,true,1),
+            //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
+            //new WaitCommand(500),
+            //new FollowPathCommand(follower,preIntakeFirstRowPath,true,1),
+            //new FollowPathCommand(follower,intakeFirstRowPath,true,1)
 
           //new FollowPathCommand(follower, intakeSecondRowPath, true, 1)
-        );
+                );
     }
 
     @Override
