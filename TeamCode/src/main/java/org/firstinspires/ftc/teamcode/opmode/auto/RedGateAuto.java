@@ -44,19 +44,19 @@ public class RedGateAuto extends OpMode {
             new Pose(90, 83));
 
     BezierLine launchToGateLine = new BezierLine(
-            new Pose(88, 83),
+            new Pose(85, 85),
             new Pose(135, 63, Math.toRadians(37)));
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(135, 64), new Pose(85, 83));
+            new Pose(135, 63), new Pose(85, 85));
 
     BezierLine preIntakeFirstRow = new BezierLine(
-            new Pose(135,64),
+            new Pose(85,85),
             new Pose(107,84));
 
     BezierLine intakeFirstRow = new BezierLine(
             new Pose(107,84),
-            new Pose(122,84));
+            new Pose(127,84));
 
     BezierLine firstRowToLaunch = new BezierLine(
             new Pose(122,84),
@@ -133,7 +133,7 @@ public class RedGateAuto extends OpMode {
             //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
             //new WaitCommand(1000),
             new FollowPathCommand(follower, launchToGate, true, 1),
-            new WaitCommand(250),
+            new WaitCommand(700),
             new FollowPathCommand(follower, gateToLaunch, true, 1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
@@ -142,25 +142,25 @@ public class RedGateAuto extends OpMode {
             //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
             //new WaitCommand(500),
             new FollowPathCommand(follower, launchToGate, false, 1),
-            new WaitCommand(500),
+            new WaitCommand(700),
             new FollowPathCommand(follower, gateToLaunch, true, 1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
-            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
-           /* new FollowPathCommand(follower,launchToGate,true,1),
-            new WaitCommand(250),
+            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+            new FollowPathCommand(follower,launchToGate,true,1),
+            new WaitCommand(700),
             new FollowPathCommand(follower,gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
             new FollowPathCommand(follower,launchToGate,true,1),
-            new WaitCommand(250),
+            new WaitCommand(700),
             new FollowPathCommand(follower, gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
             new FollowPathCommand(follower,launchToGate,true,1),
-            new WaitCommand(250),
+            new WaitCommand(700),
             new FollowPathCommand(follower,gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
@@ -170,7 +170,7 @@ public class RedGateAuto extends OpMode {
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
-             */
+                    //*/
                 );
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
     }
