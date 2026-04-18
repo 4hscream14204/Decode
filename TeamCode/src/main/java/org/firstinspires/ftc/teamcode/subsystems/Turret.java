@@ -105,7 +105,7 @@ public class Turret {
     }
 
     public boolean isAtPosition(GoBildaPinpointDriver pinpoint, Follower follower){
-        if(Math.abs(getTurretAngle(pinpoint, follower) - getPositionDegrees()) < 0.5){
+        if(Math.abs(getTurretAngle(pinpoint, follower) - getPositionDegrees()) < 3){
             return true;
         }
         return false;
