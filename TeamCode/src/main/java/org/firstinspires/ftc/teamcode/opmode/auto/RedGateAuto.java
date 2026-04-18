@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
 @Autonomous(name = "Red Gate Auto")
@@ -45,10 +46,10 @@ public class RedGateAuto extends OpMode {
 
     BezierLine launchToGateLine = new BezierLine(
             new Pose(85, 85),
-            new Pose(135, 64, Math.toRadians(37)));
+            new Pose(135, 62, Math.toRadians(37)));
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(135, 64), new Pose(85, 85));
+            new Pose(135, 62), new Pose(85, 85));
 
     BezierLine preIntakeFirstRow = new BezierLine(
             new Pose(85,85),
@@ -172,6 +173,8 @@ public class RedGateAuto extends OpMode {
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
                     //*/
                 );
+        //robotBase.turretSubsystem.updatePosition(180);
+        robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
     }
 
