@@ -9,6 +9,7 @@ import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 
 import org.firstinspires.ftc.teamcode.base.RobotBase;
+import org.firstinspires.ftc.teamcode.subsystems.Prism;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
 public class TransferCommand extends SequentialCommandGroup {
@@ -24,7 +25,10 @@ public class TransferCommand extends SequentialCommandGroup {
             new WaitCommand(500),
             new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-            new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37))
+            new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37)),
+            new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
+            new WaitCommand(500),
+            new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW))
         );
     }
 }

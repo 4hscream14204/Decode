@@ -16,6 +16,8 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.base.DataStorage;
+import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.IntakePivotSensorControl;
@@ -24,6 +26,7 @@ import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
+import org.firstinspires.ftc.teamcode.subsystems.Prism;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
 import java.util.List;
@@ -72,6 +75,14 @@ public class ThwimpTeleOp extends OpMode {
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(0)), new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0))));
 
+        new Trigger(()->timer.seconds() > 110)
+                .whileActiveOnce(new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.PARK)));
+
+        new Trigger(()->!robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower))
+                .whenActive(new InstantCommand(()->robotBase.prismSubsystem.setAllianceColor()))
+                .whenInactive(new InstantCommand(()->robotBase.prismSubsystem.rainbow()));
+
+
         /*new Trigger(()->robotBase.chassisSubsystem.isInCloseZone())
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.close())))
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));*/
@@ -83,7 +94,7 @@ public class ThwimpTeleOp extends OpMode {
     @Override
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
-        robotBase.prismSubsystem.rainbow();
+        robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW);
         //robotBase.launcherSubsystem.setVelocity(1900);
         //robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
         follower.setStartingPose(new Pose(92, 10, Math.toRadians(0)));
