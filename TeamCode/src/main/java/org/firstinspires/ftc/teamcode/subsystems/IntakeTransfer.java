@@ -36,8 +36,8 @@ public class IntakeTransfer {
     }
 
     public void intakeAndTransfer(){
-        intake(-0.9);
-        transfer(0.9);
+        intake(-0.8);
+        transfer(0.8);
     }
 
     public void intakeAndTransferOuttake(){
