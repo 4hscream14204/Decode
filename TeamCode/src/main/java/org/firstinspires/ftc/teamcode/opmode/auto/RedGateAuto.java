@@ -45,10 +45,10 @@ public class RedGateAuto extends OpMode {
 
     BezierLine launchToGateLine = new BezierLine(
             new Pose(85, 85),
-            new Pose(135, 63, Math.toRadians(37)));
+            new Pose(135, 64, Math.toRadians(37)));
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(135, 63), new Pose(85, 85));
+            new Pose(135, 64), new Pose(85, 85));
 
     BezierLine preIntakeFirstRow = new BezierLine(
             new Pose(85,85),
@@ -59,7 +59,7 @@ public class RedGateAuto extends OpMode {
             new Pose(127,84));
 
     BezierLine firstRowToLaunch = new BezierLine(
-            new Pose(122,84),
+            new Pose(127,84),
             new Pose(88,113));
 
 
