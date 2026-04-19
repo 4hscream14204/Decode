@@ -18,17 +18,29 @@ public class TransferCommand extends SequentialCommandGroup {
     public TransferCommand(RobotBase m_robotBase, Follower m_follower){
         robotBase = m_robotBase;
         follower = m_follower;
-        addCommands(
-            //new WaitUntilCommand(()->robotBase.launcherSubsystem.isAtSpeed()),
-            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
-            new WaitCommand(500),
-            new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
-            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-            new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37)),
-            new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
-            new WaitCommand(500),
-            new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW))
-        );
+        if(robotBase.chassisSubsystem.isInCloseZone()){
+            addCommands(
+                    //new WaitUntilCommand(()->robotBase.launcherSubsystem.isAtSpeed()),
+                    new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
+                    new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
+                    new WaitCommand(500),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
+                    new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                    new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37)),
+                    new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW))
+            );
+        }
+        else if(robotBase.chassisSubsystem.isInFarZone()){
+            addCommands(
+                    new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
+                    new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
+                    new WaitCommand(50),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0.6)),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-0.6)),
+                    new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW))
+            );
+        }
     }
 }

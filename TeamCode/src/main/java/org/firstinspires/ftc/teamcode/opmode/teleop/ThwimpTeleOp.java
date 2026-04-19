@@ -41,6 +41,8 @@ public class ThwimpTeleOp extends OpMode {
     List<LynxModule> allHubs;
     Pose goalPose = new Pose(144, 138);
     ElapsedTime timer;
+    boolean readyToLaunch;
+    int artifactsInBotCount;
     @Override
     public void init() {
         timer = new ElapsedTime();
@@ -61,7 +63,7 @@ public class ThwimpTeleOp extends OpMode {
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         mainController.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower), new InstantCommand(()->artifactsInBotCount = 0)));
 
         mainController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37))));
@@ -87,8 +89,13 @@ public class ThwimpTeleOp extends OpMode {
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.close())))
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));*/
 
-        /*new Trigger(()->robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower) && robotBase.launcherSubsystem.isAtSpeed() && (robotBase.chassisSubsystem.isInFarZone() || robotBase.chassisSubsystem.isInCloseZone()))
+        /*new Trigger(()->readyToLaunch)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));*/
+        new Trigger(()->robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance() <= 6 && robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance() <= 7)
+                .whenActive(()->artifactsInBotCount++);
+
+        new Trigger(()->artifactsInBotCount == 3)
+                .whenActive(()->mainController.gamepad.rumble(1, 1, 500));
     }
 
     @Override
@@ -114,6 +121,13 @@ public class ThwimpTeleOp extends OpMode {
             hub.clearBulkCache();
         }
 
+        if(robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower) && robotBase.launcherSubsystem.isAtSpeed() && (robotBase.chassisSubsystem.isInFarZone() || robotBase.chassisSubsystem.isInCloseZone())){
+            readyToLaunch = true;
+        }
+        else{
+            readyToLaunch = false;
+        }
+
         follower.update();
         mainController.readButtons();
         backupController.readButtons();
@@ -126,20 +140,13 @@ public class ThwimpTeleOp extends OpMode {
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Intake Left: ", robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance());
         telemetry.addData("Intake Right: ", robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance());
-        telemetry.addData("Servo Encoder Max Voltage", robotBase.turretSubsystem.servoEncoder.getMaxVoltage());
-        telemetry.addData("Telemetry Voltage", robotBase.turretSubsystem.servoEncoder.getVoltage());
-        telemetry.addData("Voltage / Max Voltage", robotBase.turretSubsystem.getPositionDegrees());
         telemetry.addData("Calc Turret Angle", robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower));
-        telemetry.addData("Servo position: ", robotBase.turretSubsystem.convertDegToServoPos(robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower)));
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Distance: ", follower.getPose().distanceFrom(goalPose));
         telemetry.addData("Launch Velocity Calc", robotBase.launcherSubsystem.getLaunchVelocity(follower.getPose().distanceFrom(goalPose)));
-        telemetry.addData("PID Output to Servo Pos", robotBase.turretSubsystem.pidOutputToServoPos);
-
-        telemetryM.addData("Launcher Velocity", robotBase.launcherSubsystem.launcherMotor.getVelocity());
-        telemetryM.addData("Launcher Power", robotBase.launcherSubsystem.launcherMotor.getPower());
-        telemetryM.update(telemetry);
+        telemetry.addData("Ready to Launch", readyToLaunch);
+        telemetry.addData("Artifacts in Bot: ", artifactsInBotCount);
         CommandScheduler.getInstance().run();
     }
 }
