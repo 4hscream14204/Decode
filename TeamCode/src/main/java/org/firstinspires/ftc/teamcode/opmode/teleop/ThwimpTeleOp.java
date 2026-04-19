@@ -67,8 +67,6 @@ public class ThwimpTeleOp extends OpMode {
 
         mainController.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37))));
-        /*mainController.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower)));*/
 
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -96,6 +94,9 @@ public class ThwimpTeleOp extends OpMode {
 
         new Trigger(()->artifactsInBotCount == 3)
                 .whenActive(()->mainController.gamepad.rumble(1, 1, 500));
+
+        new Trigger(()->artifactsInBotCount == 3)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.chassisSubsystem.setTargetHeading(0)), new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
     }
 
     @Override
@@ -107,7 +108,6 @@ public class ThwimpTeleOp extends OpMode {
         follower.setStartingPose(new Pose(92, 10, Math.toRadians(0)));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
-        //CommandScheduler.getInstance().schedule(new IntakePivotSensorControl(robotBase));
         CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
         //robotBase.turretSubsystem.updatePosition(90);
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
@@ -121,7 +121,7 @@ public class ThwimpTeleOp extends OpMode {
             hub.clearBulkCache();
         }
 
-        if(robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower) && robotBase.launcherSubsystem.isAtSpeed() && (robotBase.chassisSubsystem.isInFarZone() || robotBase.chassisSubsystem.isInCloseZone())){
+        if(robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower) && robotBase.chassisSubsystem.isInCloseZone()){
             readyToLaunch = true;
         }
         else{
