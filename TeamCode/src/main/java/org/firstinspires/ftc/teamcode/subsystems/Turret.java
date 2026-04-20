@@ -36,6 +36,7 @@ public class Turret {
         turretServoL = m_turretServoL;
         turretServoR = m_turretServoR;
         servoEncoder = m_servoEncoder;
+        setPosition(0.5);
     }
 
     public void setPosition(double position){

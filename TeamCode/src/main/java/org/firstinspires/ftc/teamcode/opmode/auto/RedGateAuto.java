@@ -176,7 +176,6 @@ public class RedGateAuto extends OpMode {
         //robotBase.turretSubsystem.updatePosition(180);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
-        robotBase.turretSubsystem.setPosition(0.5);
     }
 
     @Override
