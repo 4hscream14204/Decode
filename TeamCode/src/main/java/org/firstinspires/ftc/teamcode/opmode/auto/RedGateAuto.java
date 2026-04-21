@@ -38,18 +38,18 @@ public class RedGateAuto extends OpMode {
 
     BezierLine intakeSecondRow =  new BezierLine(
             new Pose(108.000, 63.000),
-            new Pose(130.000, 63.000));
+            new Pose(133.000, 63.000));
 
     BezierLine secondRowToLaunch = new BezierLine(
-            new Pose(130, 63),
+            new Pose(133, 63),
             new Pose(90, 83));
 
     BezierLine launchToGateLineUp = new BezierLine(
             new Pose(85, 85),
-            new Pose(130, 68));
+            new Pose(129, 69));
 
     BezierLine intakeFromRamp = new BezierLine(
-            new Pose(130,68),
+            new Pose(129,69),
             new Pose(136,56,Math.toRadians(49)));
 
 
@@ -59,10 +59,10 @@ public class RedGateAuto extends OpMode {
 
     BezierLine preIntakeFirstRow = new BezierLine(
             new Pose(85,85),
-            new Pose(107,84));
+            new Pose(105,84));
 
     BezierLine intakeFirstRow = new BezierLine(
-            new Pose(107,84),
+            new Pose(105,84),
             new Pose(127,84));
 
     BezierLine firstRowToLaunch = new BezierLine(
@@ -134,12 +134,12 @@ public class RedGateAuto extends OpMode {
             new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
             new FollowPathCommand(follower, startLaunch, true, 1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new WaitCommand(500),
+            new WaitCommand(300),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-            new FollowPathCommand(follower, intakeSecondRowPath, false, 1),
+            new FollowPathCommand(follower, intakeSecondRowPath, false, 0.7),
            new FollowPathCommand(follower, launchSecondRowPath,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new WaitCommand(500),
+            new WaitCommand(300),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
             //new TransferCommand(robotBase, follower),
             //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
@@ -147,45 +147,55 @@ public class RedGateAuto extends OpMode {
             new FollowPathCommand(follower, launchToLineUpToGate, true, 1),
             new FollowPathCommand(follower,intakeFromGate,true,1),
             new WaitCommand(700),
+            new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
             new FollowPathCommand(follower, gateToLaunch, true, 1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new WaitCommand(500),
+            new WaitCommand(300),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+            new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
             //new TransferCommand(robotBase, follower),
             //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
             //new WaitCommand(500),
             new FollowPathCommand(follower, launchToLineUpToGate, false, 1),
                 new FollowPathCommand(follower,intakeFromGate,false,1),
             new WaitCommand(700),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
             new FollowPathCommand(follower, gateToLaunch, true, 1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new WaitCommand(500),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+            new WaitCommand(300),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
             new FollowPathCommand(follower, launchToLineUpToGate,true,1),
                 new FollowPathCommand(follower,intakeFromGate,true,1),
             new WaitCommand(700),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
             new FollowPathCommand(follower,gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new WaitCommand(500),
+            new WaitCommand(300),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
             new FollowPathCommand(follower, launchToLineUpToGate,true,1),
                 new FollowPathCommand(follower,intakeFromGate,true,1),
             new WaitCommand(700),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
             new FollowPathCommand(follower, gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new WaitCommand(500),
+            new WaitCommand(300),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
             new FollowPathCommand(follower, launchToLineUpToGate,true,1),
                 new FollowPathCommand(follower,intakeFromGate,true,1),
             new WaitCommand(700),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
             new FollowPathCommand(follower,gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new WaitCommand(500),
+            new WaitCommand(300),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-            new FollowPathCommand(follower,preIntakeFirstRowPath,true,1),
+            new FollowPathCommand(follower,preIntakeFirstRowPath,true,0.7),
             new FollowPathCommand(follower,launchFirstRowPath,false,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-            new WaitCommand(500),
+            new WaitCommand(300),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
         //         */
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE))
