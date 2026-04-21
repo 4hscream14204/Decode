@@ -44,12 +44,17 @@ public class RedGateAuto extends OpMode {
             new Pose(130, 63),
             new Pose(90, 83));
 
-    BezierLine launchToGateLine = new BezierLine(
+    BezierLine launchToGateLineUp = new BezierLine(
             new Pose(85, 85),
-            new Pose(134, 65, Math.toRadians(25)));
+            new Pose(130, 68));
+
+    BezierLine intakeFromRamp = new BezierLine(
+            new Pose(130,68),
+            new Pose(136,56,Math.toRadians(49)));
+
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(136, 65),
+            new Pose(136,56,Math.toRadians(49)),
             new Pose(85, 85));
 
     BezierLine preIntakeFirstRow = new BezierLine(
@@ -68,7 +73,8 @@ public class RedGateAuto extends OpMode {
     PathChain startLaunch;
     PathChain intakeSecondRowPath;
     PathChain launchSecondRowPath;
-    PathChain launchToGate;
+    PathChain launchToLineUpToGate;
+    PathChain intakeFromGate;
     PathChain gateToLaunch;
     PathChain preIntakeFirstRowPath;
     PathChain launchFirstRowPath;
@@ -97,19 +103,23 @@ public class RedGateAuto extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
-        launchToGate = follower.pathBuilder()
-                .addPath(launchToGateLine)
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(37))
+        launchToLineUpToGate = follower.pathBuilder()
+                .addPath(launchToGateLineUp)
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                .build();
+        intakeFromGate = follower.pathBuilder()
+                .addPath(intakeFromRamp)
+                .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(49))
                 .build();
 
         gateToLaunch = follower.pathBuilder()
                 .addPath(gateToLaunchLine)
-                .setLinearHeadingInterpolation(Math.toRadians(35), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(28), Math.toRadians(0))
                 .build();
 
         preIntakeFirstRowPath = follower.pathBuilder()
                 .addPath(preIntakeFirstRow)
-                .setLinearHeadingInterpolation(Math.toRadians(-135),Math.toRadians(0), 0.8)
+                .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0), 0.8)
                 .addPath(intakeFirstRow)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
@@ -134,7 +144,8 @@ public class RedGateAuto extends OpMode {
             //new TransferCommand(robotBase, follower),
             //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
             //new WaitCommand(1000),
-            new FollowPathCommand(follower, launchToGate, true, 1),
+            new FollowPathCommand(follower, launchToLineUpToGate, true, 1),
+            new FollowPathCommand(follower,intakeFromGate,true,1),
             new WaitCommand(700),
             new FollowPathCommand(follower, gateToLaunch, true, 1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
@@ -143,25 +154,29 @@ public class RedGateAuto extends OpMode {
             //new TransferCommand(robotBase, follower),
             //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
             //new WaitCommand(500),
-            new FollowPathCommand(follower, launchToGate, false, 1),
+            new FollowPathCommand(follower, launchToLineUpToGate, false, 1),
+                new FollowPathCommand(follower,intakeFromGate,false,1),
             new WaitCommand(700),
             new FollowPathCommand(follower, gateToLaunch, true, 1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-            new FollowPathCommand(follower,launchToGate,true,1),
+            new FollowPathCommand(follower, launchToLineUpToGate,true,1),
+                new FollowPathCommand(follower,intakeFromGate,true,1),
             new WaitCommand(700),
             new FollowPathCommand(follower,gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-            new FollowPathCommand(follower,launchToGate,true,1),
+            new FollowPathCommand(follower, launchToLineUpToGate,true,1),
+                new FollowPathCommand(follower,intakeFromGate,true,1),
             new WaitCommand(700),
             new FollowPathCommand(follower, gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-            new FollowPathCommand(follower,launchToGate,true,1),
+            new FollowPathCommand(follower, launchToLineUpToGate,true,1),
+                new FollowPathCommand(follower,intakeFromGate,true,1),
             new WaitCommand(700),
             new FollowPathCommand(follower,gateToLaunch,true,1),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
@@ -172,7 +187,7 @@ public class RedGateAuto extends OpMode {
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
             new WaitCommand(500),
             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-              //      */
+        //         */
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE))
                 );
         //robotBase.turretSubsystem.updatePosition(180);
