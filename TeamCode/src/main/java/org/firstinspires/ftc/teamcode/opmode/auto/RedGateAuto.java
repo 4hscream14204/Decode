@@ -29,7 +29,7 @@ public class RedGateAuto extends OpMode {
 
     Pose startPose = new Pose(125, 131, Math.toRadians(-135));
 
-    BezierLine startToLaunch = new BezierLine(startPose, new Pose(83.000, 83.500, Math.toRadians(-135)));
+    BezierLine startToLaunch = new BezierLine(startPose, new Pose(83.000, 83.500, Math.toRadians(0)));
 
     BezierCurve preIntakeSecondRow = new BezierCurve(
             new Pose(88.000, 83.500),
@@ -38,18 +38,18 @@ public class RedGateAuto extends OpMode {
 
     BezierLine intakeSecondRow =  new BezierLine(
             new Pose(108.000, 63.000),
-            new Pose(129.000, 63.000));
+            new Pose(130.000, 63.000));
 
     BezierLine secondRowToLaunch = new BezierLine(
-            new Pose(128, 63),
+            new Pose(130, 63),
             new Pose(90, 83));
 
     BezierLine launchToGateLine = new BezierLine(
             new Pose(85, 85),
-            new Pose(133, 64, Math.toRadians(29)));
+            new Pose(134, 65, Math.toRadians(25)));
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(133, 64),
+            new Pose(136, 65),
             new Pose(85, 85));
 
     BezierLine preIntakeFirstRow = new BezierLine(
@@ -82,13 +82,13 @@ public class RedGateAuto extends OpMode {
 
         startLaunch = follower.pathBuilder()
                 .addPath(startToLaunch)
-                .setConstantHeadingInterpolation(startPose.getHeading())
+                .setLinearHeadingInterpolation(startPose.getHeading(), Math.toRadians(0))
                 //.addParametricCallback(0.97, ()->CommandScheduler.getInstance().schedule(new WaitCommand(1000)))
                 .build();
 
         intakeSecondRowPath = follower.pathBuilder()
                 .addPath(preIntakeSecondRow)
-                .setLinearHeadingInterpolation(Math.toRadians(-135), Math.toRadians(0), 0.8)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(intakeSecondRow)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
