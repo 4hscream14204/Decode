@@ -51,6 +51,7 @@ public class ThwompTeleOp extends OpMode {
     double velocity = 1500;
     Supplier<PathChain> pathChain;
     Pose gatePose = new Pose(126, 73, Math.toRadians(0));
+    Pose goalPose;
     Pose redGoalPose = new Pose(132, 137);
     Pose blueGoalPose = new Pose(132, 137).mirror();
     Servo prism;
@@ -138,10 +139,10 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()-> timer.seconds() > 110)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> mainController.gamepad.rumble(1000)), new InstantCommand(()->backupController.gamepad.rumble(1000)), new InstantCommand(()->prism.setPosition(0.894))));
 
-        new Trigger(()->robotZone.isInside(farLaunchZone))
+        /*new Trigger(()->robotZone.isInside(farLaunchZone))
                 .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)))
                 .whenInactive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)))
-                ;
+                ;*/
 
         new Trigger(()->robotZone.isInside(farLaunchZone))
                 //.and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
@@ -214,6 +215,15 @@ public class ThwompTeleOp extends OpMode {
         robotBase.limelightSubsystem.updateLimelight();
         robotZone.setPosition(follower.getPose().getX(), follower.getPose().getY());
         robotZone.setRotation(follower.getHeading());
+
+        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+            goalPose = redGoalPose;
+        }
+        else{
+            goalPose = blueGoalPose;
+        }
+
+        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = robotBase.chassisSubsystem.pinpoint.getVelY(DistanceUnit.INCH);

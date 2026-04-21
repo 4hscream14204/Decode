@@ -33,4 +33,8 @@ public class Hood extends SubsystemBase {
         hoodServoL.setPosition(position.value);
         hoodServoR.setPosition(position.value);
     }
+
+    public void setDynamicPosition(double distance){
+        setPosition((((0.7895 * distance) + 1422.4) - 600) / 1800);
+    }
 }
