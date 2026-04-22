@@ -89,14 +89,14 @@ public class Chassis extends SubsystemBase {
                     if(Math.abs(m_gamepadOneLSX) > 0.1 || Math.abs(m_gamepadOneLSY) > 0.1){
                         distance = follower.getPose().distanceFrom(goalPose) * 2.54;
                         timeOfFlight = distance * timeOfFlightMultiplier;
-                        targetHeading = (Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight)))) - m_headingOffset;
+                        targetHeading = (Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight))));
                         headingDeviation = (botHeading - targetHeading) * -1;
                         headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
                         dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);
                         rx = dblHeadingOutput;
                     }
                     else{
-                        targetHeading = (Math.atan2((goalPose.getY() - follower.getPose().getY()), (goalPose.getX() - follower.getPose().getX()))) - m_headingOffset;
+                        targetHeading = (Math.atan2((goalPose.getY() - follower.getPose().getY()), (goalPose.getX() - follower.getPose().getX())));
                         headingDeviation = (botHeading - targetHeading) * -1;
                         headingDeviation = AngleUnit.normalizeRadians(headingDeviation);
                         dblHeadingOutput = driveHeadingControl.calculate(headingDeviation);

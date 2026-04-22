@@ -222,8 +222,8 @@ public class ThwompTeleOp extends OpMode {
         else{
             goalPose = blueGoalPose;
         }
+        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(redGoalPose));
 
-        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = robotBase.chassisSubsystem.pinpoint.getVelY(DistanceUnit.INCH);
