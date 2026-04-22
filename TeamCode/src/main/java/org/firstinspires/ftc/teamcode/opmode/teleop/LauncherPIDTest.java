@@ -5,6 +5,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
@@ -27,8 +28,11 @@ public class LauncherPIDTest extends OpMode {
     double power = 0;
     double velocity;
     Follower follower;
+    ElapsedTime timer;
     @Override
     public void init() {
+        timer = new ElapsedTime();
+        CommandScheduler.getInstance().reset();
         robotBase = new RobotBase(hardwareMap);
         List <VoltageSensor> voltageSensors = hardwareMap.getAll(VoltageSensor.class);
         controlHubVoltageSensor = voltageSensors.get(0);
@@ -48,7 +52,7 @@ public class LauncherPIDTest extends OpMode {
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->velocity -= 10)));
 
         mainController.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setPower(0))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->velocity = 0)));
 
         mainController.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
@@ -56,14 +60,17 @@ public class LauncherPIDTest extends OpMode {
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) - mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)))))
+                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(
+                                mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER)
+                                        - mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER)))))
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(0))));
 
+        /*
         new Trigger(()->robotBase.chassisSubsystem.isInCloseZone())
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.close())))
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));
-
+        */
 
     }
 
@@ -71,8 +78,7 @@ public class LauncherPIDTest extends OpMode {
     public void start() {
         robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
-        robotBase.turretSubsystem.setPositionDeg(90);
-        follower.setStartingPose(new Pose(92, 10, 0));
+        follower.setStartingPose(new Pose(88, 8, 0));
     }
 
     @Override
@@ -80,6 +86,10 @@ public class LauncherPIDTest extends OpMode {
         mainController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
         follower.update();
+        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(new Pose(144, 138)));
+        robotBase.turretSubsystem.updatePosition(90);
+        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower, timer);
+        robotBase.chassisSubsystem.updateRobotZone();
         //robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower);
         //robotBase.chassisSubsystem.updateRobotZone();
         CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(velocity)));
