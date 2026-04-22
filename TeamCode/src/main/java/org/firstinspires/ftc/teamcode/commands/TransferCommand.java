@@ -29,7 +29,8 @@ public class TransferCommand extends SequentialCommandGroup {
                     new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
                     new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                     new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
-                    new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37)),
+                    new WaitCommand(750),
+                    //new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37)),
                     new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW))
             );
         }

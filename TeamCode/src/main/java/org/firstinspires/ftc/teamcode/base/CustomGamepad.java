@@ -26,6 +26,9 @@ public class CustomGamepad {
         gamepad.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))));
 
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                        .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37))));
+
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.setPose(new Pose(92, 10, Math.toRadians(0))))));
     }
