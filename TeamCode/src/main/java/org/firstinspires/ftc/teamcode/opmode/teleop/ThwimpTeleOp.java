@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.base.CustomGamepad;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
+import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
@@ -91,8 +92,8 @@ public class ThwimpTeleOp extends OpMode {
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.close())))
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));*/
 
-        /*new Trigger(()->readyToLaunch)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));*/
+        new Trigger(()->readyToLaunch)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
         new Trigger(()->robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance() <= 6 && robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance() <= 7)
                 .whenActive(()->artifactsInBotCount++);
 
@@ -149,6 +150,8 @@ public class ThwimpTeleOp extends OpMode {
         telemetry.addData("Launch Velocity Calc", robotBase.launcherSubsystem.getLaunchVelocity(follower.getPose().distanceFrom(goalPose)));
         telemetry.addData("Ready to Launch", readyToLaunch);
         telemetry.addData("Artifacts in Bot: ", artifactsInBotCount);
+        telemetry.addData("DegreeNormalized", robotBase.turretSubsystem.degreeNormalized);
+        telemetry.addData("DegreeModulus", robotBase.turretSubsystem.degreeModulus);
         CommandScheduler.getInstance().run();
     }
 }

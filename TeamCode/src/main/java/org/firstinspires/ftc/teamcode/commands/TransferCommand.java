@@ -4,6 +4,7 @@ import com.pedropathing.follower.Follower;
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
@@ -24,7 +25,9 @@ public class TransferCommand extends SequentialCommandGroup {
                     //new WaitUntilCommand(()->robotBase.launcherSubsystem.isAtSpeed()),
                     new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
                     new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
+                    new WaitCommand(250),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0.6)),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-0.6)),
                     new WaitCommand(500),
                     new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
                     new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
@@ -37,11 +40,14 @@ public class TransferCommand extends SequentialCommandGroup {
         else if(robotBase.chassisSubsystem.isInFarZone()){
             addCommands(
                     new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
-                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
                     new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
+                    new WaitCommand(250),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
                     new WaitCommand(50),
-                    new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0.6)),
-                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-0.6)),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0.4)),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-0.4)),
+                    new WaitCommand(750),
+                    new ParallelCommandGroup(new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll())),
                     new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW)),
                     new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))
             );

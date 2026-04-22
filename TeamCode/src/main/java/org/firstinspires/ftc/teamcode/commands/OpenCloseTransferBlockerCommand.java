@@ -14,7 +14,7 @@ public class OpenCloseTransferBlockerCommand extends SequentialCommandGroup {
         robotBase = m_robotBase;
         addCommands(
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(500),
+                new WaitCommand(200),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
         );
     }

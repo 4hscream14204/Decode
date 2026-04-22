@@ -29,6 +29,8 @@ public class Turret {
     double turretOffset;
     double rotationLead;
     double maxDegrees;
+    public double degreeNormalized;
+    public double degreeModulus;
     public double pidOutputToServoPos;
     PIDFController turretHeadingPID = new PIDFController(0.005, 0, 0.0005, 0.1);
 
@@ -45,7 +47,8 @@ public class Turret {
     }
 
     public double convertDegToServoPos(double degree){
-        double degreeModulus = degree % 360;
+        degreeNormalized = AngleUnit.normalizeDegrees(degree);
+        degreeModulus = degreeNormalized % 360;
         if(degreeModulus < 0){
             degreeModulus += 360;
         }
@@ -89,13 +92,15 @@ public class Turret {
     }
 
     public void updatePosition(double headingDeg){
-        if(headingDeg < 5){
-            headingDeg = 5;
+        degreeNormalized = (AngleUnit.normalizeDegrees(headingDeg) + 360);
+        degreeModulus = degreeNormalized % 360;
+        if(degreeModulus < 5){
+            degreeModulus = 5;
         }
-        if(headingDeg > 350){
-            headingDeg = 350;
+        if(degreeModulus > 350){
+            degreeModulus = 350;
         }
-        double error = (headingDeg - getPositionDegrees());
+        double error = (degreeModulus - getPositionDegrees());
         double pidOutput = turretHeadingPID.calculate(error);
         pidOutputToServoPos = ((pidOutput + 1) / 2);
         setPosition(pidOutputToServoPos);

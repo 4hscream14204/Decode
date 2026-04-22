@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
 import java.util.List;
@@ -78,6 +79,7 @@ public class LauncherPIDTest extends OpMode {
     public void start() {
         robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
+        robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         follower.setStartingPose(new Pose(88, 8, 0));
     }
 
