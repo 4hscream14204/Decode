@@ -23,7 +23,7 @@ public class Turret {
     Pose goalPose;
     double xSpeed;
     double ySpeed;
-    double timeOfFlight = 0.03;
+    double timeOfFlight = 0.01;
     double botHeading;
     double targetHeading;
     double turretOffset;
@@ -78,8 +78,8 @@ public class Turret {
         else{
             turretOffset = botHeading - targetHeading;
         }
-        //rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
-        //turretOffset += rotationLead;
+        rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
+        turretOffset += rotationLead;
         //turretOffset = ((turretOffset + 180) % 360) -180;
         //turretOffset = Math.max(-maxDegrees, Math.min(maxDegrees, turretOffset));
         return turretOffset;
