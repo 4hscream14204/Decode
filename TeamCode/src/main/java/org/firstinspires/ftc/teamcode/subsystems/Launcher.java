@@ -25,7 +25,7 @@ public class Launcher{
     public DcMotorEx launcherMotor2;
     public double dblTargetVel = 0;
     double maximum = 2700;
-    double changeThresholdPower = 0.001;
+    double changeThresholdPower = 0.003;
     double changeThresholdVelocity = 3;
     int velStorageSize = 3;
     PIDFController launcherPIDF = new PIDFController(0.5,0,0,0.0004);
@@ -72,8 +72,10 @@ public double calculatePower(double targetVelocity){
 }
 
 public void setPower(double power){
-    launcherMotor.setPower(power);
-    launcherMotor2.setPower(power);
+    if(Math.abs(power - launcherMotor.getPower()) > changeThresholdPower) {
+        launcherMotor.setPower(power);
+        launcherMotor2.setPower(power);
+    }
 }
 
 public void setVelocity(double m_velocity) {

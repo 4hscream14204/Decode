@@ -17,6 +17,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.base.CustomGamepad;
+import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
@@ -43,6 +44,8 @@ public class ThwimpTeleOp extends OpMode {
     ElapsedTime timer;
     boolean readyToLaunch;
     int artifactsInBotCount;
+    double loopTime;
+    double previousLoop;
     @Override
     public void init() {
         timer = new ElapsedTime();
@@ -108,7 +111,7 @@ public class ThwimpTeleOp extends OpMode {
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW);
-        follower.setStartingPose(new Pose(92, 11, Math.toRadians(0)));
+        follower.setStartingPose(new Pose(94, 10, Math.toRadians(90)));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
@@ -131,6 +134,9 @@ public class ThwimpTeleOp extends OpMode {
             readyToLaunch = false;
         }
 
+        loopTime = timer.milliseconds() - previousLoop;
+        previousLoop = timer.milliseconds();
+
         follower.update();
         mainController.readButtons();
         launcherController.readButtons();
@@ -148,10 +154,12 @@ public class ThwimpTeleOp extends OpMode {
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Distance: ", follower.getPose().distanceFrom(goalPose));
         telemetry.addData("Launch Velocity Calc", robotBase.launcherSubsystem.getLaunchVelocity(follower.getPose().distanceFrom(goalPose)));
+        telemetry.addData("Launch Velocity", robotBase.launcherSubsystem.getVelocity());
         telemetry.addData("Ready to Launch", readyToLaunch);
         telemetry.addData("Artifacts in Bot: ", artifactsInBotCount);
         telemetry.addData("DegreeNormalized", robotBase.turretSubsystem.degreeNormalized);
         telemetry.addData("DegreeModulus", robotBase.turretSubsystem.degreeModulus);
+        telemetry.addData("Loop Time", loopTime);
         CommandScheduler.getInstance().run();
     }
 }

@@ -32,7 +32,11 @@ public class Turret {
     public double degreeNormalized;
     public double degreeModulus;
     public double pidOutputToServoPos;
-    PIDFController turretHeadingPID = new PIDFController(0.005, 0, 0.0005, 0.1);
+    public double kD = 0.0005;
+    public double kP = 0.005;
+    public static double kF = 0.1;
+    public static double feedForward = 0.1;
+    PIDController turretHeadingPID = new PIDController(kP, 0, kD);
 
     public Turret(Servo m_turretServoL, Servo m_turretServoR, AnalogInput m_servoEncoder){
         turretServoL = m_turretServoL;
@@ -63,10 +67,10 @@ public class Turret {
 
     public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            goalPose = new Pose(144, 138);
+            goalPose = new Pose(144, 140);
         }
         else{
-            goalPose = new Pose(144, 138).mirror();
+            goalPose = new Pose(144, 140).mirror();
         }
         botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
@@ -103,6 +107,9 @@ public class Turret {
         double error = (degreeModulus - getPositionDegrees());
         double pidOutput = turretHeadingPID.calculate(error);
         pidOutputToServoPos = ((pidOutput + 1) / 2);
+        /*if(Math.abs(error) > 2){
+            pidOutputToServoPos -= feedForward * (error/Math.abs(error));
+        }*/
         setPosition(pidOutputToServoPos);
     }
 
