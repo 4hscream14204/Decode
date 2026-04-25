@@ -70,18 +70,13 @@ public class Turret {
             goalPose = new Pose(144, 140);
         }
         else{
-            goalPose = new Pose(144, 140).mirror();
+            goalPose = new Pose(0, 140);
         }
         botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
         targetHeading = Math.toDegrees(Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight))));
-        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            turretOffset = targetHeading - botHeading;
-        }
-        else{
-            turretOffset = botHeading - targetHeading;
-        }
+        turretOffset = targetHeading - botHeading;
         rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
         turretOffset += rotationLead;
         //turretOffset = ((turretOffset + 180) % 360) -180;
