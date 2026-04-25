@@ -125,7 +125,7 @@ public class ThwimpTeleOp extends OpMode {
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW);
-        follower.setStartingPose(new Pose(94, 10, Math.toRadians(90)));
+        follower.setStartingPose(DataStorage.endPosition);
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         CommandScheduler.getInstance().schedule(new TurretHeadingControlManualCommand(robotBase, follower, ((launcherController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) / 2) + (-1 * (launcherController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) / 2)) + 0.5), launcherController));

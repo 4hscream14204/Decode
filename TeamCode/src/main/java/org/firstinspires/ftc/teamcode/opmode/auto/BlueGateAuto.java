@@ -54,10 +54,10 @@ public class BlueGateAuto extends OpMode {
 
     BezierLine launchToGateLineUp = new BezierLine(
             new Pose(85, 85).mirror(),
-            new Pose(136,63,Math.toRadians(136)).mirror());
+            new Pose(136,63,Math.toRadians(135)).mirror());
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(136,63,Math.toRadians(136)).mirror(),
+            new Pose(136,63,Math.toRadians(135)).mirror(),
             new Pose(85, 85).mirror());
 
     BezierLine preIntakeFirstRow = new BezierLine(
