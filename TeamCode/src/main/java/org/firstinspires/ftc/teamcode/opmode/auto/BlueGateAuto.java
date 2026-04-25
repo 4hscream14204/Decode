@@ -41,19 +41,19 @@ public class BlueGateAuto extends OpMode {
     BezierCurve preIntakeSecondRow = new BezierCurve(
             new Pose(93.000, 96.000).mirror(),
             new Pose(89.054, 68.888).mirror(),
-            new Pose(108.000, 63.000).mirror());
+            new Pose(108.000, 64.000).mirror());
 
     BezierLine intakeSecondRow =  new BezierLine(
-            new Pose(108.000, 63.000).mirror(),
-            new Pose(135.000, 63.000).mirror());
+            new Pose(108.000, 64.000).mirror(),
+            new Pose(135.000, 64.000).mirror());
 
     BezierLine secondRowToLaunch = new BezierLine(
-            new Pose(133, 63).mirror(),
+            new Pose(133, 64).mirror(),
             new Pose(90, 83).mirror());
 
     BezierLine launchToGateLineUp = new BezierLine(
             new Pose(85, 85).mirror(),
-            new Pose(135,63,Math.toRadians(40)).mirror());
+            new Pose(137,64,Math.toRadians(136)).mirror());
 
   /*  BezierLine intakeFromRamp = new BezierLine(
             new Pose(130,69),
@@ -61,7 +61,7 @@ public class BlueGateAuto extends OpMode {
 */
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(135,63,Math.toRadians(40)).mirror(),
+            new Pose(137,64,Math.toRadians(136)).mirror(),
             new Pose(85, 85).mirror());
 
     BezierLine preIntakeFirstRow = new BezierLine(
@@ -70,7 +70,7 @@ public class BlueGateAuto extends OpMode {
 
     BezierLine intakeFirstRow = new BezierLine(
             new Pose(105,84).mirror(),
-            new Pose(127,84).mirror());
+            new Pose(126,84).mirror());
 
     BezierLine firstRowToLaunch = new BezierLine(
             new Pose(127,84).mirror(),
@@ -95,24 +95,24 @@ public class BlueGateAuto extends OpMode {
 
         startLaunch = follower.pathBuilder()
                 .addPath(startToLaunch)
-                .setLinearHeadingInterpolation(startPose.getHeading(), Math.toRadians(0))
+                .setLinearHeadingInterpolation(startPose.getHeading(), Math.toRadians(180))
                 //.addParametricCallback(0.97, ()->CommandScheduler.getInstance().schedule(new WaitCommand(1000)))
                 .build();
 
         intakeSecondRowPath = follower.pathBuilder()
                 .addPath(preIntakeSecondRow)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(intakeSecondRow)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         launchSecondRowPath = follower.pathBuilder()
                 .addPath(secondRowToLaunch)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
         launchToLineUpToGate = follower.pathBuilder()
                 .addPath(launchToGateLineUp)
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-40))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(136))
                 .build();
        /* intakeFromGate = follower.pathBuilder()
                 .addPath(intakeFromRamp)
@@ -121,18 +121,18 @@ public class BlueGateAuto extends OpMode {
 */
         gateToLaunch = follower.pathBuilder()
                 .addPath(gateToLaunchLine)
-                .setLinearHeadingInterpolation(Math.toRadians(-39), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(180))
                 .build();
 
         preIntakeFirstRowPath = follower.pathBuilder()
                 .addPath(preIntakeFirstRow)
-                .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0), 0.8)
+                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(180), 0.8)
                 .addPath(intakeFirstRow)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
         launchFirstRowPath = follower.pathBuilder()
                 .addPath(firstRowToLaunch)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
         path = new SequentialCommandGroup(
@@ -141,15 +141,15 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
                 new FollowPathCommand(follower, startLaunch, true, 1),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(250),
+                new WaitCommand(200),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new FollowPathCommand(follower, intakeSecondRowPath, false, 0.6),
-                new FollowPathCommand(follower, launchSecondRowPath,true,1),
+              /*  new FollowPathCommand(follower, launchSecondRowPath,true,1),
                 new WaitCommand(100),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(250),
+                new WaitCommand(200),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 //  new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 //new TransferCommand(robotBase, follower),
@@ -166,7 +166,7 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(100),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(250),
+                new WaitCommand(200),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 //    new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
@@ -183,7 +183,7 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(100),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(250),
+                new WaitCommand(200),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 // new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
@@ -196,7 +196,7 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(100),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(250),
+                new WaitCommand(200),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 //  new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
@@ -210,9 +210,13 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(100),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(250),
+                new WaitCommand(200),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+
+               */
+
            /*
            REMOVED THIS CYCLE FOR TIME PURPOSES
            // new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
@@ -252,6 +256,7 @@ public class BlueGateAuto extends OpMode {
         //robotBase.turretSubsystem.updatePosition(180);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
+        DataStorage.alliance = DecodeEnums.Alliance.BLUE;
     }
 
     @Override
