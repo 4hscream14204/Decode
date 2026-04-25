@@ -51,6 +51,7 @@ public class ThwimpTeleOp extends OpMode {
     double loopTime;
     double previousLoop;
     boolean isInManualControl = false;
+    boolean isFieldCentric = true;
     @Override
     public void init() {
         timer = new ElapsedTime();
@@ -80,7 +81,10 @@ public class ThwimpTeleOp extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->artifactsInBotCount = 0)));
 
         mainController.getGamepadButton(GamepadKeys.Button.BACK)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAllianceCommand()));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->isFieldCentric = !isFieldCentric)));
+
+        /*launcherController.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->isInManualControl = !isInManualControl)));*/
 
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -124,7 +128,7 @@ public class ThwimpTeleOp extends OpMode {
         follower.setStartingPose(new Pose(94, 10, Math.toRadians(90)));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
-        CommandScheduler.getInstance().schedule(new TurretHeadingControlManualCommand(robotBase, follower, isInManualControl, ((mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) / 2) + (-1 * (mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) / 2)) + 0.5)));
+        CommandScheduler.getInstance().schedule(new TurretHeadingControlManualCommand(robotBase, follower, ((launcherController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) / 2) + (-1 * (launcherController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) / 2)) + 0.5), launcherController));
         //robotBase.turretSubsystem.updatePosition(90);
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         timer.reset();
@@ -152,10 +156,10 @@ public class ThwimpTeleOp extends OpMode {
         launcherController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower, timer);
+            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), isFieldCentric, follower, timer);
         }
         else{
-            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), true, follower, timer);
+            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), isFieldCentric, follower, timer);
         }
         robotBase.chassisSubsystem.updateRobotZone();
         robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));

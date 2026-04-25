@@ -84,6 +84,20 @@ public class Turret {
         return turretOffset;
     }
 
+    public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower, Pose m_goalPose){
+        goalPose = m_goalPose;
+        botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
+        xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
+        ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
+        targetHeading = Math.toDegrees(Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight))));
+        turretOffset = targetHeading - botHeading;
+        rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
+        turretOffset += rotationLead;
+        //turretOffset = ((turretOffset + 180) % 360) -180;
+        //turretOffset = Math.max(-maxDegrees, Math.min(maxDegrees, turretOffset));
+        return turretOffset;
+    }
+
     public void setPositionDeg(double positionDeg){
             setPosition(convertDegToServoPos(positionDeg));
             //turretServoR.setPosition(convertDegToServoPos(positionDeg));
