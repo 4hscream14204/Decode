@@ -18,8 +18,11 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.base.CustomGamepad;
 import org.firstinspires.ftc.teamcode.base.DataStorage;
+import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
+import org.firstinspires.ftc.teamcode.commands.GateHeadingCommand;
+import org.firstinspires.ftc.teamcode.commands.ToggleAllianceCommand;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
@@ -74,7 +77,8 @@ public class ThwimpTeleOp extends OpMode {
         launcherController.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->artifactsInBotCount = 0)));
 
-
+        mainController.getGamepadButton(GamepadKeys.Button.BACK)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAllianceCommand()));
 
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
@@ -96,7 +100,8 @@ public class ThwimpTeleOp extends OpMode {
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));*/
 
         new Trigger(()->readyToLaunch)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower), new InstantCommand(()->artifactsInBotCount = 0)));
+
         new Trigger(()->robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance() <= 6 && robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance() <= 7)
                 .whenActive(()->artifactsInBotCount++);
 
@@ -105,6 +110,9 @@ public class ThwimpTeleOp extends OpMode {
 
         new Trigger(()->artifactsInBotCount == 3)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.chassisSubsystem.setTargetHeading(0)), new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
+
+        /*new Trigger(()->robotBase.chassisSubsystem.isInGateZone())
+                .whenActive(()->CommandScheduler.getInstance().schedule(new GateHeadingCommand(robotBase)));*/
     }
 
     @Override
@@ -141,11 +149,17 @@ public class ThwimpTeleOp extends OpMode {
         mainController.readButtons();
         launcherController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
-        robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower, timer);
+        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+            robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower, timer);
+        }
+        else{
+            robotBase.chassisSubsystem.drive(-mainController.getLeftY(), -mainController.getLeftX(), mainController.getRightX(), true, follower, timer);
+        }
         robotBase.chassisSubsystem.updateRobotZone();
         robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
         //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90)));
 
+        telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         telemetry.addData("Intake Left: ", robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance());
         telemetry.addData("Intake Right: ", robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance());
@@ -160,6 +174,7 @@ public class ThwimpTeleOp extends OpMode {
         telemetry.addData("DegreeNormalized", robotBase.turretSubsystem.degreeNormalized);
         telemetry.addData("DegreeModulus", robotBase.turretSubsystem.degreeModulus);
         telemetry.addData("Loop Time", loopTime);
+        telemetry.addData("Is In Gate Zone", robotBase.chassisSubsystem.isInGateZone());
         CommandScheduler.getInstance().run();
     }
 }

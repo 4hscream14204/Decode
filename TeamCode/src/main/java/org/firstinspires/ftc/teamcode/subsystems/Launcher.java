@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
@@ -16,16 +17,14 @@ import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import java.util.ArrayList;
 import java.util.List;
 
+@Configurable
 public class Launcher{
 
-    public final double dblLaunchWheelRadius = 1.375;
-    public final double launchVar1 = 2.2787;
-    public final double launchVar2 = 1770.4;
     public DcMotorEx launcherMotor;
     public DcMotorEx launcherMotor2;
     public double dblTargetVel = 0;
     double maximum = 2700;
-    double changeThresholdPower = 0.003;
+    double changeThresholdPower = 0.02;
     double changeThresholdVelocity = 3;
     int velStorageSize = 3;
     PIDFController launcherPIDF = new PIDFController(0.5,0,0,0.0004);
@@ -34,7 +33,7 @@ public class Launcher{
     double voltage;
     double adjustedVelocity;
     double power;
-    double proportional = 0.005;
+    public static double proportional = 0.002;
     double error;
     double xSpeed;
     double ySpeed;

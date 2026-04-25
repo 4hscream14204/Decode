@@ -22,12 +22,12 @@ public class TransferCommand extends SequentialCommandGroup {
         follower = m_follower;
         if(robotBase.chassisSubsystem.isInCloseZone()){
             addCommands(
-                    //new WaitUntilCommand(()->robotBase.launcherSubsystem.isAtSpeed()),
+                    new WaitUntilCommand(()->robotBase.launcherSubsystem.isAtSpeed()),
                     new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
                     new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                     new WaitCommand(250),
-                    new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0.6)),
-                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-0.6)),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0.55)),
+                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-0.55)),
                     new WaitCommand(500),
                     new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                     new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
