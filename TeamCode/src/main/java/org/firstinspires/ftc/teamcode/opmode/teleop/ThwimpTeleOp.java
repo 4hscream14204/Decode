@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.commands.GateHeadingCommand;
 import org.firstinspires.ftc.teamcode.commands.ToggleAllianceCommand;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
+import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlManualCommand;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
@@ -49,6 +50,7 @@ public class ThwimpTeleOp extends OpMode {
     int artifactsInBotCount;
     double loopTime;
     double previousLoop;
+    boolean isInManualControl = false;
     @Override
     public void init() {
         timer = new ElapsedTime();
@@ -122,7 +124,7 @@ public class ThwimpTeleOp extends OpMode {
         follower.setStartingPose(new Pose(94, 10, Math.toRadians(90)));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
-        CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new TurretHeadingControlManualCommand(robotBase, follower, isInManualControl, ((mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) / 2) + (-1 * (mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) / 2)) + 0.5)));
         //robotBase.turretSubsystem.updatePosition(90);
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         timer.reset();
