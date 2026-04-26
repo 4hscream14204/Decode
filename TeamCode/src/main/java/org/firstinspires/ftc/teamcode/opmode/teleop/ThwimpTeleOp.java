@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.GateHeadingCommand;
+import org.firstinspires.ftc.teamcode.commands.GoalHeadingCommand;
 import org.firstinspires.ftc.teamcode.commands.ToggleAllianceCommand;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
@@ -105,17 +106,20 @@ public class ThwimpTeleOp extends OpMode {
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.close())))
                 .whenInactive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.far())));*/
 
-        new Trigger(()->readyToLaunch)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower), new InstantCommand(()->artifactsInBotCount = 0)));
+        /*new Trigger(()->readyToLaunch)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower), new InstantCommand(()->artifactsInBotCount = 0)));*/
 
         new Trigger(()->robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance() <= 6 && robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance() <= 7)
                 .whenActive(()->artifactsInBotCount++);
 
         new Trigger(()->artifactsInBotCount == 3)
-                .whenActive(()->mainController.gamepad.rumble(1, 1, 500));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->mainController.gamepad.rumble(1, 1, 500)), new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
 
-        new Trigger(()->artifactsInBotCount == 3)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()-> robotBase.chassisSubsystem.setTargetHeading(0)), new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
+        /*new Trigger(()->artifactsInBotCount == 3 && DataStorage.alliance == DecodeEnums.Alliance.RED)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(0))));
+
+        new Trigger(()->artifactsInBotCount == 3 && DataStorage.alliance == DecodeEnums.Alliance.BLUE)
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(180))));*/
 
         /*new Trigger(()->robotBase.chassisSubsystem.isInGateZone())
                 .whenActive(()->CommandScheduler.getInstance().schedule(new GateHeadingCommand(robotBase)));*/

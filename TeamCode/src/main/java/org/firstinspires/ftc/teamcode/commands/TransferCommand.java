@@ -28,13 +28,10 @@ public class TransferCommand extends SequentialCommandGroup {
                     new WaitCommand(250),
                     new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0.55)),
                     new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-0.55)),
-                    new WaitCommand(500),
+                    new WaitCommand(400),
                     new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                     new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
-                    new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
-                    new WaitCommand(750),
-                    //new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(37)),
-                    new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW))
+                    new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))
             );
         }
         else if(robotBase.chassisSubsystem.isInFarZone()){

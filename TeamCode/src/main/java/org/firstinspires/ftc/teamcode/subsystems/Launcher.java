@@ -24,7 +24,7 @@ public class Launcher{
     public DcMotorEx launcherMotor2;
     public double dblTargetVel = 0;
     double maximum = 2700;
-    double changeThresholdPower = 0.02;
+    double changeThresholdPower = 0.01;
     double changeThresholdVelocity = 3;
     int velStorageSize = 3;
     PIDFController launcherPIDF = new PIDFController(0.5,0,0,0.0004);

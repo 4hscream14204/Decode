@@ -23,7 +23,7 @@ public class Turret {
     Pose goalPose;
     double xSpeed;
     double ySpeed;
-    double timeOfFlight = 0.01;
+    double timeOfFlight = 0.001;
     double botHeading;
     double targetHeading;
     double turretOffset;
@@ -70,7 +70,7 @@ public class Turret {
             goalPose = new Pose(144, 140);
         }
         else{
-            goalPose = new Pose(0, 140);
+            goalPose = new Pose(-24, 144);
         }
         botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
@@ -127,7 +127,7 @@ public class Turret {
     }
 
     public boolean isAtPosition(GoBildaPinpointDriver pinpoint, Follower follower){
-        if(Math.abs(getTurretAngle(pinpoint, follower) - getPositionDegrees()) < 3){
+        if(Math.abs(getTurretAngle(pinpoint, follower) - getPositionDegrees()) < 5){
             return true;
         }
         return false;
