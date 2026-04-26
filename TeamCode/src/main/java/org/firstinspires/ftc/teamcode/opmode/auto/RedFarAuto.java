@@ -33,13 +33,13 @@ public class RedFarAuto extends OpMode {
     SequentialCommandGroup path;
     int artifactsInBotCount;
 
-    Pose startPose = new Pose(87.5, 7.5, Math.toRadians(90));
+    Pose startPose = new Pose(90, 10, Math.toRadians(90));
     Pose LaunchPose = new Pose(84, 18, Math.toRadians(0));
     Pose goalPose = new Pose(144, 138);
 
     BezierLine startToLaunch = new BezierLine(startPose, new Pose(84, 18, Math.toRadians(0)));
 
-    BezierCurve preIntakeLastRow = new BezierCurve(
+    BezierLine preIntakeLastRow = new BezierLine(
             new Pose(84, 18,Math.toRadians(0)),
             new Pose(101, 36));
 
@@ -109,22 +109,22 @@ public class RedFarAuto extends OpMode {
 
 
         path = new SequentialCommandGroup(
-                //new InstantCommand(()->robotBase.hoodSubsystem.close()),
-                //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1740)),
-                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
-                new WaitCommand(200),
+                new InstantCommand(()->robotBase.hoodSubsystem.far()),
+                //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1900)),
+                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.4)),
                 new FollowPathCommand(follower, startLaunch, true, 1),
+                new WaitCommand(650),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(500),
+                new WaitCommand(750),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
-                new FollowPathCommand(follower, intakeLastRowPath, false, 1),
+                new FollowPathCommand(follower, intakeLastRowPath, false, 0.6),
                 new FollowPathCommand(follower, launchLastRowPath,true,1),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(500),
+                new WaitCommand(750),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
-                new FollowPathCommand(follower, launchToHPZone, true, 1),
+               /* new FollowPathCommand(follower, launchToHPZone, true, 1),
                 new WaitCommand(200),
                 new FollowPathCommand(follower, HPIntakeToLaunch, true, 1),
               //  new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
@@ -142,7 +142,7 @@ public class RedFarAuto extends OpMode {
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(500),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),*/
                 new FollowPathCommand(follower, launchToParking, true, 1),
 
 
@@ -168,13 +168,14 @@ public class RedFarAuto extends OpMode {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(path);
         CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
-        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
+        //CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
     }
 
     @Override
     public void loop() {
         follower.update();
-        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
+        robotBase.launcherSubsystem.setVelocity(2100);
+        //robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
 
         telemetry.addData("X: ", follower.getPose().getX());
         telemetry.addData("Y: ", follower.getPose().getY());

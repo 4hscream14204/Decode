@@ -40,6 +40,11 @@ public class IntakeTransfer {
         transfer(0.8);
     }
 
+    public void intakeAndTransfer(double power){
+        intake(-power);
+        transfer(power);
+    }
+
     public void intakeAndTransferOuttake(){
         outtake();
         transfer(-1);
