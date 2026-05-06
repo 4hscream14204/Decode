@@ -28,6 +28,7 @@ public class LauncherPIDTest extends OpMode {
     GamepadEx mainController;
     double power = 0;
     double velocity;
+    double hoodAngle = 0;
     Follower follower;
     ElapsedTime timer;
     @Override
@@ -58,6 +59,18 @@ public class LauncherPIDTest extends OpMode {
         mainController.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
 
+        mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(hoodAngle += 0.1))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(hoodAngle -= 0.1))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(hoodAngle += 0.01))));
+
+        mainController.getGamepadButton(GamepadKeys.Button.Y)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(hoodAngle -= 0.01))));
+
         new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1)
                 .or(new Trigger(()-> mainController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1))
                 .whileActiveContinuous(()->CommandScheduler.getInstance().schedule(
@@ -77,10 +90,10 @@ public class LauncherPIDTest extends OpMode {
 
     @Override
     public void start() {
-        robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
+        //robotBase.chassisSubsystem.pinpoint.setHeading(0, AngleUnit.DEGREES);
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
-        follower.setStartingPose(new Pose(88, 8, 0));
+        follower.setStartingPose(new Pose(92, 10, Math.toRadians(90)));
     }
 
     @Override
@@ -88,7 +101,7 @@ public class LauncherPIDTest extends OpMode {
         mainController.readButtons();
         //robotBase.chassisSubsystem.pinpoint.update();
         follower.update();
-        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(new Pose(144, 138)));
+        robotBase.hoodSubsystem.setPosition(hoodAngle);
         robotBase.turretSubsystem.updatePosition(90);
         robotBase.chassisSubsystem.drive(mainController.getLeftY(), mainController.getLeftX(), mainController.getRightX(), true, follower, timer);
         robotBase.chassisSubsystem.updateRobotZone();
@@ -100,6 +113,7 @@ public class LauncherPIDTest extends OpMode {
         telemetry.addData("Voltage: ", controlHubVoltageSensor.getVoltage());
         telemetry.addData("Velocity Variable: ", velocity);
         telemetry.addData("Velocity: ", robotBase.launcherSubsystem.launcherMotor.getVelocity());
+        telemetry.addData("Hood Angle", hoodAngle);
         CommandScheduler.getInstance().run();
     }
 }

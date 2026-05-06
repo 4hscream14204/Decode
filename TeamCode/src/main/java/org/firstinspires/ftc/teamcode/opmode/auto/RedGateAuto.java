@@ -18,6 +18,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
+import org.firstinspires.ftc.teamcode.commands.DynamicVelocityAutoCommand;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
@@ -259,7 +260,7 @@ public class RedGateAuto extends OpMode {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(path);
         CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
-        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new DynamicVelocityAutoCommand(robotBase, follower));
     }
 
     @Override

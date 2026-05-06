@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.AutoTurretHeadingCommand;
+import org.firstinspires.ftc.teamcode.commands.DynamicVelocityAutoCommand;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
@@ -54,10 +55,10 @@ public class BlueGateAuto extends OpMode {
 
     BezierLine launchToGateLineUp = new BezierLine(
             new Pose(85, 85).mirror(),
-            new Pose(136,63,Math.toRadians(135)).mirror());
+            new Pose(135,64,Math.toRadians(135)).mirror());
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(136,63,Math.toRadians(135)).mirror(),
+            new Pose(135,64,Math.toRadians(135)).mirror(),
             new Pose(85, 85).mirror());
 
     BezierLine preIntakeFirstRow = new BezierLine(
@@ -255,7 +256,7 @@ public class BlueGateAuto extends OpMode {
         follower.setStartingPose(new Pose(startPose.getX(), startPose.getY(), Math.toRadians(-44)));
         CommandScheduler.getInstance().schedule(path);
         CommandScheduler.getInstance().schedule(new AutoTurretHeadingCommand(robotBase, follower, new Pose(-24, 144)));
-        CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new DynamicVelocityAutoCommand(robotBase, follower));
     }
 
     @Override

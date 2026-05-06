@@ -36,6 +36,7 @@ public class Hood {
     }
 
     public void setDynamicPosition(double distance){
-        setPosition(((8.4 * distance + 861) - 600) / 1800);
+        //setPosition(((8.4 * distance + 861) - 600) / 1800);
+        setPosition((0.0011 * distance) + 0.6542);
     }
 }

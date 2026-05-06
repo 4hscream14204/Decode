@@ -113,7 +113,13 @@ public void setLaunchVelocity(double m_Distance) {
 }
 
 public double getLaunchVelocity(double m_Distance){
+    //return ((7.6943 * m_Distance) + 986.63);
+    return (0.0335 * Math.pow(m_Distance, 2)) + (0.8955 * m_Distance) + 1377.6;
+}
+
+public double getLaunchVelocityAuto(double m_Distance){
     return ((7.6943 * m_Distance) + 986.63);
+    //return (0.0335 * Math.pow(m_Distance, 2)) + (0.8955 * m_Distance) + 1377.6;
 }
 
 public boolean isAtSpeed(){
