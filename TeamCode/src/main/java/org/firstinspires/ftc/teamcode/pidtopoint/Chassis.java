@@ -20,6 +20,9 @@ public class Chassis {
     private DcMotor backLeftMotor;
     private DcMotor backRightMotor;
 
+    double rotX;
+    double rotY;
+
     private double dblFrontLeftPower;
     private double dblFrontRightPower;
     private double dblBackLeftPower;
@@ -36,6 +39,9 @@ public class Chassis {
 
     public void goToPoint(Point m_point){
         currentPoint = m_point;
+    }
+
+    public void update(){
         xOffset = localizer.getX() - currentPoint.getX();
         yOffset = localizer.getY() - currentPoint.getY();
         headingOffset = localizer.getHeadingRad() - currentPoint.getHeadingRad();
@@ -43,10 +49,9 @@ public class Chassis {
             xPIDOutput = ChassisConstants.xPID.calculate(xOffset);
             yPIDOutput = ChassisConstants.yPID.calculate(yOffset);
             headingPIDOutput = ChassisConstants.headingPID.calculate(headingOffset);
-            headingOffset = localizer.getHeadingRad() - currentPoint.getHeadingRad();
 
-            double rotX = xPIDOutput * Math.cos(-localizer.getHeadingRad()) - yPIDOutput * Math.sin(-localizer.getHeadingRad());
-            double rotY = xPIDOutput * Math.sin(-localizer.getHeadingRad()) + yPIDOutput * Math.cos(-localizer.getHeadingRad());
+            rotX = xPIDOutput * Math.cos(-localizer.getHeadingRad()) - yPIDOutput * Math.sin(-localizer.getHeadingRad());
+            rotY = xPIDOutput * Math.sin(-localizer.getHeadingRad()) + yPIDOutput * Math.cos(-localizer.getHeadingRad());
 
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(headingPIDOutput), 1);
 
