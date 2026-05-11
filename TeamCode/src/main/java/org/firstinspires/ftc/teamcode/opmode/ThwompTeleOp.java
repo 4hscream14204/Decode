@@ -30,6 +30,7 @@ import org.firstinspires.ftc.teamcode.opmode.Controllers.ChassisControllerKeys;
 import org.firstinspires.ftc.teamcode.opmode.Controllers.LauncherControllerKeys;
 import org.firstinspires.ftc.teamcode.opmode.Controllers.MainControllerKeys;
 import org.firstinspires.ftc.teamcode.opmode.Triggers.RGBLights;
+import org.firstinspires.ftc.teamcode.pedropathing.poses.PoseGenerator;
 import org.firstinspires.ftc.teamcode.pedropathing.tuning.Constants;
 import org.firstinspires.ftc.teamcode.robotbase.DataStorage;
 import org.firstinspires.ftc.teamcode.robotbase.DecodeEnums;
@@ -63,6 +64,7 @@ public class ThwompTeleOp extends OpMode {
     double ySpeed;
     boolean readyToLaunch;
     double farZoneHeadingOffset = -1;
+    PoseGenerator poseGenerator;
 
     PolygonZone robotZone;
     PolygonZone closeLaunchZone;
@@ -94,6 +96,7 @@ public class ThwompTeleOp extends OpMode {
         robotBase.chassisSubsystem.backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robotBase.chassisSubsystem.backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rgbLights = new RGBLights();
+        poseGenerator = new PoseGenerator(robotBase.limelightSubsystem, follower);
 
         allHubs = hardwareMap.getAll(LynxModule.class);
 
@@ -281,7 +284,9 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Loop Time", loopTime);
         telemetry.addData("Distance Pedro", follower.getPose().distanceFrom(redGoalPose) * 2.54);
         telemetry.addData("Inside Close Zone", robotZone.isInside(closeLaunchZone));
-        telemetry.addData("Is ready to launch: ", readyToLaunch);
+        //telemetry.addData("Is ready to launch: ", readyToLaunch);
+        telemetry.addData("Generated Ball Pose X", poseGenerator.calculatePose().getX());
+        telemetry.addData("Generated Ball Pose Y", poseGenerator.calculatePose().getY());
         //telemetry.addData("goal in sight", robotBase.limelightSubsystem.goalInSight());
         //telemetry.addData("lock offset", dblLockOffset);
         //telemetry.addData("Follower Pose", follower.getPose());
