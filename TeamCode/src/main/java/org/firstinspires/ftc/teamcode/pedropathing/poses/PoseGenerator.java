@@ -12,6 +12,8 @@ public class PoseGenerator {
     double botHeading;
     double botPoseX;
     double botPoseY;
+    double newX;
+    double newY;
 
     public PoseGenerator(Limelight m_limelight, Follower m_follower){
         limelight = m_limelight;
@@ -24,6 +26,9 @@ public class PoseGenerator {
         botPoseX = follower.getPose().getX();
         botPoseY = follower.getPose().getY();
 
-        return new Pose( (botPoseX + distance * Math.cos(botHeading)), (botPoseY + distance * Math.sin(botHeading)) );
+        newX = ((Math.cos(botHeading) * distance) + botPoseX);
+        newY = ((Math.sin(botHeading) * distance) + botPoseY);
+
+        return new Pose(newX, newY);
     }
 }

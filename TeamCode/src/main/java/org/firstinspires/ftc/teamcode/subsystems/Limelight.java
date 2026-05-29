@@ -32,13 +32,8 @@ public class Limelight extends SubsystemBase {
     public double limeLightID;
     public double mountingAngle = 0;
     public final double goalAprilTagHeight = 74.75;
-    public final double goalHeight = 99;
+    public final double targetHeight = 12.7;
     public double limelightHeight = 40.2;
-    public double goalHeightOffset = goalHeight - limelightHeight;
-    public final double gravity = 981;
-    public double shooterOffsetY = 0;
-    public double shooterOffsetX = 0;
-    public double yClearance = 17;
     public double x;
     public double y;
     public double distance;
@@ -62,14 +57,6 @@ public class Limelight extends SubsystemBase {
 
 
         result = limelight.getLatestResult();
-        List<LLResultTypes.FiducialResult> aprilTagResult = result.getFiducialResults();
-        //loop through the list, even if there is only 1 item since it is a List type
-        for (LLResultTypes.FiducialResult fr : aprilTagResult) {
-            id = fr.getFiducialId();
-            x = fr.getTargetPoseRobotSpace().getPosition().x; // Where it is (left-right)
-            y = fr.getTargetPoseRobotSpace().getPosition().y; // Where it is (up-down)
-            distance = fr.getTargetPoseRobotSpace().getPosition().z;
-        }
         /*List<LLResultTypes.ColorResult> fiducials = result.getColorResults();
         int id = 0;
         for (LLResultTypes.ColorResult fiducial : fiducials) {
@@ -110,48 +97,13 @@ public class Limelight extends SubsystemBase {
         }
     }
 
-    public double getVerticalDistance(double m_Offset){ //Y
-        return (goalHeightOffset) + m_Offset;
-    }
-
-    public double getHorizontalComp(){ //P
-        return getHorizontalDistance(shooterOffsetX) / getArcTime();
-    } //X / T
-
-    public double getVerticalComp(){ //U
-        return (getVerticalDistance(shooterOffsetY + yClearance) * 2) / getArcTime();
-    } // 2Y / T
-
-    public double getArcTime(){ //T
-        return Math.pow(((getVerticalDistance(shooterOffsetY + yClearance) * 2) / gravity), 0.5);
-    } //(2Y / G) ^0.5
-
-    public double getLaunchSpeed(){ //V
-        return Math.pow((gravity * Math.pow(getHorizontalDistance(shooterOffsetX), 2) / (getVerticalDistance(shooterOffsetY + yClearance) * 2)) + (2 * gravity * getVerticalDistance(shooterOffsetY + yClearance)), 0.5);
-    } //((G * X^2 / 2Y) + 2YG) ^0.5
-
-    public double getLaunchAngle() { // Q
-        return Math.atan(getHorizontalComp() / getVerticalComp());
-    } //atan(P / U)
-
-    /*public double getLaunchRPM() {
-        return ;
-    }*/
 
     public void updateLimelight(){
         result = limelight.getLatestResult();
-        List<LLResultTypes.FiducialResult> aprilTagResult = result.getFiducialResults();
-        //loop through the list, even if there is only 1 item since it is a List type
-        for (LLResultTypes.FiducialResult fr : aprilTagResult) {
-            id = fr.getFiducialId();
-            x = fr.getTargetPoseRobotSpace().getPosition().x; // Where it is (left-right)
-            y = fr.getTargetPoseRobotSpace().getPosition().y; // Where it is (up-down)
-            distance = fr.getTargetPoseRobotSpace().getPosition().z;
-        }
-
         limeLightID = id;
         limelightTX = result.getTx();
         limelightTY = result.getTy();
+        distance = ((limelightHeight) / (Math.tan(Math.toRadians(mountingAngle - limelightTY))));
         limelightTZ = distance;
         limelightPiplineType = result.getPipelineType();
         limelightTa = result.getTa();
@@ -172,7 +124,7 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getTargetZ(){
-        return limelightTZ * 100;
+        return limelightTZ / 2.54;
     }
 
     public double getID(){
