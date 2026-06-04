@@ -26,8 +26,8 @@ public class PoseGenerator {
         botPoseX = follower.getPose().getX();
         botPoseY = follower.getPose().getY();
 
-        newX = ((Math.cos(botHeading) * distance) + botPoseX);
-        newY = ((Math.sin(botHeading) * distance) + botPoseY);
+        newX = ((Math.cos(botHeading - Math.toRadians(limelight.getTargetX())) * distance) + botPoseX);
+        newY = ((Math.sin(botHeading - Math.toRadians(limelight.getTargetX())) * distance) + botPoseY);
 
         return new Pose(newX, newY);
     }
