@@ -23,7 +23,7 @@ public class IntakeTransfer {
 
     public void intake(){
         setPower(-1);
-        transfer(0.75);
+        transfer(0.2);
     }
 
     public void outtake(){

@@ -24,10 +24,13 @@ public class CustomGamepad {
     }
 
     public void player1(){
-        gamepad.getGamepadButton(GamepadKeys.Button.B)
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))));
 
-        gamepad.getGamepadButton(GamepadKeys.Button.A)
+        gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new GateHeadingCommand(robotBase)));
 
         gamepad.getGamepadButton(GamepadKeys.Button.START)
@@ -35,8 +38,7 @@ public class CustomGamepad {
     }
 
     public void player2(){
-        gamepad.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
+
 
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAllianceCommand()));
