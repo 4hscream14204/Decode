@@ -94,6 +94,8 @@ public class BlueGateAuto extends OpMode {
                 .addPath(startToLaunch)
                 .setLinearHeadingInterpolation(startPose.getHeading(), Math.toRadians(180))
                 //.addParametricCallback(0.97, ()->CommandScheduler.getInstance().schedule(new WaitCommand(1000)))
+                .addParametricCallback(0.25, ()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.2))))
+                .addParametricCallback(0.75, ()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
         intakeSecondRowPath = follower.pathBuilder()
@@ -105,6 +107,7 @@ public class BlueGateAuto extends OpMode {
         launchSecondRowPath = follower.pathBuilder()
                 .addPath(secondRowToLaunch)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addParametricCallback(0.5, ()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
         launchToLineUpToGate = follower.pathBuilder()
@@ -119,6 +122,7 @@ public class BlueGateAuto extends OpMode {
         gateToLaunch = follower.pathBuilder()
                 .addPath(gateToLaunchLine)
                 .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(180))
+                .addParametricCallback(0.5, ()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
         preIntakeFirstRowPath = follower.pathBuilder()
@@ -130,6 +134,7 @@ public class BlueGateAuto extends OpMode {
         launchFirstRowPath = follower.pathBuilder()
                 .addPath(firstRowToLaunch)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addParametricCallback(0.5, ()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
         path = new SequentialCommandGroup(
@@ -142,6 +147,7 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 new FollowPathCommand(follower, intakeSecondRowPath, false, 0.6),
                 new FollowPathCommand(follower, launchSecondRowPath,true,1),
                 //new WaitCommand(100),
@@ -153,6 +159,7 @@ public class BlueGateAuto extends OpMode {
                 //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
                 //new WaitCommand(1000),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 new FollowPathCommand(follower, launchToLineUpToGate, true, 1),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new WaitUntilCommand(()->artifactsInBotCount >= 3).withTimeout(900),
@@ -167,6 +174,7 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->artifactsInBotCount = 0),
                  new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 //new TransferCommand(robotBase, follower),
                 //new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1000)),
                 //new WaitCommand(500),
@@ -184,6 +192,7 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->artifactsInBotCount = 0),
                  new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 new FollowPathCommand(follower, launchToLineUpToGate,true,1),
                 //new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new WaitUntilCommand(()->artifactsInBotCount >= 3).withTimeout(900),
@@ -195,6 +204,7 @@ public class BlueGateAuto extends OpMode {
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 new FollowPathCommand(follower, launchToLineUpToGate,true,1),
                 //new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new WaitUntilCommand(()->artifactsInBotCount >= 3).withTimeout(900),
@@ -205,6 +215,7 @@ public class BlueGateAuto extends OpMode {
                 new WaitCommand(200),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
 
            //

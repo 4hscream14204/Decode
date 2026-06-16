@@ -17,13 +17,15 @@ public class CustomGamepad {
     GamepadEx gamepad;
     RobotBase robotBase;
     Follower follower;
-    public CustomGamepad(GamepadEx m_gamepad, RobotBase m_robotBase, Follower m_follower){
+    double artifactCount;
+    public CustomGamepad(GamepadEx m_gamepad, RobotBase m_robotBase, Follower m_follower, double m_artifactCount){
         gamepad = m_gamepad;
         robotBase = m_robotBase;
         follower = m_follower;
+        artifactCount = m_artifactCount;
     }
 
-    public void player1(){
+    public void player1Z(){
         gamepad.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))));
 
@@ -37,10 +39,29 @@ public class CustomGamepad {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.setPose(new Pose(92, 10, Math.toRadians(90))))));
     }
 
-    public void player2(){
+    public void player2Z(){
 
 
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAllianceCommand()));
+    }
+
+    public void player1Connor(){
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new GateHeadingCommand(robotBase)));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.setPose(new Pose(92, 10, Math.toRadians(90))))));
+    }
+
+    public void player2Connor(){
+        gamepad.getGamepadButton(GamepadKeys.Button.START)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAllianceCommand()));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new TransferCommand(robotBase, follower)));
     }
 }

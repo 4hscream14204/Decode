@@ -24,8 +24,8 @@ public class Turret {
     double xSpeed;
     double ySpeed;
     double timeOfFlight = 0.001;
-    double botHeading;
-    double targetHeading;
+    public double botHeading;
+    public double targetHeading;
     double turretOffset;
     double rotationLead;
     double maxDegrees;
@@ -56,11 +56,11 @@ public class Turret {
         if(degreeModulus < 0){
             degreeModulus += 360;
         }
-        if(degreeModulus < 5){
-            degreeModulus = 5;
+        if(degreeModulus < 4){
+            degreeModulus = 4;
         }
-        if(degreeModulus > 350){
-            degreeModulus = 350;
+        if(degreeModulus > 351){
+            degreeModulus = 351;
         }
         return ((0.002933 * degreeModulus) - 0.07);
     }
