@@ -109,7 +109,7 @@ public class ThwimpTeleOp extends OpMode {
                 .whileActiveOnce(new InstantCommand(()->artifactsInBotCount++));
 
         new Trigger(()->artifactsInBotCount == 3)
-                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->mainController.gamepad.rumble(1, 1, 500)), new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))));
+                .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->mainController.gamepad.rumble(1, 1, 500))));
 
         /*new Trigger(()->artifactsInBotCount == 3 && DataStorage.alliance == DecodeEnums.Alliance.RED)
                 .whenActive(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.chassisSubsystem.setTargetHeading(0))));

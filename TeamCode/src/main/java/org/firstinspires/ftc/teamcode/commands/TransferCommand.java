@@ -45,12 +45,13 @@ public class TransferCommand extends SequentialCommandGroup {
                     new WaitUntilCommand(()->robotBase.launcherSubsystem.isAtSpeed()),
                     new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
                     new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                    new WaitCommand(250),
+                    new WaitCommand(50),
                     new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
                     new WaitCommand(400),
-                    new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-                    new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
-                    new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))
+                    new ParallelCommandGroup(
+                            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                            new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),
+                            new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)))
             );
         }
     }

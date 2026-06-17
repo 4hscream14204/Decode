@@ -23,7 +23,7 @@ public class Turret {
     Pose goalPose;
     double xSpeed;
     double ySpeed;
-    double timeOfFlight = 0.001;
+    double timeOfFlight = 0;
     public double botHeading;
     public double targetHeading;
     double turretOffset;
