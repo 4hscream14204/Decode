@@ -43,11 +43,14 @@ public class TransferCommand extends SequentialCommandGroup {
         else{
             addCommands(
                     new WaitUntilCommand(()->robotBase.launcherSubsystem.isAtSpeed()),
-                    new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
-                    new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
+                    new ParallelCommandGroup(
+                            new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.LAUNCH)),
+                            new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE))),
                     new WaitCommand(50),
-                    new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
-                    new WaitCommand(400),
+                    new ParallelCommandGroup(
+                        new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0.55)),
+                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(-1))),
+                    new WaitCommand(1000),
                     new ParallelCommandGroup(
                             new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                             new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll()),

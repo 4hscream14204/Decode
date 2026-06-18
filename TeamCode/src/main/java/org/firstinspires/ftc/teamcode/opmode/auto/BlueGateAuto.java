@@ -140,7 +140,7 @@ public class BlueGateAuto extends OpMode {
         path = new SequentialCommandGroup(
                 //new InstantCommand(()->robotBase.hoodSubsystem.close()),
                // new InstantCommand(()->robotBase.launcherSubsystem.setVelocity(1600)),
-                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
+                //new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
                 new FollowPathCommand(follower, startLaunch, true, 1),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(200),
