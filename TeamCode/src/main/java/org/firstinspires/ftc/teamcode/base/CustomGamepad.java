@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.commands.GateHeadingCommand;
 import org.firstinspires.ftc.teamcode.commands.ToggleAllianceCommand;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
+import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
 public class CustomGamepad {
     GamepadEx gamepad;
@@ -40,10 +41,14 @@ public class CustomGamepad {
     }
 
     public void player2Z(){
-
-
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleAllianceCommand()));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE))));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.B)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))));
     }
 
     public void player1Connor(){

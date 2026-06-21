@@ -8,6 +8,8 @@ import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
+import org.firstinspires.ftc.teamcode.base.DataStorage;
+import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 
 public class TurretHeadingControlManualCommand extends CommandBase {
@@ -33,13 +35,18 @@ public class TurretHeadingControlManualCommand extends CommandBase {
     @Override
     public void execute(){
         launcherDriver.readButtons();
-        if(isUsingManualControl == false){
+        if(!isUsingManualControl){
             turretAngle = robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower);
-            robotBase.turretSubsystem.updatePosition(turretAngle);
         }
         else{
-            robotBase.turretSubsystem.setPosition(((launcherDriver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) / 2) + (-1 * (launcherDriver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) / 2)) + 0.5));
+            if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+                turretAngle = 45;
+            }
+            else{
+                turretAngle = 275;
+            }
         }
+        robotBase.turretSubsystem.updatePosition(turretAngle);
     }
 
     @Override

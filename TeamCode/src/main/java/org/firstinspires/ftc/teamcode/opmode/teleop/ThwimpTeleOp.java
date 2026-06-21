@@ -168,23 +168,23 @@ public class ThwimpTeleOp extends OpMode {
 
         telemetry.addData("Alliance", DataStorage.alliance);
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
-        telemetry.addData("Intake Left: ", robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance());
-        telemetry.addData("Intake Right: ", robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance());
-        telemetry.addData("Calc Turret Angle", robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower));
-        telemetry.addData("Turret Heading", robotBase.turretSubsystem.targetHeading);
-        telemetry.addData("Bot Heading from Turret", robotBase.turretSubsystem.botHeading);
+        //telemetry.addData("Intake Left: ", robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance());
+        //telemetry.addData("Intake Right: ", robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance());
+        //telemetry.addData("Calc Turret Angle", robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower));
+        //telemetry.addData("Turret Heading", robotBase.turretSubsystem.targetHeading);
+        //telemetry.addData("Bot Heading from Turret", robotBase.turretSubsystem.botHeading);
         telemetry.addData("X", follower.getPose().getX());
         telemetry.addData("Y", follower.getPose().getY());
         telemetry.addData("Distance: ", follower.getPose().distanceFrom(goalPose));
-        telemetry.addData("Launch Velocity Calc", robotBase.launcherSubsystem.getLaunchVelocity(follower.getPose().distanceFrom(goalPose)));
-        telemetry.addData("Launch Velocity", robotBase.launcherSubsystem.getVelocity());
-        telemetry.addData("Ready to Launch", readyToLaunch);
-        telemetry.addData("Artifacts in Bot: ", artifactsInBotCount);
-        telemetry.addData("DegreeNormalized", robotBase.turretSubsystem.degreeNormalized);
-        telemetry.addData("DegreeModulus", robotBase.turretSubsystem.degreeModulus);
+        //telemetry.addData("Launch Velocity Calc", robotBase.launcherSubsystem.getLaunchVelocity(follower.getPose().distanceFrom(goalPose)));
+        //telemetry.addData("Launch Velocity", robotBase.launcherSubsystem.getVelocity());
+        //telemetry.addData("Ready to Launch", readyToLaunch);
+        //telemetry.addData("Artifacts in Bot: ", artifactsInBotCount);
+        //telemetry.addData("DegreeNormalized", robotBase.turretSubsystem.degreeNormalized);
+        //telemetry.addData("DegreeModulus", robotBase.turretSubsystem.degreeModulus);
         telemetry.addData("Loop Time", loopTime);
-        telemetry.addData("Is In Gate Zone", robotBase.chassisSubsystem.isInGateZone());
-        telemetry.addData("Pinpoint Velocity", robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH));
+        //telemetry.addData("Is In Gate Zone", robotBase.chassisSubsystem.isInGateZone());
+        //telemetry.addData("Pinpoint Velocity", robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH));
         CommandScheduler.getInstance().run();
     }
 }

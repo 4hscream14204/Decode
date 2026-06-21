@@ -18,7 +18,7 @@ public class GateHeadingCommand extends CommandBase {
             robotBase.chassisSubsystem.setTargetHeading(37);
         }
         else{
-            robotBase.chassisSubsystem.setTargetHeading(127);
+            robotBase.chassisSubsystem.setTargetHeading(137);
         }
     }
 }

@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
-@Autonomous(name = "Red Gate Auto")
+@Autonomous(name = "Red Gate Auto Field One")
 public class RedGateAuto extends OpMode {
 
     Follower follower;
@@ -53,7 +53,7 @@ public class RedGateAuto extends OpMode {
 
     BezierLine launchToGateLineUp = new BezierLine(
             new Pose(85, 85),
-            new Pose(135,63,Math.toRadians(40)));
+            new Pose(137,62,Math.toRadians(40)));
 
   /*  BezierLine intakeFromRamp = new BezierLine(
             new Pose(130,69),
@@ -61,7 +61,7 @@ public class RedGateAuto extends OpMode {
 */
 
     BezierLine gateToLaunchLine = new BezierLine(
-            new Pose(135,63,Math.toRadians(40)),
+            new Pose(137,62,Math.toRadians(40)),
             new Pose(85, 85));
 
     BezierLine preIntakeFirstRow = new BezierLine(
