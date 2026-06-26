@@ -11,4 +11,9 @@ public class DecodeEnums {
         BLUE,
         RED
     }
+
+    public enum LaunchingMode{
+        GOAL,
+        SPECTRUM
+    }
 }

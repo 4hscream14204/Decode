@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
+import org.firstinspires.ftc.teamcode.commands.ToggleLaunchingModeCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlManualCommand;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
@@ -78,7 +79,7 @@ public class ThwimpTeleOp extends OpMode {
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->artifactsInBotCount = 0)));
 
         mainController.getGamepadButton(GamepadKeys.Button.BACK)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->isFieldCentric = !isFieldCentric)));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleLaunchingModeCommand()));
 
         /*launcherController.getGamepadButton(GamepadKeys.Button.BACK)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->isInManualControl = !isInManualControl)));*/
@@ -167,6 +168,7 @@ public class ThwimpTeleOp extends OpMode {
         //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90)));
 
         telemetry.addData("Alliance", DataStorage.alliance);
+        telemetry.addData("Launching Mode", DataStorage.launchingMode);
         telemetry.addData("Pinpoint heading", robotBase.chassisSubsystem.pinpoint.getHeading(AngleUnit.DEGREES));
         //telemetry.addData("Intake Left: ", robotBase.intakeLIntakeDistanceSensorSubsystem.getDistance());
         //telemetry.addData("Intake Right: ", robotBase.intakeRIntakeDistanceSensorSubsystem.getDistance());
