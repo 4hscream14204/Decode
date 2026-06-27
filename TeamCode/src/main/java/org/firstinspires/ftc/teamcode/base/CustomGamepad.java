@@ -37,7 +37,7 @@ public class CustomGamepad {
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new GateHeadingCommand(robotBase)));
 
         gamepad.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.setPose(new Pose(92, 10, Math.toRadians(90))))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.setPose(new Pose(19, 78, Math.toRadians(0))))));
     }
 
     public void player2Z(){

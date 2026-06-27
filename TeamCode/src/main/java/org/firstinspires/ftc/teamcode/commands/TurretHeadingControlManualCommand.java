@@ -46,7 +46,7 @@ public class TurretHeadingControlManualCommand extends CommandBase {
                 turretAngle = 275;
             }
         }
-        robotBase.turretSubsystem.updatePosition(turretAngle);
+        robotBase.turretSubsystem.setPositionDeg(turretAngle);
     }
 
     @Override
