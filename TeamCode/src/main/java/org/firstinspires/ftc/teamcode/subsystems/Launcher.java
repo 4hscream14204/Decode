@@ -138,10 +138,20 @@ public boolean isAtSpeed(){
 
 public double getDistance(GoBildaPinpointDriver pinpoint, Follower follower){
     if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-        goalPose = new Pose(144, 138);
+        if(DataStorage.launchingMode == DecodeEnums.LaunchingMode.GOAL){
+            goalPose = DataStorage.launcherRedGoalPose;
+        }
+        else{
+            goalPose = DataStorage.launcherRedPrismPose;
+        }
     }
     else{
-        goalPose = new Pose(144, 138).mirror();
+        if(DataStorage.launchingMode == DecodeEnums.LaunchingMode.GOAL){
+            goalPose = DataStorage.launcherBlueGoalPose;
+        }
+        else{
+            goalPose = DataStorage.launcherBluePrismPose;
+        }
     }
     xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
     ySpeed = pinpoint.getVelY(DistanceUnit.INCH);

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import android.provider.ContactsContract;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -42,7 +44,7 @@ public class Turret {
         turretServoL = m_turretServoL;
         turretServoR = m_turretServoR;
         servoEncoder = m_servoEncoder;
-        setPosition(0.5);
+        //setPosition(0.5);
     }
 
     public void setPosition(double position){
@@ -56,21 +58,32 @@ public class Turret {
         if(degreeModulus < 0){
             degreeModulus += 360;
         }
-        if(degreeModulus < 4){
-            degreeModulus = 4;
+        if(degreeModulus < 5){
+            degreeModulus = 5;
         }
-        if(degreeModulus > 351){
-            degreeModulus = 351;
+        if(degreeModulus > 350){
+            degreeModulus = 350;
         }
-        return ((0.002933 * degreeModulus) - 0.07);
+        //return ((0.002933 * degreeModulus) - 0.07);
+        return ((-0.002840 * degreeModulus) + 1.01666);
     }
 
     public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            goalPose = new Pose(144, 140);
+            if(DataStorage.launchingMode == DecodeEnums.LaunchingMode.GOAL){
+                goalPose = DataStorage.redGoalPose;
+            }
+            else{
+                goalPose = DataStorage.redPrismPose;
+            }
         }
         else{
-            goalPose = new Pose(-24, 144);
+            if(DataStorage.launchingMode == DecodeEnums.LaunchingMode.GOAL){
+                goalPose = DataStorage.blueGoalPose;
+            }
+            else{
+                goalPose = DataStorage.bluePrismPose;
+            }
         }
         botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
