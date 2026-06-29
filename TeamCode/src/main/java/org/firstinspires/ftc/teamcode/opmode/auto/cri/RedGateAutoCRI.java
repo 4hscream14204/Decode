@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmode.auto.cri;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.base.DataStorage;
@@ -29,14 +32,11 @@ public class RedGateAutoCRI extends OpMode {
             new Pose(126, 125)
     );
 //(47)
-    BezierLine preIntakeRow = new BezierLine(
+    BezierCurve intakeRow = new BezierCurve(
             new Pose(126,125),
-            new Pose(142,107));
-//(47)(0)
-    BezierLine intakeRow = new BezierLine(
             new Pose(142,107),
             new Pose(172,107));
-//(0)(0)
+//(47)(0)(0)
     BezierLine intakeToLaunch = new BezierLine(
             new Pose(172,107),
             new Pose(126,125));
@@ -73,6 +73,16 @@ public class RedGateAutoCRI extends OpMode {
             new Pose(174,105),
             new Pose(126,125));
 
+    BezierLine launchToPark = new BezierLine(
+            new Pose( 126,125),
+            endPose
+    );
+    PathChain startToLaunch;
+    PathChain intakeFirstRow;
+    PathChain launchFirstRow;
+    PathChain gateCycle;
+    //Gate to launch
+    PathChain parking;
 
 
 
@@ -85,7 +95,17 @@ public class RedGateAutoCRI extends OpMode {
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
 
+        startToLaunch = follower.pathBuilder()
+                .addPath(preloadLaunch)
+                .setLinearHeadingInterpolation(startPose.getHeading(),Math.toRadians(0))
+                .addParametricCallback(0.25,()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.3))))
+                .addParametricCallback(0.75,()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0))))
+                .build();
 
+        intakeFirstRow = follower.pathBuilder()
+                .addPath(intakeRow)
+                .setLinearHeadingInterpolation(Math.toRadians(47),Math.toRadians(0))
+                .
 
         path = new SequentialCommandGroup(
 
