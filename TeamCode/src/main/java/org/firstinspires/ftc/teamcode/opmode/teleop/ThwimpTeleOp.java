@@ -91,12 +91,12 @@ public class ThwimpTeleOp extends OpMode {
                 .whenInactive (()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intake(0)), new InstantCommand(()->robotBase.intakeTransferSubsystem.transfer(0))));
 
-        new Trigger(()->timer.seconds() > 110)
-                .whileActiveOnce(new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.PARK)));
+        /*new Trigger(()->timer.seconds() > 110)
+                .whileActiveOnce(new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.PARK)));*/
 
-        new Trigger(()->!robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower))
-                .whenActive(new InstantCommand(()->robotBase.prismSubsystem.setAllianceColor()))
-                .whenInactive(new InstantCommand(()->robotBase.prismSubsystem.rainbow()));
+        /*new Trigger(()->!robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower))
+                .whenActive(new InstantCommand(()->robotBase.prismSubsystem.setAllianceColor(DataStorage.launchingMode)))
+                .whenInactive(new InstantCommand(()->robotBase.prismSubsystem.rainbow()));*/
 
 
         /*new Trigger(()->robotBase.chassisSubsystem.isInCloseZone())
@@ -125,7 +125,6 @@ public class ThwimpTeleOp extends OpMode {
     @Override
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
-        robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW);
         follower.setStartingPose(DataStorage.endPosition);
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
@@ -137,6 +136,8 @@ public class ThwimpTeleOp extends OpMode {
 
     @Override
     public void loop() {
+
+        robotBase.prismSubsystem.setGamePhase(timer);
 
         for(LynxModule hub : allHubs){
             hub.clearBulkCache();

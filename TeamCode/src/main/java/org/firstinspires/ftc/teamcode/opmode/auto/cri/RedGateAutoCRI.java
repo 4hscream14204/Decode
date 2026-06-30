@@ -105,7 +105,7 @@ public class RedGateAutoCRI extends OpMode {
         intakeFirstRow = follower.pathBuilder()
                 .addPath(intakeRow)
                 .setLinearHeadingInterpolation(Math.toRadians(47),Math.toRadians(0))
-                .
+                .build();
 
         path = new SequentialCommandGroup(
 
