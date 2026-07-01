@@ -59,7 +59,7 @@ public class Prism {
         if(time.seconds() > 110){
             setMode(PrismModes.PARK, false);
         } else {
-            setMode(PrismModes.RAINBOW, false);
+            setAllianceColor(DataStorage.launchingMode);
         }
     }
 

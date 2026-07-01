@@ -35,19 +35,21 @@ public class TransferCommand extends SequentialCommandGroup {
                     new ParallelCommandGroup(new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),new InstantCommand(()->robotBase.intakeTransferSubsystem.stopAll())),
                     new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.RAINBOW)),
                     new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))*/
-                        new InstantCommand(() -> robotBase.prismSubsystem.setMode(Prism.PrismModes.LAUNCH, false)),
+                        //new InstantCommand(() -> robotBase.prismSubsystem.setMode(Prism.PrismModes.LAUNCH, false)),
                         new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                         new InstantCommand(() -> robotBase.intakeTransferSubsystem.intakeAndTransfer(0.4)),
                         new WaitCommand(750),
-                        new ParallelCommandGroup(new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)), new InstantCommand(() -> robotBase.intakeTransferSubsystem.stopAll())),
-                        new InstantCommand(()-> robotBase.prismSubsystem.setGamePhase(time)),
+                        new ParallelCommandGroup(
+                                new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                                new InstantCommand(() -> robotBase.intakeTransferSubsystem.stopAll())),
+                        //new InstantCommand(()-> robotBase.prismSubsystem.setGamePhase(time)),
                         new InstantCommand(() -> robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))
                 );
             } else {
                 addCommands(
                         new WaitUntilCommand(() -> robotBase.launcherSubsystem.isAtSpeed()),
                         new ParallelCommandGroup(
-                                new InstantCommand(() -> robotBase.prismSubsystem.setMode(Prism.PrismModes.LAUNCH, false)),
+                                //new InstantCommand(() -> robotBase.prismSubsystem.setMode(Prism.PrismModes.LAUNCH, false)),
                                 new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE))),
                         new WaitCommand(50),
                         new ParallelCommandGroup(
@@ -64,9 +66,8 @@ public class TransferCommand extends SequentialCommandGroup {
         else{
             addCommands(
                     new WaitUntilCommand(() -> robotBase.launcherSubsystem.isAtSpeed()),
-                    new ParallelCommandGroup(
-                            new InstantCommand(() -> robotBase.prismSubsystem.setMode(Prism.PrismModes.LAUNCH, false)),
-                            new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE))),
+                            //new InstantCommand(() -> robotBase.prismSubsystem.setMode(Prism.PrismModes.LAUNCH, false)),
+                            new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                     new WaitCommand(50),
                     new ParallelCommandGroup(
                             new InstantCommand(() -> robotBase.intakeTransferSubsystem.transfer(0.35)),
