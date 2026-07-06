@@ -16,7 +16,6 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.CustomGamepad;
 import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.DecodeEnums;
@@ -94,9 +93,10 @@ public class ThwimpTeleOp extends OpMode {
         /*new Trigger(()->timer.seconds() > 110)
                 .whileActiveOnce(new InstantCommand(()->robotBase.prismSubsystem.setPosition(Prism.PrismModes.PARK)));*/
 
-        /*new Trigger(()->!robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower))
-                .whenActive(new InstantCommand(()->robotBase.prismSubsystem.setAllianceColor(DataStorage.launchingMode)))
-                .whenInactive(new InstantCommand(()->robotBase.prismSubsystem.rainbow()));*/
+        new Trigger(()->!robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower))
+                .and(new Trigger(()->artifactsInBotCount >= 3))
+                .whileActiveContinuous(new InstantCommand(()->robotBase.prismSubsystem.setMode(Prism.PrismModes.ALLIANCE, true)))
+                .whenInactive(new InstantCommand(()-> robotBase.prismSubsystem.setMode(Prism.PrismModes.GAMEPHASE, false)));
 
 
         /*new Trigger(()->robotBase.chassisSubsystem.isInCloseZone())
@@ -132,12 +132,15 @@ public class ThwimpTeleOp extends OpMode {
         //robotBase.turretSubsystem.updatePosition(90);
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         timer.reset();
+
+        //robotBase.prismSubsystem.setGamePhase(timer);
+        robotBase.prismSubsystem.setMode(Prism.PrismModes.RAINBOW, false);
     }
 
     @Override
     public void loop() {
 
-        robotBase.prismSubsystem.setGamePhase(timer);
+        robotBase.prismSubsystem.updateLights(timer);
 
         for(LynxModule hub : allHubs){
             hub.clearBulkCache();

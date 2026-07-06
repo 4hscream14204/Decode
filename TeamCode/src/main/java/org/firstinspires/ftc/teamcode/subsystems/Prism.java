@@ -10,13 +10,15 @@ public class Prism {
 
     public enum PrismModes{
         NONE(0, 0),
-        RAINBOW(0.255, 1),
+        RAINBOW(0.2261, 1),
         LAUNCH(0.898, 4),
-        PARK(0.913, 3),
-        RED(0.069, 2),
+        PARK(0.913, 1),
+        RED(0.055555555, 2),
         BLUE(0.838, 2),
         RAINBOWBLUE(0.20222, 2),
-        RAINBOWRED(0.21778, 2);
+        RAINBOWRED(0.21778, 2),
+        ALLIANCE(0, 2),
+        GAMEPHASE(0, 3);
         public final double value;
         public final int priority;
         PrismModes(double val, int pri){this.value = val; this.priority = pri;}
@@ -30,41 +32,32 @@ public class Prism {
         prism = m_prism;
     }
 
-    public void setPosition(double position){
-        prism.setPosition(position);
-    }
-
     public void setPosition(PrismModes m_mode){
-        prismModes = m_mode;
         prism.setPosition(m_mode.value);
     }
 
-    public void setAllianceColor(DecodeEnums.LaunchingMode m_launchMode){
+    public void setAllianceColor(){
         if (DataStorage.alliance == DecodeEnums.Alliance.RED) {
-            if(m_launchMode == DecodeEnums.LaunchingMode.GOAL) {
-                setMode(PrismModes.RED, false);
+            if(DataStorage.launchingMode == DecodeEnums.LaunchingMode.GOAL) {
+                setPosition(PrismModes.RED);
             } else {
-                setMode(PrismModes.RAINBOWRED, false);
+                setPosition(PrismModes.RAINBOWRED);
             }
         } else {
-            if(m_launchMode == DecodeEnums.LaunchingMode.GOAL) {
-                setMode(PrismModes.BLUE, false);
+            if(DataStorage.launchingMode == DecodeEnums.LaunchingMode.GOAL) {
+                setPosition(PrismModes.BLUE);
             } else {
-                setMode(PrismModes.RAINBOWBLUE, false);
+                setPosition(PrismModes.RAINBOWBLUE);
             }
         }
     }
 
     public void setGamePhase(ElapsedTime time){
         if(time.seconds() > 110){
-            setMode(PrismModes.PARK, false);
+            setPosition(PrismModes.PARK);
         } else {
-            setAllianceColor(DataStorage.launchingMode);
+            setPosition(PrismModes.RAINBOW);
         }
-    }
-
-    public void rainbow(){
-        setPosition(0.225);
     }
 
     public PrismModes getMode(){
@@ -73,10 +66,20 @@ public class Prism {
 
     public void setMode(PrismModes m_mode, boolean m_overwrite){
 
-        if(m_mode.priority <= prismModes.priority && !m_overwrite){
+        if((m_mode.priority <= prismModes.priority && !m_overwrite) || m_mode == prismModes){
             return;
         }
 
-        setPosition(m_mode);
+        prismModes = m_mode;
+    }
+
+    public void updateLights(ElapsedTime m_gameTime){
+        if(prismModes == PrismModes.ALLIANCE) {
+            setAllianceColor();
+        } else if (prismModes == PrismModes.GAMEPHASE) {
+            setGamePhase(m_gameTime);
+        } else {
+            setPosition(prismModes);
+        }
     }
 }
