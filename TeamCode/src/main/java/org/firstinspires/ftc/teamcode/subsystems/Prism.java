@@ -13,7 +13,7 @@ public class Prism {
         RAINBOW(0.2261, 1),
         LAUNCH(0.898, 4),
         PARK(0.913, 1),
-        RED(0.0555555556, 2),
+        RED((100/1800), 2),
         BLUE(0.838, 2),
         RAINBOWBLUE(0.20222, 2),
         RAINBOWRED(0.21778, 2),
