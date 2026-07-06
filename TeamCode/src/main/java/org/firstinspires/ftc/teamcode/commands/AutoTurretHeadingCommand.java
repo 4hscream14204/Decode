@@ -19,6 +19,6 @@ public class AutoTurretHeadingCommand extends CommandBase {
 
     @Override
     public void execute(){
-        robotBase.turretSubsystem.updatePosition(robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower, goalPose));
+        robotBase.turretSubsystem.setPositionDeg(robotBase.turretSubsystem.getTurretAngle(robotBase.chassisSubsystem.pinpoint, follower, goalPose));
     }
 }

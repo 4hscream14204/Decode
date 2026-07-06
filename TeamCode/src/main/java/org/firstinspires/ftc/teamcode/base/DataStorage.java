@@ -15,5 +15,6 @@ public class DataStorage {
     public static Pose redPrismPose = new Pose(82, 200).mirror();
     public static Pose launcherRedPrismPose = new Pose(98, 192);
     public static Pose launcherBluePrismPose = new Pose(92, 192);
+    public static Pose autoTurretRedGoal = new Pose(188, 190);
     //82, 182
 }

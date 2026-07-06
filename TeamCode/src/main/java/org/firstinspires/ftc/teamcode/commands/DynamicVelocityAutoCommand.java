@@ -27,10 +27,10 @@ public class DynamicVelocityAutoCommand extends CommandBase {
     @Override
     public void execute(){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            goalPose = new Pose(144, 138);
+            goalPose = DataStorage.launcherRedGoalPose;
         }
         else{
-            goalPose = new Pose(144, 138).mirror();
+            goalPose = DataStorage.launcherBlueGoalPose;
         }
         xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = robotBase.chassisSubsystem.pinpoint.getVelY(DistanceUnit.INCH);
