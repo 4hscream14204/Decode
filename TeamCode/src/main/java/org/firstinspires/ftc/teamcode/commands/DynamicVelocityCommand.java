@@ -16,9 +16,10 @@ public class DynamicVelocityCommand extends CommandBase {
     Pose futurePose;
     double distance;
     double newDistance;
-    double timeOfFlightMultiplier = 0.001;
-    double xSpeed;
-    double ySpeed;
+    double oldDistance;
+    double timeOfFlightMultiplier = 0;
+    double xSpeed = 0;
+    double ySpeed = 0;
     double timeOfFlight;
     public DynamicVelocityCommand(RobotBase m_robotBase, Follower m_follower){
         robotBase = m_robotBase;

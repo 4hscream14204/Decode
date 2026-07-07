@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configurable
 public class Launcher{
 
     public DcMotorEx launcherMotor;
@@ -33,7 +32,7 @@ public class Launcher{
     double voltage;
     double adjustedVelocity;
     double power;
-    public static double proportional = 0.002;
+    public double proportional = 0.002;
     double error;
     double xSpeed;
     double ySpeed;

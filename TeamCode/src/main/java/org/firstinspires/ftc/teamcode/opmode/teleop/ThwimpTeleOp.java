@@ -146,13 +146,6 @@ public class ThwimpTeleOp extends OpMode {
             hub.clearBulkCache();
         }
 
-        if(robotBase.turretSubsystem.isAtPosition(robotBase.chassisSubsystem.pinpoint, follower) && robotBase.chassisSubsystem.isInCloseZone()){
-            readyToLaunch = true;
-        }
-        else{
-            readyToLaunch = false;
-        }
-
         loopTime = timer.milliseconds() - previousLoop;
         previousLoop = timer.milliseconds();
 
