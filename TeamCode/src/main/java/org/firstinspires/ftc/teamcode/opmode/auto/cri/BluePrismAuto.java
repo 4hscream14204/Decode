@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.ConditionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
@@ -18,12 +19,16 @@ import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
+import com.seattlesolvers.solverslib.pedroCommand.HoldPointCommand;
 
 import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.AutoTurretHeadingCommand;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityAutoCommand;
+import org.firstinspires.ftc.teamcode.commands.ToggleBottomSpikeOrderCommand;
+import org.firstinspires.ftc.teamcode.commands.ToggleMiddleSpikeOrderCommand;
+import org.firstinspires.ftc.teamcode.commands.ToggleTopSpikeOrderCommand;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
@@ -45,43 +50,63 @@ public class BluePrismAuto extends OpMode {
     ElapsedTime timer;
     public enum SpikeOrder{
         FIRST,
-//        SECOND,
-//        THIRD,
+        SECOND,
+        THIRD,
         NONE
     }
     SpikeOrder currentSpikeOrder = SpikeOrder.NONE;
-    SpikeOrder topSpikeOrder = SpikeOrder.NONE;
-    SpikeOrder middleSpikeOrder = SpikeOrder.NONE;
-    SpikeOrder bottomSpikeOrder = SpikeOrder.NONE;
+    public static SpikeOrder topSpikeOrder = SpikeOrder.NONE;
+    public static SpikeOrder middleSpikeOrder = SpikeOrder.NONE;
+    public static SpikeOrder bottomSpikeOrder = SpikeOrder.NONE;
     int waitTime= 0;
 
-    Pose startPose = new Pose(62, 185, Math.toRadians(-90));
+    Pose startPose = new Pose(62, 185, Math.toRadians(-90));//62,185
 
-    Pose launchPose1 = new Pose(70, 150, Math.toRadians(-90));
+    Pose launchPose1 = new Pose(68, 121, Math.toRadians(-135));
+    Pose topLineUpPose = new Pose(60, 108, Math.toRadians(180));
     Pose middleLineUpPose = new Pose(60,86, Math.toRadians(180));
+    Pose bottomLineUpPose = new Pose(50,61, Math.toRadians(180));
+    Pose topSpikePose = new Pose(6, 108, Math.toRadians(180));
     Pose middleSpikePose = new Pose(6, 85, Math.toRadians(180));
-    Pose launchPose2 = new Pose(75, 111, Math.toRadians(225));
+    Pose bottomSpikePose = new Pose(6, 61, Math.toRadians(180));
+//    Pose launchPose2 = new Pose(75, 111, Math.toRadians(225));
     Pose parkPose = new Pose(75,158, Math.toRadians(-90));
 
     BezierLine startToLaunchPath = new BezierLine(startPose, launchPose1);
     BezierLine basicParkPath = new BezierLine(launchPose1, parkPose);
+    BezierLine topLineUpPath = new BezierLine(launchPose1, topLineUpPose);
     BezierLine middleLineUpPath = new BezierLine(launchPose1, middleLineUpPose);
+    BezierLine bottomLineUpPath = new BezierLine(launchPose1, bottomLineUpPose);
+    BezierLine topSpikePath = new BezierLine(topLineUpPose, topSpikePose);
     BezierLine middleSpikePath = new BezierLine(middleLineUpPose, middleSpikePose);
+    BezierLine bottomSpikePath = new BezierLine(bottomLineUpPose, bottomSpikePose);
+    BezierLine topBackUpPath = new BezierLine(topSpikePose, topLineUpPose);
     BezierLine middleBackUpPath = new BezierLine(middleSpikePose, middleLineUpPose);
-    BezierLine launchFromMiddlePath = new BezierLine(middleSpikePose, launchPose2);
+    BezierLine bottomBackUpPath = new BezierLine(bottomSpikePose, bottomLineUpPose);
+    BezierLine launchFromTopPath = new BezierLine(topLineUpPose, launchPose1);
+    BezierLine launchFromMiddlePath = new BezierLine(middleLineUpPose, launchPose1);
+    BezierLine launchFromBottomPath = new BezierLine(bottomLineUpPose, launchPose1);
     BezierCurve parkPath = new BezierCurve(
-            new Pose(launchPose2.getX(),launchPose2.getY()),
+            new Pose(launchPose1.getX(),launchPose1.getY()),
             new Pose(49,133),
             new Pose(parkPose.getX(),parkPose.getY()));
-
 
     PathChain startLaunch;
     PathChain middleLineUp;
     PathChain middleSpike;
     PathChain middleBackUp;
-    PathChain spikeLaunch;
+    PathChain middleSpikeLaunch;
+    PathChain bottomLineUp;
+    PathChain bottomSpike;
+    PathChain bottomBackUp;
+    PathChain bottomSpikeLaunch;
+    PathChain topLineUp;
+    PathChain topSpike;
+    PathChain topBackUp;
+    PathChain topSpikeLaunch;
     PathChain park;
     PathChain basicPark;
+    PathChain spikeReady;
 
 
 
@@ -95,13 +120,24 @@ public class BluePrismAuto extends OpMode {
 
         startLaunch = follower.pathBuilder()
                 .addPath(startToLaunchPath)
-                .setLinearHeadingInterpolation(startPose.getHeading(), Math.toRadians(-90))
+                .setLinearHeadingInterpolation(startPose.getHeading(), Math.toRadians(-135))
                 //.addParametricCallback(0.97, ()->CommandScheduler.getInstance().schedule(new WaitCommand(1000)))
                 .addParametricCallback(0.25, ()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.2))))
-                .addParametricCallback(0.75, ()->CommandScheduler.getInstance().schedule(
-                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
+                .addParametricCallback(0.85, ()->CommandScheduler.getInstance().schedule(
+                        new SequentialCommandGroup(
+                                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
+                                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer()),
+                                new WaitCommand(800),
+                                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.2)),
+                                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
+                )))
                 .build();
+
+//        spikeReady = follower.pathBuilder()
+//                .addPath(spikeReadyPath)
+//                .setLinearHeadingInterpolation(launchPose1.getHeading(), launchPose2.getHeading())
+//                .build();
 
         basicPark = follower.pathBuilder()
                 .addPath(basicParkPath)
@@ -125,85 +161,132 @@ public class BluePrismAuto extends OpMode {
         middleBackUp = follower.pathBuilder()
                 .addPath(middleBackUpPath)
                 .setConstantHeadingInterpolation(Math.toRadians(-180))
-                .addParametricCallback(0.5,()->CommandScheduler.getInstance().schedule(
+                .addParametricCallback(0.75,()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))
                 ))
                 .build();
-        spikeLaunch = follower.pathBuilder()
+
+        middleSpikeLaunch = follower.pathBuilder()
                 .addPath(launchFromMiddlePath)
                 .setLinearHeadingInterpolation(middleLineUpPose.getHeading(), Math.toRadians(225))
-                .addParametricCallback(0.75, ()->CommandScheduler.getInstance().schedule(
+                .addParametricCallback(0.9, ()->CommandScheduler.getInstance().schedule(
                         new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
+
+        bottomLineUp = follower.pathBuilder()
+                .addPath(bottomLineUpPath)
+                .setLinearHeadingInterpolation(launchPose1.getHeading(), bottomLineUpPose.getHeading())
+                .build();
+
+        bottomSpike = follower.pathBuilder()
+                .addPath(bottomSpikePath)
+                .setLinearHeadingInterpolation(bottomLineUpPose.getHeading(), bottomSpikePose.getHeading())
+                .addParametricCallback(0, ()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))
+                ))
+                .addParametricCallback(0, ()->robotBase.intakeTransferSubsystem.intake())
+                .build();
+
+        bottomBackUp = follower.pathBuilder()
+                .addPath(bottomBackUpPath)
+                .setLinearHeadingInterpolation(bottomSpikePose.getHeading(), bottomLineUpPose.getHeading())
+                .addParametricCallback(0.75,()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))
+                ))
+                .build();
+
+        bottomSpikeLaunch = follower.pathBuilder()
+                .addPath(launchFromBottomPath)
+                .setLinearHeadingInterpolation(bottomLineUpPose.getHeading(), launchPose1.getHeading())
+                .addParametricCallback(0.9, ()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
+                .build();
+
+        topLineUp = follower.pathBuilder()
+                .addPath(topLineUpPath)
+                .setLinearHeadingInterpolation(launchPose1.getHeading(), topLineUpPose.getHeading())
+                .build();
+
+        topSpike = follower.pathBuilder()
+                .addPath(topSpikePath)
+                .setLinearHeadingInterpolation(topLineUpPose.getHeading(), topSpikePose.getHeading())
+                .addParametricCallback(0, ()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))
+                ))
+                .addParametricCallback(0, ()->robotBase.intakeTransferSubsystem.intake())
+                .build();
+
+        topBackUp = follower.pathBuilder()
+                .addPath(topBackUpPath)
+                .setLinearHeadingInterpolation(topSpikePose.getHeading(), topLineUpPose.getHeading())
+                .addParametricCallback(0.75,()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK))
+                ))
+                .build();
+
+        topSpikeLaunch = follower.pathBuilder()
+                .addPath(launchFromTopPath)
+                .setLinearHeadingInterpolation(topLineUpPose.getHeading(), launchPose1.getHeading())
+                .addParametricCallback(0.9, ()->CommandScheduler.getInstance().schedule(
+                        new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
+                .build();
+
         park = follower.pathBuilder()
                 .addPath(parkPath)
                 .setLinearHeadingInterpolation(parkPose.getHeading(), Math.toRadians(180))
                 .build();
 
-
         path = new SequentialCommandGroup(
                 new WaitUntilCommand(()->waitTime <= timer.milliseconds()),
                 new FollowPathCommand(follower, startLaunch, true,1),
-                new WaitCommand(800),
-                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
-                new WaitCommand(800),
-                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.2)),
-                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-                new ConditionalCommand(
-                        new InstantCommand(()->middlePath.schedule()),
-                        new ConditionalCommand(
-                                new InstantCommand(()->bottomPath.schedule()),
-                                new ConditionalCommand(
-                                        new InstantCommand(()->topPath.schedule()),
-                                        new InstantCommand(()->idlePath.schedule()),
-                                        ()-> topSpikeOrder == SpikeOrder.FIRST
-                                        ),
-                                ()->bottomSpikeOrder == SpikeOrder.FIRST
-                                ),
-                        ()->middleSpikeOrder == SpikeOrder.FIRST
-                        )
-        );
+                new WaitCommand(800));
 
         idlePath = new SequentialCommandGroup(
                 new FollowPathCommand(follower, basicPark, true, 1)
         );
 
         topPath = new SequentialCommandGroup(
-                new FollowPathCommand(follower, middleLineUp, true, 1),
-                new FollowPathCommand(follower, middleSpike, true, 1),
-                new FollowPathCommand(follower, middleBackUp, true, 1),
-                new FollowPathCommand(follower, spikeLaunch, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPathCommand(follower, topLineUp, true, 1),
+                new FollowPathCommand(follower, topSpike, true, 1),
+                new FollowPathCommand(follower, topBackUp, true, 1),
+                new FollowPathCommand(follower, topSpikeLaunch, true, 1),
+                new HoldPointCommand(follower, launchPose1, true),
                 new WaitCommand(800),
                 new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(800),
                 new InstantCommand(() -> robotBase.intakeTransferSubsystem.intakeAndTransfer(0.2)),
                 new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
-//                new FollowPathCommand(follower, park, true, 1)
         );
+//                new FollowPathCommand(follower, park, true, 1)
 
         middlePath = new SequentialCommandGroup(
+                new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower, middleLineUp, true, 1),
                 new FollowPathCommand(follower, middleSpike, true, 1),
                 new FollowPathCommand(follower, middleBackUp, true, 1),
-                new FollowPathCommand(follower, spikeLaunch, true, 1),
+                new FollowPathCommand(follower, middleSpikeLaunch, true, 1),
                 new WaitCommand(800),
                 new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(800),
                 new InstantCommand(() -> robotBase.intakeTransferSubsystem.intakeAndTransfer(0.2)),
-                new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
+                new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                new WaitCommand(800)
 //                new FollowPathCommand(follower, park, true, 1)
         );
 
         bottomPath = new SequentialCommandGroup(
-                new FollowPathCommand(follower, middleLineUp, true, 1),
-                new FollowPathCommand(follower, middleSpike, true, 1),
-                new FollowPathCommand(follower, middleBackUp, true, 1),
-                new FollowPathCommand(follower, spikeLaunch, true, 1),
+                new WaitUntilCommand(()->!follower.isBusy()),
+                new FollowPathCommand(follower, bottomLineUp, true, 1),
+                new FollowPathCommand(follower, bottomSpike, true, 1),
+                new FollowPathCommand(follower, bottomBackUp, true, 1),
+                new FollowPathCommand(follower, bottomSpikeLaunch, true, 1),
                 new WaitCommand(800),
                 new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(800),
                 new InstantCommand(() -> robotBase.intakeTransferSubsystem.intakeAndTransfer(0.2)),
-                new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK))
+                new InstantCommand(() -> robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                new WaitCommand(800)
 //                new FollowPathCommand(follower, park, true, 1)
         );
 
@@ -226,12 +309,15 @@ public class BluePrismAuto extends OpMode {
 
         gamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->waitTime -= 1000)));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.CIRCLE)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleTopSpikeOrderCommand()));
+
         gamepad.getGamepadButton(GamepadKeys.Button.TRIANGLE)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new ConditionalCommand(
-                        new InstantCommand(()->middleSpikeOrder = SpikeOrder.FIRST),
-                        new InstantCommand(()->middleSpikeOrder = SpikeOrder.NONE),
-                        ()->middleSpikeOrder == SpikeOrder.NONE
-                )));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleMiddleSpikeOrderCommand()));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.SQUARE)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleBottomSpikeOrderCommand()));
     }
 
     @Override
@@ -240,6 +326,8 @@ public class BluePrismAuto extends OpMode {
         gamepad.readButtons();
         telemetry.addData("Wait Time", waitTime);
         telemetry.addData("Middle Spike", middleSpikeOrder);
+        telemetry.addData("Bottom Spike", bottomSpikeOrder);
+        telemetry.addData("Top Spike", topSpikeOrder);
     }
 
     @Override
@@ -247,6 +335,30 @@ public class BluePrismAuto extends OpMode {
         follower.setStartingPose(new Pose(startPose.getX(), startPose.getY(), Math.toRadians(-90)));
         CommandScheduler.getInstance().schedule(new WaitCommand(waitTime));
         CommandScheduler.getInstance().schedule(path);
+
+        if (middleSpikeOrder == SpikeOrder.FIRST){
+            CommandScheduler.getInstance().schedule(middlePath);
+        } else if (bottomSpikeOrder == SpikeOrder.FIRST) {
+            CommandScheduler.getInstance().schedule(bottomPath);
+        } else if (topSpikeOrder == SpikeOrder.FIRST) {
+            CommandScheduler.getInstance().schedule(topPath);
+        }
+
+        if (middleSpikeOrder == SpikeOrder.SECOND){
+            CommandScheduler.getInstance().schedule(middlePath);
+        } else if (bottomSpikeOrder == SpikeOrder.SECOND) {
+            CommandScheduler.getInstance().schedule(bottomPath);
+        } else if (topSpikeOrder == SpikeOrder.SECOND) {
+            CommandScheduler.getInstance().schedule(topPath);
+        }
+
+        if (middleSpikeOrder == SpikeOrder.THIRD){
+            CommandScheduler.getInstance().schedule(middlePath);
+        } else if (bottomSpikeOrder == SpikeOrder.THIRD) {
+            CommandScheduler.getInstance().schedule(bottomPath);
+        } else if (topSpikeOrder == SpikeOrder.THIRD) {
+            CommandScheduler.getInstance().schedule(topPath);
+        }
         CommandScheduler.getInstance().schedule(new AutoTurretHeadingCommand(robotBase, follower, DataStorage.blueGoalPose));
         CommandScheduler.getInstance().schedule(new DynamicVelocityAutoCommand(robotBase, follower));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
