@@ -42,8 +42,8 @@ public class RedGateAutoCRI extends OpMode {
 //(0)
     BezierCurve intakeRow = new BezierCurve(
             new Pose(130,144),
-            new Pose(156,101),
-            new Pose(171,101));
+            new Pose(127,102),
+            new Pose(178,103));
 
     //BezierLine intakeSecondRowLineUp = new BezierLine(
          //   new Pose(126, 130),
@@ -61,7 +61,7 @@ public class RedGateAutoCRI extends OpMode {
     //);
 //(0)(0)(0)
     BezierLine intakeToLaunch = new BezierLine(
-            new Pose(171,101),
+            new Pose(175,110),
             new Pose(128,130));
  //(0)(0)
     BezierLine launchToGate = new BezierLine(
@@ -132,6 +132,8 @@ public class RedGateAutoCRI extends OpMode {
         intakeFirstRow = follower.pathBuilder()
                 .addPath(intakeRow)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addPath(new BezierCurve(new Pose(178, 103), new Pose(157, 100), new Pose(175, 110)))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-30))
                 .build();
 
         launchFirstRow = follower.pathBuilder()
@@ -195,7 +197,7 @@ public class RedGateAutoCRI extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-                new FollowPathCommand(follower, intakeFirstRow, true,1),
+                new FollowPathCommand(follower, intakeFirstRow, true,0.6).withTimeout(3500),
                 new FollowPathCommand(follower,launchFirstRow,false,1),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(200),

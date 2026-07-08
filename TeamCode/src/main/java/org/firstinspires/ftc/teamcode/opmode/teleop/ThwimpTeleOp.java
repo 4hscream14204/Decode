@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
@@ -16,6 +17,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.base.CustomGamepad;
 import org.firstinspires.ftc.teamcode.base.DataStorage;
 import org.firstinspires.ftc.teamcode.base.DecodeEnums;
@@ -41,7 +43,7 @@ public class ThwimpTeleOp extends OpMode {
     CustomGamepad backupControllerCG;
     TelemetryManager telemetryM;
     List<LynxModule> allHubs;
-    Pose goalPose = new Pose(144, 138);
+    Pose goalPose;
     ElapsedTime timer;
     boolean readyToLaunch;
     int artifactsInBotCount;
@@ -126,7 +128,7 @@ public class ThwimpTeleOp extends OpMode {
     public void start(){
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         follower.setStartingPose(DataStorage.endPosition);
-        robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
+        //robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
         CommandScheduler.getInstance().schedule(new TurretHeadingControlManualCommand(robotBase, follower, ((backupController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) / 2) + (-1 * (backupController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) / 2)) + 0.5), backupController));
         //robotBase.turretSubsystem.updatePosition(90);
@@ -144,6 +146,13 @@ public class ThwimpTeleOp extends OpMode {
 
         for(LynxModule hub : allHubs){
             hub.clearBulkCache();
+        }
+
+        if(DataStorage.alliance == DecodeEnums.Alliance.RED){
+            goalPose = DataStorage.launcherRedGoalPose;
+        }
+        else{
+            goalPose = DataStorage.launcherBlueGoalPose;
         }
 
         loopTime = timer.milliseconds() - previousLoop;
@@ -183,7 +192,7 @@ public class ThwimpTeleOp extends OpMode {
         //telemetry.addData("DegreeModulus", robotBase.turretSubsystem.degreeModulus);
         telemetry.addData("Loop Time", loopTime);
         //telemetry.addData("Is In Gate Zone", robotBase.chassisSubsystem.isInGateZone());
-        //telemetry.addData("Pinpoint Velocity", robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH));
+        telemetry.addData("Pinpoint Velocity", robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH));
         CommandScheduler.getInstance().run();
     }
 }

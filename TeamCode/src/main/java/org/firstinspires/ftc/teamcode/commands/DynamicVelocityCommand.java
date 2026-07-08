@@ -17,7 +17,7 @@ public class DynamicVelocityCommand extends CommandBase {
     double distance;
     double newDistance;
     double oldDistance;
-    double timeOfFlightMultiplier = 0;
+    double timeOfFlightMultiplier = 0.001;
     double xSpeed = 0;
     double ySpeed = 0;
     double timeOfFlight;
@@ -56,4 +56,4 @@ public class DynamicVelocityCommand extends CommandBase {
     public boolean isFinished(){
         return false;
     }
-    }
+}
