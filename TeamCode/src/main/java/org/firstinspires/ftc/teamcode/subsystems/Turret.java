@@ -90,8 +90,8 @@ public class Turret {
         ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
         targetHeading = Math.toDegrees(Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight))));
         turretOffset = targetHeading - botHeading;
-        rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
-        turretOffset += rotationLead;
+        //rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
+        //turretOffset += rotationLead;
         //turretOffset = ((turretOffset + 180) % 360) -180;
         //turretOffset = Math.max(-maxDegrees, Math.min(maxDegrees, turretOffset));
         return turretOffset;
