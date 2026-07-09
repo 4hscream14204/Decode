@@ -44,7 +44,7 @@ public class RedGateAutoCRI extends OpMode {
             new Pose(130,144),
             new Pose(127,102),
             new Pose(178,103));
-
+//178 103
     //BezierLine intakeSecondRowLineUp = new BezierLine(
          //   new Pose(126, 130),
        //     new Pose(135, 79)
@@ -66,10 +66,10 @@ public class RedGateAutoCRI extends OpMode {
  //(0)(0)
     BezierLine launchToGate = new BezierLine(
             new Pose(128,130),
-            new Pose(178,102));
+            new Pose(182,102));
 //(0)(30)
     BezierLine gateToLaunch = new BezierLine(
-            new Pose(178,102),
+            new Pose(182,102),
             new Pose(128,130));
 
     BezierLine secondRowMoveBack = new BezierLine(
@@ -178,6 +178,7 @@ public class RedGateAutoCRI extends OpMode {
 
         path = new SequentialCommandGroup(
                 new FollowPathCommand(follower, startToLaunch,false,1),
+                new WaitCommand(200),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(300),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
@@ -197,7 +198,7 @@ public class RedGateAutoCRI extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-                new FollowPathCommand(follower, intakeFirstRow, true,0.6).withTimeout(3500),
+                new FollowPathCommand(follower, intakeFirstRow, true,0.7),
                 new FollowPathCommand(follower,launchFirstRow,false,1),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(200),
@@ -205,18 +206,19 @@ public class RedGateAutoCRI extends OpMode {
                 new WaitCommand(300),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
-                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75))
+                new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 //GATE STUFF
-              /*  new FollowPathCommand(follower,launchGate,true,1),
+                new FollowPathCommand(follower,launchGate,true,1),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new WaitUntilCommand(()->artifactsInBotCount == 3).withTimeout(700),
-                new FollowPathCommand(follower,gateLaunch,true,1),
+                new FollowPathCommand(follower,gateLaunch,false,1),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(200),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(300),
                 new InstantCommand(()->artifactsInBotCount = 0),
-                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
+                new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))
+                /*
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.75)),
                 new FollowPathCommand(follower,launchGate,true,1),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
