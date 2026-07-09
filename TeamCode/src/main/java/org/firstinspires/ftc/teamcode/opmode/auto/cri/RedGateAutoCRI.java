@@ -43,7 +43,7 @@ public class RedGateAutoCRI extends OpMode {
     BezierCurve intakeRow = new BezierCurve(
             new Pose(130,144),
             new Pose(127,102),
-            new Pose(178,103));
+            new Pose(181,100));
 //178 103
     //BezierLine intakeSecondRowLineUp = new BezierLine(
          //   new Pose(126, 130),
@@ -66,10 +66,10 @@ public class RedGateAutoCRI extends OpMode {
  //(0)(0)
     BezierLine launchToGate = new BezierLine(
             new Pose(128,130),
-            new Pose(182,102));
+            new Pose(182,101,Math.toRadians(135)));
 //(0)(30)
     BezierLine gateToLaunch = new BezierLine(
-            new Pose(182,102),
+            new Pose(182,101,Math.toRadians(135)),
             new Pose(128,130));
 
     BezierLine secondRowMoveBack = new BezierLine(
