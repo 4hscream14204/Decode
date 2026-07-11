@@ -32,7 +32,7 @@ public class RedGateAuto2Spikes extends OpMode {
     SequentialCommandGroup path;
 
     Pose startPose = new Pose(166, 170 ,Math.toRadians(-135));
-    Pose endPose = new Pose(165,130,Math.toRadians(90));
+    Pose endPose = new Pose(141,162,Math.toRadians(0));
 
     BezierLine preloadLaunch = new BezierLine(
             startPose,
@@ -47,7 +47,7 @@ public class RedGateAuto2Spikes extends OpMode {
     BezierCurve intakeSecondRow = new BezierCurve(
        new Pose(149, 136),
          new Pose(135, 79),
-        new Pose(166,79));
+        new Pose(169,79));
 
     //BezierLine intakeSecondRow = new BezierLine(
     //new Pose(135, 79),
@@ -55,7 +55,7 @@ public class RedGateAuto2Spikes extends OpMode {
     //);
 
      BezierLine launchSecondRow = new BezierLine(
-           new Pose(166, 79),
+           new Pose(169, 79),
          new Pose(149, 136)
     );
 //(0)(0)(0)
@@ -96,8 +96,8 @@ public class RedGateAuto2Spikes extends OpMode {
             new Pose(126,125));
 
 */
-    BezierLine launchToPark = new BezierLine(
-            new Pose( 149,136),
+    BezierLine gateToPark = new BezierLine(
+            new Pose(179,102,Math.toRadians(39)),
             endPose
     );
 
@@ -170,8 +170,8 @@ public class RedGateAuto2Spikes extends OpMode {
                 .build();
 
         parking = follower.pathBuilder()
-                .addPath(launchToPark)
-                .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(90))
+                .addPath(gateToPark)
+                .setLinearHeadingInterpolation(Math.toRadians(39),Math.toRadians(0))
                 .build();
 
 
@@ -180,7 +180,7 @@ public class RedGateAuto2Spikes extends OpMode {
                 new WaitCommand(50),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(100),
-                new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                //new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.65)),
@@ -260,29 +260,14 @@ public class RedGateAuto2Spikes extends OpMode {
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new WaitUntilCommand(()->artifactsInBotCount == 3).withTimeout(700),
                 //new WaitCommand(900),
-                new FollowPathCommand(follower,gateLaunch,true,1),
+                new FollowPathCommand(follower,parking,true,1),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(50),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(100),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.65)),
-                new InstantCommand(()->artifactsInBotCount = 0),
-                new FollowPathCommand(follower,parking,false,1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                new InstantCommand(()->artifactsInBotCount = 0)
 
         );
     }
