@@ -79,9 +79,6 @@ public class ThwimpTeleOp extends OpMode {
         mainController.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->artifactsInBotCount = 0)));
 
-        mainController.getGamepadButton(GamepadKeys.Button.BACK)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleLaunchingModeCommand()));
-
         /*launcherController.getGamepadButton(GamepadKeys.Button.BACK)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->isInManualControl = !isInManualControl)));*/
 
@@ -192,7 +189,7 @@ public class ThwimpTeleOp extends OpMode {
         //telemetry.addData("DegreeModulus", robotBase.turretSubsystem.degreeModulus);
         telemetry.addData("Loop Time", loopTime);
         //telemetry.addData("Is In Gate Zone", robotBase.chassisSubsystem.isInGateZone());
-        telemetry.addData("Pinpoint Velocity", robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH));
+        //telemetry.addData("Pinpoint Velocity", robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH));
         CommandScheduler.getInstance().run();
     }
 }

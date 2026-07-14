@@ -68,8 +68,8 @@ public class Chassis{
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        closeLaunchZone = new PolygonZone(new Point(144, 130), new Point(72, 65), new Point(0, 130));
-        farLaunchZone = new PolygonZone(new Point(45, 0), new Point(72, 36), new Point(100, 0));
+        closeLaunchZone = new PolygonZone(new Point(0, 188), new Point(94, 94), new Point(188, 188));
+        farLaunchZone = new PolygonZone(new Point(45, 0), new Point(94, 80), new Point(144, 0));
         redGateZone = new PolygonZone(new Point(120, 48), new Point(120, 72), new Point(144, 72), new Point(144, 48));
         blueGateZone = new PolygonZone(new Point(24, 48), new Point(24, 72), new Point(0, 72), new Point(0, 48));
         robotZone = new PolygonZone(13, 10);

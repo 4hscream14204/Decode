@@ -11,6 +11,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.commands.GateHeadingCommand;
 import org.firstinspires.ftc.teamcode.commands.ResetPositionCommand;
 import org.firstinspires.ftc.teamcode.commands.ToggleAllianceCommand;
+import org.firstinspires.ftc.teamcode.commands.ToggleLaunchingModeCommand;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
@@ -28,7 +29,7 @@ public class CustomGamepad {
     }
 
     public void player1Z(){
-        gamepad.getGamepadButton(GamepadKeys.Button.A)
+        gamepad.getGamepadButton(GamepadKeys.Button.B)
                 .whenPressed(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE))));
 
         gamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
@@ -39,6 +40,9 @@ public class CustomGamepad {
 
         gamepad.getGamepadButton(GamepadKeys.Button.START)
                 .whenPressed(()->CommandScheduler.getInstance().schedule(new ResetPositionCommand(follower)));
+
+        gamepad.getGamepadButton(GamepadKeys.Button.A)
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ToggleLaunchingModeCommand()));
     }
 
     public void player2Z(){
