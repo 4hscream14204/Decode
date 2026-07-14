@@ -23,59 +23,58 @@ import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
-
-@Autonomous(name="Red Gate & Spike Auto")
-public class RedGateAuto2Spikes extends OpMode {
+@Autonomous (name = "Blue Gate Auto 2 Spikes")
+public class BlueGateAuto2Spikes extends OpMode {
     Follower follower;
     RobotBase robotBase;
     int artifactsInBotCount;
     SequentialCommandGroup path;
 
-    Pose startPose = new Pose(166, 170 ,Math.toRadians(-135));
-    Pose endPose = new Pose(141,162,Math.toRadians(0));
+    Pose startPose = new Pose(166, 170 ,Math.toRadians(-135)).mirror();
+    Pose endPose = new Pose(141,162,Math.toRadians(180)).mirror();
 
     BezierLine preloadLaunch = new BezierLine(
             startPose,
-            new Pose(149, 136)
+            new Pose(149, 136).mirror()
     );
     //(0)
     BezierCurve intakeRow = new BezierCurve(
-            new Pose(140,150),
-            new Pose(127,102),
-            new Pose(168,104));
-//178 103
+            new Pose(140,150).mirror(),
+            new Pose(127,102).mirror(),
+            new Pose(168,104).mirror());
+    //178 103
     BezierCurve intakeSecondRow = new BezierCurve(
-       new Pose(149, 136),
-         new Pose(135, 79),
-        new Pose(169,79));
+            new Pose(149, 136).mirror(),
+            new Pose(135, 79).mirror(),
+            new Pose(169,79).mirror());
 
     //BezierLine intakeSecondRow = new BezierLine(
     //new Pose(135, 79),
     //new Pose(165, 79)
     //);
 
-     BezierLine launchSecondRow = new BezierLine(
-           new Pose(169, 79),
-         new Pose(149, 136)
+    BezierLine launchSecondRow = new BezierLine(
+            new Pose(169, 79).mirror(),
+            new Pose(149, 136).mirror()
     );
-//(0)(0)(0)
+    //(0)(0)(0)
     BezierLine intakeToLaunch = new BezierLine(
-            new Pose(173,112),
-            new Pose(149,136));
+            new Pose(173,112).mirror(),
+            new Pose(149,136).mirror());
     //(0)(0)
     BezierCurve launchToGate = new BezierCurve(
-            new Pose(149,136),
-            new Pose(148,120),
-            new Pose(179,102,Math.toRadians(39)));
+            new Pose(149,136).mirror(),
+            new Pose(148,120).mirror(),
+            new Pose(179,102,Math.toRadians(135)).mirror());
     //(0)(30) 179,103,
     BezierCurve gateToLaunch = new BezierCurve(
-            new Pose(179,102,Math.toRadians(39)),
-            new Pose(148,120),
-            new Pose(149,136));
+            new Pose(179,102,Math.toRadians(135)).mirror(),
+            new Pose(148,120).mirror(),
+            new Pose(149,136).mirror());
     //81
     BezierLine secondRowMoveBack = new BezierLine(
-            new Pose(165, 79),
-            new Pose(135, 79)
+            new Pose(165, 79).mirror(),
+            new Pose(135, 79).mirror()
     );
     //(30)(0)
     //Extra Gate poses
@@ -97,7 +96,7 @@ public class RedGateAuto2Spikes extends OpMode {
 
 */
     BezierLine gateToPark = new BezierLine(
-            new Pose(179,102,Math.toRadians(39)),
+            new Pose(179,102,Math.toRadians(135)).mirror(),
             endPose
     );
 
@@ -108,7 +107,7 @@ public class RedGateAuto2Spikes extends OpMode {
     PathChain launchGate;
     PathChain gateLaunch;
     PathChain parking;
-     //PathChain intakeSecondRowLineUpPath;
+    //PathChain intakeSecondRowLineUpPath;
     PathChain intakeSecondRowPath;
     PathChain launchSecondRowPath;
 
@@ -118,28 +117,28 @@ public class RedGateAuto2Spikes extends OpMode {
         CommandScheduler.getInstance().reset();
         follower = Constants.createFollower(hardwareMap);
         robotBase = new RobotBase(hardwareMap);
-        DataStorage.alliance = DecodeEnums.Alliance.RED;
+        DataStorage.alliance = DecodeEnums.Alliance.BLUE;
         robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK);
         robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE);
 
 
         startToLaunch = follower.pathBuilder()
                 .addPath(preloadLaunch)
-                .setLinearHeadingInterpolation(startPose.getHeading(),Math.toRadians(0))
+                .setLinearHeadingInterpolation(startPose.getHeading(),Math.toRadians(180))
                 .addParametricCallback(0.25,()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.3))))
                 .addParametricCallback(0.75,()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
         intakeFirstRow = follower.pathBuilder()
                 .addPath(intakeRow)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new BezierCurve(new Pose(168, 104), new Pose(158, 112), new Pose(173, 112)))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-30))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addPath(new BezierCurve(new Pose(168, 104).mirror(), new Pose(158, 112).mirror(), new Pose(173, 112).mirror()))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(160))
                 .build();
 //176
         launchFirstRow = follower.pathBuilder()
                 .addPath(intakeToLaunch)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addParametricCallback(0.5,()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
@@ -148,30 +147,30 @@ public class RedGateAuto2Spikes extends OpMode {
         //       .setConstantHeadingInterpolation(Math.toRadians(0))
         //     .build();
 
-         intakeSecondRowPath = follower.pathBuilder()
-               .addPath(intakeSecondRow)
-             .setConstantHeadingInterpolation(Math.toRadians(0))
-           .build();
+        intakeSecondRowPath = follower.pathBuilder()
+                .addPath(intakeSecondRow)
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
 
-         launchSecondRowPath = follower.pathBuilder()
-           .addPath(launchSecondRow)
-          .setConstantHeadingInterpolation(Math.toRadians(0))
-        .build();
+        launchSecondRowPath = follower.pathBuilder()
+                .addPath(launchSecondRow)
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
 
         launchGate = follower.pathBuilder()
                 .addPath(launchToGate)
-                .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(39))
+                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(39))
                 .build();
 
         gateLaunch = follower.pathBuilder()
                 .addPath(gateToLaunch)
-                .setLinearHeadingInterpolation(Math.toRadians(39),Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(39),Math.toRadians(180))
                 .addParametricCallback(0.5,()->CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
         parking = follower.pathBuilder()
                 .addPath(gateToPark)
-                .setLinearHeadingInterpolation(Math.toRadians(39),Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(39),Math.toRadians(180))
                 .build();
 
 
@@ -181,9 +180,10 @@ public class RedGateAuto2Spikes extends OpMode {
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(100),
                 //new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-                new InstantCommand(()->artifactsInBotCount = 0),
+               // new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.65)),
+                new InstantCommand(()->artifactsInBotCount = 0),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new FollowPathCommand(follower, intakeFirstRow, false,0.8),
                 new FollowPathCommand(follower,launchFirstRow,true,1),
@@ -269,20 +269,6 @@ public class RedGateAuto2Spikes extends OpMode {
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.65)),
                 new InstantCommand(()->artifactsInBotCount = 0)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         );
     }
 
@@ -290,7 +276,7 @@ public class RedGateAuto2Spikes extends OpMode {
     public void start(){
         CommandScheduler.getInstance().schedule(path);
         follower.setStartingPose(startPose);
-        CommandScheduler.getInstance().schedule(new AutoTurretHeadingCommand(robotBase, follower, DataStorage.autoTurretRedGoal));
+        CommandScheduler.getInstance().schedule(new AutoTurretHeadingCommand(robotBase, follower, DataStorage.launcherBlueGoalPose));
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
     }
@@ -310,3 +296,5 @@ public class RedGateAuto2Spikes extends OpMode {
     }
 
 }
+
+

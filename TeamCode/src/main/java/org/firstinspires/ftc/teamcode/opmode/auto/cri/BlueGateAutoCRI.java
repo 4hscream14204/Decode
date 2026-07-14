@@ -32,18 +32,18 @@ public class BlueGateAutoCRI extends OpMode {
     int artifactsInBotCount;
     SequentialCommandGroup path;
 
-    Pose startPose = new Pose(166, 170, Math.toRadians(135)).mirror(900);
-    Pose endPose = new Pose(165, 130, Math.toRadians(90)).mirror();
+    Pose startPose = new Pose(22, 170, Math.toRadians(135));
+    Pose endPose = new Pose(21, 130, Math.toRadians(90));
 
     BezierLine preloadLaunch = new BezierLine(
             startPose,
-            new Pose(149, 136).mirror()
+            new Pose(5, 136)
     );
     //(0)
     BezierCurve intakeRow = new BezierCurve(
-            new Pose(140, 150).mirror(),
-            new Pose(127, 102).mirror(),
-            new Pose(168, 104).mirror());
+            new Pose(-4, 150),
+            new Pose(-17, 102),
+            new Pose(24, 104));
 //178 103
     //BezierLine intakeSecondRowLineUp = new BezierLine(
     //   new Pose(126, 130),
@@ -61,22 +61,22 @@ public class BlueGateAutoCRI extends OpMode {
     //);
 //(0)(0)(0)
     BezierLine intakeToLaunch = new BezierLine(
-            new Pose(173, 112).mirror(),
-            new Pose(149, 136).mirror());
+            new Pose(29, 112).mirror(),
+            new Pose(5, 136).mirror());
     //(0)(0)
     BezierCurve launchToGate = new BezierCurve(
-            new Pose(149, 136).mirror(),
-            new Pose(148, 120).mirror(),
-            new Pose(179, 102, Math.toRadians(-39)).mirror());
+            new Pose(5, 136),
+            new Pose(4, 120),
+            new Pose(35, 102, Math.toRadians(135)));
     //(0)(30) 179,103,
     BezierCurve gateToLaunch = new BezierCurve(
-            new Pose(179, 102, Math.toRadians(-39)).mirror(),
-            new Pose(148, 120).mirror(),
-            new Pose(149, 136).mirror());
+            new Pose(35, 102, Math.toRadians(135)),
+            new Pose(4, 120),
+            new Pose(5, 136));
     //81
     BezierLine secondRowMoveBack = new BezierLine(
-            new Pose(165, 79).mirror(),
-            new Pose(135, 79).mirror()
+            new Pose(21, 79),
+            new Pose(-9, 79)
     );
     //(30)(0)
     //Extra Gate poses
@@ -98,7 +98,7 @@ public class BlueGateAutoCRI extends OpMode {
 
 */
     BezierLine launchToPark = new BezierLine(
-            new Pose(149, 136).mirror(),
+            new Pose(5, 136),
             endPose
     );
 
@@ -126,21 +126,21 @@ public class BlueGateAutoCRI extends OpMode {
 
         startToLaunch = follower.pathBuilder()
                 .addPath(preloadLaunch)
-                .setLinearHeadingInterpolation(startPose.getHeading(), Math.toRadians(0))
+                .setLinearHeadingInterpolation(startPose.getHeading(), Math.toRadians(180))
                 .addParametricCallback(0.25, () -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> robotBase.intakeTransferSubsystem.intakeAndTransfer(0.3))))
                 .addParametricCallback(0.75, () -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
         intakeFirstRow = follower.pathBuilder()
                 .addPath(intakeRow)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new BezierCurve(new Pose(168, 104).mirror(), new Pose(158, 112).mirror(), new Pose(173, 112).mirror()))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(30))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .addPath(new BezierCurve(new Pose(24, 104), new Pose(14, 112), new Pose(29, 112)))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(160))
                 .build();
 //176
         launchFirstRow = follower.pathBuilder()
                 .addPath(intakeToLaunch)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addParametricCallback(0.5, () -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
@@ -163,18 +163,18 @@ public class BlueGateAutoCRI extends OpMode {
 
         launchGate = follower.pathBuilder()
                 .addPath(launchToGate)
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-39))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(135))
                 .build();
 
         gateLaunch = follower.pathBuilder()
                 .addPath(gateToLaunch)
-                .setLinearHeadingInterpolation(Math.toRadians(-39), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(135), Math.toRadians(180))
                 .addParametricCallback(0.5, () -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> robotBase.intakeTransferSubsystem.intakeAndTransfer())))
                 .build();
 
         parking = follower.pathBuilder()
                 .addPath(launchToPark)
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-90))
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-270))
                 .build();
 
 
