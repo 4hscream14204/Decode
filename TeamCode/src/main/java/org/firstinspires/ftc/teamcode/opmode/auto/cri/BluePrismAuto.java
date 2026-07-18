@@ -59,7 +59,7 @@ public class BluePrismAuto extends OpMode {
     }
    public static SpikeOrder currentSpikeOrder = SpikeOrder.NONE;
     public static SpikeOrder topSpikeOrder = SpikeOrder.NONE;
-    public static SpikeOrder middleSpikeOrder = SpikeOrder.NONE;
+    public static  SpikeOrder middleSpikeOrder = SpikeOrder.NONE;
     public static SpikeOrder bottomSpikeOrder = SpikeOrder.NONE;
     int waitTime= 0;
 
