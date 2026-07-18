@@ -53,7 +53,7 @@ public class Prism {
     }
 
     public void setGamePhase(ElapsedTime time){
-        if(time.seconds() > 110){
+        if(time.seconds() >= 112){
             setPosition(PrismModes.PARK);
         } else {
             setPosition(PrismModes.RAINBOW);
