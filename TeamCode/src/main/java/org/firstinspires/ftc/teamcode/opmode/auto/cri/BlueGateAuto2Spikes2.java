@@ -30,48 +30,56 @@ public class BlueGateAuto2Spikes2 extends OpMode {
     RobotBase robotBase;
     int artifactsInBotCount;
     SequentialCommandGroup path;
+    double fieldWidth = 189.5;
 
-    Pose startPose = new Pose(166, 170 ,Math.toRadians(-135)).mirror();
-    Pose endPose = new Pose(141,162,Math.toRadians(0)).mirror();
+    Pose startPose = new Pose(166, 170 ,Math.toRadians(-135)).mirror(fieldWidth);
+    Pose endPose = new Pose(141,162,Math.toRadians(0)).mirror(fieldWidth);
 
     BezierLine preloadLaunch = new BezierLine(
             startPose,
-            new Pose(149, 136).mirror()
-    );
+            new Pose(149, 136).mirror(fieldWidth));
     //(0)
-    BezierCurve intakeRow = new BezierCurve(
-            new Pose(140,150).mirror(),
-            new Pose(127,102).mirror(),
-            new Pose(168,104).mirror());
-//178 103
-    BezierCurve intakeSecondRow = new BezierCurve(
-       new Pose(149, 136).mirror(),
-         new Pose(134, 79).mirror(),
-        new Pose(169,79).mirror());
+    BezierLine intakeRow = new BezierLine(
+            new Pose(140,150).mirror(fieldWidth),
+            new Pose(142,100).mirror(fieldWidth));
+
+    BezierLine intakeRowGrabBalls = new BezierLine(
+            new Pose(142, 100).mirror(fieldWidth),
+            new Pose(182, 100).mirror(fieldWidth)
+    );
+    //178 103
+    BezierLine intakeSecondRowLineUp = new BezierLine(
+            new Pose(149, 136).mirror(fieldWidth),
+            new Pose(142,79).mirror(fieldWidth));
+
+    BezierLine intakeSecondRow = new BezierLine(
+            new Pose(142, 79).mirror(fieldWidth),
+            new Pose(182, 79).mirror(fieldWidth)
+    );
 
     //BezierLine intakeSecondRow = new BezierLine(
     //new Pose(135, 79),
     //new Pose(165, 79)
     //);
 
-     BezierLine launchSecondRow = new BezierLine(
-           new Pose(167, 79).mirror() ,
-         new Pose(149, 136).mirror()
+    BezierLine launchSecondRow = new BezierLine(
+            new Pose(167, 79).mirror(fieldWidth),
+            new Pose(149, 136).mirror(fieldWidth)
     );
-//(0)(0)(0)
+    //(0)(0)(0)
     BezierLine intakeToLaunch = new BezierLine(
-            new Pose(173,112).mirror(),
-            new Pose(149,136).mirror());
+            new Pose(173,112).mirror(fieldWidth),
+            new Pose(149,136).mirror(fieldWidth));
     //(0)(0
     BezierCurve launchToGate = new BezierCurve(
-            new Pose(149,136).mirror(),
-            new Pose(148,120).mirror(),
-            new Pose(175,102).mirror());
+            new Pose(149,136).mirror(fieldWidth),
+            new Pose(148,120).mirror(fieldWidth),
+            new Pose(177,102).mirror(fieldWidth));
     //(0)(30) 179,103,
     BezierCurve gateToLaunch = new BezierCurve(
-            new Pose(175,102).mirror(),
-            new Pose(148,120).mirror(),
-            new Pose(149,136).mirror());
+            new Pose(175,102).mirror(fieldWidth),
+            new Pose(148,120).mirror(fieldWidth),
+            new Pose(149,136).mirror(fieldWidth));
     //81
     BezierLine secondRowMoveBack = new BezierLine(
             new Pose(165, 79),
@@ -97,9 +105,8 @@ public class BlueGateAuto2Spikes2 extends OpMode {
 
 */
     BezierLine gateToPark = new BezierLine(
-            new Pose(35,102).mirror(),
-            endPose
-    );
+            new Pose(35,102).mirror(fieldWidth),
+            endPose);
 
 
     PathChain startToLaunch;
@@ -108,7 +115,8 @@ public class BlueGateAuto2Spikes2 extends OpMode {
     PathChain launchGate;
     PathChain gateLaunch;
     PathChain parking;
-     //PathChain intakeSecondRowLineUpPath;
+    //PathChain intakeSecondRowLineUpPath;
+    PathChain intakeSecondRowLineUpPath;
     PathChain intakeSecondRowPath;
     PathChain launchSecondRowPath;
 
@@ -133,7 +141,15 @@ public class BlueGateAuto2Spikes2 extends OpMode {
         intakeFirstRow = follower.pathBuilder()
                 .addPath(intakeRow)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(new BezierCurve(new Pose(168, 104).mirror(), new Pose(158, 112).mirror(), new Pose(172, 112).mirror()))
+                .build();
+
+        PathChain intakeFirstRowGrabBallsPath = follower.pathBuilder()
+                .addPath(intakeRowGrabBalls)
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+
+        PathChain hitGate = follower.pathBuilder()
+                .addPath(new BezierCurve(new Pose(178, 104).mirror(fieldWidth), new Pose(158, 112).mirror(fieldWidth), new Pose(172, 112).mirror(fieldWidth)))
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(160))
                 .build();
 //176
@@ -148,15 +164,20 @@ public class BlueGateAuto2Spikes2 extends OpMode {
         //       .setConstantHeadingInterpolation(Math.toRadians(0))
         //     .build();
 
-         intakeSecondRowPath = follower.pathBuilder()
-               .addPath(intakeSecondRow)
-             .setConstantHeadingInterpolation(Math.toRadians(180))
-           .build();
+        intakeSecondRowLineUpPath = follower.pathBuilder()
+                .addPath(intakeSecondRowLineUp)
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
 
-         launchSecondRowPath = follower.pathBuilder()
-           .addPath(launchSecondRow)
-          .setConstantHeadingInterpolation(Math.toRadians(180))
-        .build();
+        intakeSecondRowPath = follower.pathBuilder()
+                .addPath(intakeSecondRow)
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+
+        launchSecondRowPath = follower.pathBuilder()
+                .addPath(launchSecondRow)
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
 
         launchGate = follower.pathBuilder()
                 .addPath(launchToGate)
@@ -176,7 +197,7 @@ public class BlueGateAuto2Spikes2 extends OpMode {
 
 
         path = new SequentialCommandGroup(
-                new FollowPathCommand(follower, startToLaunch,false,1),
+                new FollowPathCommand(follower, startToLaunch,true,1),
                 new WaitCommand(50),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.RELEASE)),
                 new WaitCommand(100),
@@ -185,8 +206,10 @@ public class BlueGateAuto2Spikes2 extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.25)),
-               // new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-                new FollowPathCommand(follower, intakeFirstRow, false,0.8),
+                // new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                new FollowPathCommand(follower, intakeFirstRow, false,1),
+                new FollowPathCommand(follower, intakeFirstRowGrabBallsPath, false, 1),
+                new FollowPathCommand(follower, hitGate, false, 1),
                 new FollowPathCommand(follower,launchFirstRow,true,1),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(50),
@@ -196,8 +219,9 @@ public class BlueGateAuto2Spikes2 extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.25)),
-               // new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
-                new FollowPathCommand(follower, intakeSecondRowPath, false,0.8),
+                // new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                new FollowPathCommand(follower, intakeSecondRowLineUpPath, false,1),
+                new FollowPathCommand(follower, intakeSecondRowPath, false, 1),
                 new FollowPathCommand(follower,launchSecondRowPath,true,1),
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.BLOCK)),
                 new WaitCommand(50),
@@ -207,8 +231,8 @@ public class BlueGateAuto2Spikes2 extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.25)),
-                new FollowPathCommand(follower,launchGate,false,1),
-               // new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                new FollowPathCommand(follower,launchGate,true,1),
+                // new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new WaitUntilCommand(()->artifactsInBotCount == 3).withTimeout(700),
                 //new WaitCommand(900),
                 new FollowPathCommand(follower,gateLaunch,true,1),
@@ -221,7 +245,7 @@ public class BlueGateAuto2Spikes2 extends OpMode {
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.25)),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new FollowPathCommand(follower,launchGate,true,1),
-              //  new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                //  new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new WaitUntilCommand(()->artifactsInBotCount == 3).withTimeout(700),
                 // new WaitCommand(900),
                 new FollowPathCommand(follower,gateLaunch,true,1),
@@ -234,7 +258,7 @@ public class BlueGateAuto2Spikes2 extends OpMode {
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.25)),
                 new InstantCommand(()->artifactsInBotCount = 0),
                 new FollowPathCommand(follower,launchGate,true,1),
-              //  new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
+                //  new InstantCommand(()->robotBase.transferBlockerSubsystem.setPosition(TransferBlocker.TransferBlockerPosition.BLOCK)),
                 new WaitUntilCommand(()->artifactsInBotCount == 3).withTimeout(700),
                 // new WaitCommand(900),
                 new FollowPathCommand(follower,gateLaunch,true,1),
@@ -258,23 +282,6 @@ public class BlueGateAuto2Spikes2 extends OpMode {
                 new InstantCommand(()->robotBase.intakePivotSubsystem.setPosition(IntakePivot.PivotPosition.INTAKE)),
                 new InstantCommand(()->robotBase.intakeTransferSubsystem.intakeAndTransfer(0.25)),
                 new InstantCommand(()->artifactsInBotCount = 0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         );
     }
 
@@ -282,7 +289,7 @@ public class BlueGateAuto2Spikes2 extends OpMode {
     public void start(){
         CommandScheduler.getInstance().schedule(path);
         follower.setStartingPose(startPose);
-        CommandScheduler.getInstance().schedule(new AutoTurretHeadingCommand(robotBase, follower, DataStorage.launcherBlueGoalPose));
+        CommandScheduler.getInstance().schedule(new AutoTurretHeadingCommand(robotBase, follower, DataStorage.blueGoalPose));
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE);
     }
