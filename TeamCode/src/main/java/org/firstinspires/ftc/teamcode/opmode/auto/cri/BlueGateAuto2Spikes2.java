@@ -6,6 +6,7 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.InstantCommand;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
+@Disabled
 @Autonomous(name="blue Gate & Spike Auto")
 public class BlueGateAuto2Spikes2 extends OpMode {
     Follower follower;
@@ -73,7 +75,8 @@ public class BlueGateAuto2Spikes2 extends OpMode {
     //(0)(0
     BezierLine launchToGate = new BezierLine(
             new Pose(149,136).mirror(fieldWidth),
-            new Pose(12,102));
+            new Pose(137,84,Math.toRadians(135)).mirror()
+            /*new Pose(12,102)*/);
 
     BezierLine launchToGate2 = new BezierLine(
             new Pose(149,136).mirror(fieldWidth),
@@ -191,7 +194,7 @@ public class BlueGateAuto2Spikes2 extends OpMode {
 
         launchGate = follower.pathBuilder()
                 .addPath(launchToGate)
-                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(145))
+                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(135))
                 .build();
 
         launchGate2 = follower.pathBuilder()
