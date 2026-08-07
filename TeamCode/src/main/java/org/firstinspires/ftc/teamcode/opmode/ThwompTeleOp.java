@@ -144,11 +144,11 @@ public class ThwompTeleOp extends OpMode {
                 .whenInactive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)))
                 ;*/
 
-        new Trigger(()->robotZone.isInside(farLaunchZone))
+        /*new Trigger(()->robotZone.isInside(farLaunchZone))
                 //.and(new Trigger(()-> robotBase.limelightSubsystem.goalInSight()))
-                .whenActive(new InstantCommand(()->dblLockOffset = 0/*Math.toRadians(farZoneHeadingOffset)*/))
+                .whenActive(new InstantCommand(()->dblLockOffset = 0/*Math.toRadians(farZoneHeadingOffset)/))
                 //.whenInactive(new InstantCommand(()->dblLockOffset = 0))
-                ;
+                ;*/
 
         new Trigger(()->!robotZone.isInside(farLaunchZoneBuffer))
                 .whileActiveContinuous(new InstantCommand(()->dblLockOffset = Math.toRadians(0)));
@@ -222,7 +222,7 @@ public class ThwompTeleOp extends OpMode {
         else{
             goalPose = blueGoalPose;
         }
-        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(redGoalPose));
+        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
 
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
@@ -282,6 +282,7 @@ public class ThwompTeleOp extends OpMode {
         telemetry.addData("Distance Pedro", follower.getPose().distanceFrom(redGoalPose) * 2.54);
         telemetry.addData("Inside Close Zone", robotZone.isInside(closeLaunchZone));
         telemetry.addData("Is ready to launch: ", readyToLaunch);
+        telemetry.addData("Goal Distance", follower.getPose().distanceFrom(goalPose));
         //telemetry.addData("goal in sight", robotBase.limelightSubsystem.goalInSight());
         //telemetry.addData("lock offset", dblLockOffset);
         //telemetry.addData("Follower Pose", follower.getPose());
