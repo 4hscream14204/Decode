@@ -42,7 +42,7 @@ public class Turret {
         turretServoL = m_turretServoL;
         turretServoR = m_turretServoR;
         servoEncoder = m_servoEncoder;
-        setPosition(0.5);
+        //setPosition(0.5);
     }
 
     public void setPosition(double position){
@@ -56,29 +56,30 @@ public class Turret {
         if(degreeModulus < 0){
             degreeModulus += 360;
         }
-        if(degreeModulus < 4){
-            degreeModulus = 4;
+        if(degreeModulus < 5){
+            degreeModulus = 5;
         }
-        if(degreeModulus > 351){
-            degreeModulus = 351;
+        if(degreeModulus > 350){
+            degreeModulus = 350;
         }
-        return ((0.002933 * degreeModulus) - 0.07);
+        //return ((0.002933 * degreeModulus) - 0.07);
+        return ((-0.002840 * degreeModulus) + 1.01666);
     }
 
     public double getTurretAngle(GoBildaPinpointDriver pinpoint, Follower follower){
         if(DataStorage.alliance == DecodeEnums.Alliance.RED){
-            goalPose = new Pose(144, 140);
+            goalPose = DataStorage.redGoalPose;
         }
         else{
-            goalPose = new Pose(-24, 144);
+            goalPose = DataStorage.blueGoalPose;
         }
         botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
         targetHeading = Math.toDegrees(Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight))));
         turretOffset = targetHeading - botHeading;
-        rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
-        turretOffset += rotationLead;
+        //rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
+        //turretOffset += rotationLead;
         //turretOffset = ((turretOffset + 180) % 360) -180;
         //turretOffset = Math.max(-maxDegrees, Math.min(maxDegrees, turretOffset));
         return turretOffset;
@@ -99,9 +100,9 @@ public class Turret {
     }
 
     public void setPositionDeg(double positionDeg){
-            setPosition(convertDegToServoPos(positionDeg));
-            //turretServoR.setPosition(convertDegToServoPos(positionDeg));
-            turretServoPosition = convertDegToServoPos(positionDeg);
+        setPosition(convertDegToServoPos(positionDeg));
+        //turretServoR.setPosition(convertDegToServoPos(positionDeg));
+        turretServoPosition = convertDegToServoPos(positionDeg);
     }
 
     public void updatePosition(double headingDeg){
