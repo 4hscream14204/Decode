@@ -163,7 +163,7 @@ public class ThwimpTeleOp extends OpMode {
         }
 
         robotBase.chassisSubsystem.updateRobotZone();
-        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
+        //robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
         //CommandScheduler.getInstance().schedule(new InstantCommand(()->robotBase.turretSubsystem.setPositionDeg(90)));
 
         telemetry.addData("Alliance", DataStorage.alliance);
