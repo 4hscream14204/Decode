@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.skeletonarmy.marrow.zones.Point;
 import com.skeletonarmy.marrow.zones.PolygonZone;
 
@@ -52,7 +53,7 @@ public class ThwompTeleOp extends OpMode {
     Supplier<PathChain> pathChain;
     Pose gatePose = new Pose(126, 73, Math.toRadians(0));
     Pose goalPose;
-    Pose redGoalPose = new Pose(132, 137);
+    Pose redGoalPose = new Pose(128, 137);
     Pose blueGoalPose = new Pose(132, 137).mirror();
     Servo prism;
     PathChain holdPoint;
@@ -172,6 +173,10 @@ public class ThwompTeleOp extends OpMode {
         new Trigger(()->!follower.isBusy())
                 .whenActive(()-> CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.pausePathFollowing())));*/
 
+        new Trigger(()->robotZone.isInside(farLaunchZone))
+                .whenActive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.FAR)))
+                .whenInactive(new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)));
+
         CommandScheduler.getInstance().run();
     }
 
@@ -222,7 +227,7 @@ public class ThwompTeleOp extends OpMode {
         else{
             goalPose = blueGoalPose;
         }
-        robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
+        //robotBase.hoodSubsystem.setDynamicPosition(follower.getPose().distanceFrom(goalPose));
 
         CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
         xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
