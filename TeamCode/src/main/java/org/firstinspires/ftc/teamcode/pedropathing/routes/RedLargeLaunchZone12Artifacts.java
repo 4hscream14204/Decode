@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedropathing.routes;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
 import com.seattlesolvers.solverslib.command.ConditionalCommand;
@@ -36,7 +37,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     SequentialCommandGroup route;
     AutoTransferAndLaunchCommandGroup autoTransferAndLaunchCommandGroup;
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
-    Pose parkPose = new Pose(106, 74, Math.toRadians(0));
+    Pose parkPose = new Pose(116, 78, Math.toRadians(0));
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
     Pose launchPose1 = new Pose(88, 91, Math.toRadians(49));
     Pose launchPose2 = new Pose(92, 90, Math.toRadians(43));
@@ -44,21 +45,21 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose launchPose4 = new Pose(89, 90, Math.toRadians(43));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
-    Pose preIntakeTopRow = new Pose(94, 84, Math.toRadians(0));
-    Pose intakeTopRow = new Pose(125, 84, Math.toRadians(0));
+    Pose preIntakeTopRow = new Pose(94, 90, Math.toRadians(0));
+    Pose intakeTopRow = new Pose(125, 90, Math.toRadians(0));
     Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90));
-    Pose lineUpToOpenRamp = new Pose(121, 78, Math.toRadians(90));
-    Pose openRamp = new Pose(126, 78, Math.toRadians(90));
+    Pose lineUpToOpenRamp = new Pose(121, 86, Math.toRadians(90));
+    Pose openRamp = new Pose(126, 86, Math.toRadians(90));
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
-    Pose preIntakeMiddleRow = new Pose(94, 62, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(132, 60, Math.toRadians(0));
-    Pose backupMiddleRow = new Pose(122, 60, Math.toRadians(0));
+    Pose preIntakeMiddleRow = new Pose(94, 68, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(132, 68, Math.toRadians(0));
+    Pose backupMiddleRow = new Pose(122, 68, Math.toRadians(0));
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
-    Pose preIntakeBottomRow = new Pose(94, 42, Math.toRadians(0));
-    Pose intakeBottomRow = new Pose(132, 41, Math.toRadians(0));
-    Pose backsUpFromBottomRow = new Pose(104,35,Math.toRadians(0));
+    Pose preIntakeBottomRow = new Pose(94, 47, Math.toRadians(0));
+    Pose intakeBottomRow = new Pose(132, 47, Math.toRadians(0));
+    Pose backsUpFromBottomRow = new Pose(104,47,Math.toRadians(0));
     Pose bottomRowToLaunchControl = new Pose(99.020, 40.449);
     PathChain goesFromWallToShootPreload;
     PathChain linesUpToIntakeThirdRow;
