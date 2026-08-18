@@ -94,9 +94,9 @@ public class RedLotsOfArtifactsAuto extends OpMode {
                         new HeadingInterpolator.PiecewiseNode(0.2, 0.4, HeadingInterpolator.linear(intakeArtifactsFromGate.getHeading(), launchAftIntakeFromGate.getHeading())),
                         new HeadingInterpolator.PiecewiseNode(0.4, 1, HeadingInterpolator.constant(launchAftIntakeFromGate.getHeading()))))
                 //.addParametricCallback(0, ()->new SetAllVelocityCommandGroup(robotBase, 1900))
-                .addParametricCallback(0.95, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.95, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.95, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.95,()->robotBase.intakeSubsystem.intake(1))
                 .build();
 
