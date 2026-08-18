@@ -31,8 +31,8 @@ public class RedLotsOfArtifactsAuto extends OpMode {
     Pose beginLaunch = new Pose(100, 110, Math.toRadians(49));
     Pose launchPose = new Pose(87, 87, Math.toRadians(49));
     //Pose launchAftPreloadPose = new Pose(85, 85, Math.toRadians(45));
-    Pose intakeMiddleLineUp = new Pose(94, 60, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(129, 60, Math.toRadians(0));
+    Pose intakeMiddleLineUp = new Pose(94, 65, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(135, 65, Math.toRadians(0));
     Pose pushGate = new Pose(120, 66, Math.toRadians(0));
     Pose intakeArtifactsFromGate = new Pose(127, 63, Math.toRadians(30));
     Pose launchAftIntakeFromGate = new Pose(89,76,Math.toRadians(50));
@@ -70,10 +70,9 @@ public class RedLotsOfArtifactsAuto extends OpMode {
                 .setLinearHeadingInterpolation(startPose.getHeading(), beginLaunch.getHeading())
                 .addPath(new BezierLine(beginLaunch, launchPose))
                 .setConstantHeadingInterpolation(beginLaunch.getHeading())
-                .addParametricCallback(0, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
-                .addParametricCallback(0.98, ()->CommandScheduler.getInstance().schedule(new TransferResetCommandGroup(robotBase)))
+                .addParametricCallback(0.9, ()->robotBase.ejectorLeftSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9, ()->robotBase.ejectorMiddleSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
+                .addParametricCallback(0.9, ()->robotBase.ejectorRightSubsystem.setPosition(SorterServo.ServoPosition.LAUNCH))
                 .addParametricCallback(0.98, ()->robotBase.intakeSubsystem.intake(-1))
                 .build();
 
@@ -158,16 +157,17 @@ public class RedLotsOfArtifactsAuto extends OpMode {
                 .build();
 
         route = new SequentialCommandGroup(
-                new InstantCommand(()->dblLaunchVel = 1850),
+                new InstantCommand(()->dblLaunchVel = 1800),
                 new InstantCommand(()->robotBase.hoodSubsystem.setPosition(Hood.HoodPosition.CLOSE)),
                 new FollowPathCommand(follower, startPath, true, 1),
+                new TransferResetCommandGroup(robotBase),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 //new WaitCommand(250),
                 //new FollowPath(follower, launchPath, true, 1),
                 //new WaitUntilCommand(()->!follower.isBusy()),
                 new FollowPathCommand(follower, intakeMiddleRowPathLineUp, true, 1),
 
-                new InstantCommand(()->dblLaunchVel = 1870),
+                new InstantCommand(()->dblLaunchVel = 1820),
                 new FollowPathCommand(follower, intakeMiddleRowPath, true, 1),
                 new FollowPathCommand(follower, middleRowToLaunch, true, 1),
                 new WaitCommand(250),
