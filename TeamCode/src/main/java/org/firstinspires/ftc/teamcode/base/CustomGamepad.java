@@ -9,6 +9,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.commands.GateHeadingCommand;
+import org.firstinspires.ftc.teamcode.commands.ResetHeadingCommand;
 import org.firstinspires.ftc.teamcode.commands.ToggleAllianceCommand;
 import org.firstinspires.ftc.teamcode.commands.TransferCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
@@ -37,7 +38,7 @@ public class CustomGamepad {
                         .whenPressed(()->CommandScheduler.getInstance().schedule(new GateHeadingCommand(robotBase)));
 
         gamepad.getGamepadButton(GamepadKeys.Button.START)
-                .whenPressed(()->CommandScheduler.getInstance().schedule(new InstantCommand(()->follower.setPose(new Pose(92, 10, Math.toRadians(90))))));
+                .whenPressed(()->CommandScheduler.getInstance().schedule(new ResetHeadingCommand(follower)));
     }
 
     public void player2Z(){
