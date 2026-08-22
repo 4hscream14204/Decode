@@ -39,22 +39,22 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     Pose startPose = new Pose(111.62, 135.55, Math.toRadians(180));
     Pose parkPose = new Pose(116, 78, Math.toRadians(0));
     //Pose launchPose = new Pose(88, 98, Math.toRadians(45));
-    Pose launchPose1 = new Pose(88, 91, Math.toRadians(49));
-    Pose launchPose2 = new Pose(92, 90, Math.toRadians(43));
-    Pose launchPose3 = new Pose(88, 90, Math.toRadians(43));
-    Pose launchPose4 = new Pose(89, 90, Math.toRadians(43));
+    Pose launchPose1 = new Pose(90, 93, Math.toRadians(49));
+    Pose launchPose2 = new Pose(97, 95, Math.toRadians(43));
+    Pose launchPose3 = new Pose(91, 93, Math.toRadians(43));
+    Pose launchPose4 = new Pose(93, 93, Math.toRadians(43));
     Pose startToLaunchControl = new Pose(89.321, 136.355, Math.toRadians(0));
     Pose launchToTopRowControl = new Pose(79, 84, Math.toRadians(0));
-    Pose preIntakeTopRow = new Pose(94, 90, Math.toRadians(0));
-    Pose intakeTopRow = new Pose(125, 90, Math.toRadians(0));
+    Pose preIntakeTopRow = new Pose(94, 92, Math.toRadians(0));
+    Pose intakeTopRow = new Pose(125, 92, Math.toRadians(0));
     Pose moveBackFromFirstRow = new Pose(92,84, Math.toRadians(90));
     Pose lineUpToOpenRamp = new Pose(121, 86, Math.toRadians(90));
     Pose openRamp = new Pose(126, 86, Math.toRadians(90));
     Pose topRowToLaunchControl = new Pose(90.9, 78.23, Math.toRadians(0));
     Pose launchToMiddleRow = new Pose(74.000, 62.000, Math.toRadians(0));
-    Pose preIntakeMiddleRow = new Pose(94, 68, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(132, 68, Math.toRadians(0));
-    Pose backupMiddleRow = new Pose(122, 68, Math.toRadians(0));
+    Pose preIntakeMiddleRow = new Pose(94, 69, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(130, 69, Math.toRadians(0));
+    Pose backupMiddleRow = new Pose(122, 69, Math.toRadians(0));
     Pose middleRowToLaunchControl = new Pose(79.604, 54.688, Math.toRadians(0));
     Pose launchToBottomRowControl = new Pose(77.016, 85.753, Math.toRadians(0));
     Pose preIntakeBottomRow = new Pose(94, 47, Math.toRadians(0));
@@ -84,9 +84,9 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
     boolean middleRowDone = false;
     boolean bottomRowDone = false;
     int secondsToWait = 0;
-    double dblTargetLaunchVel = 1850;
-    double dblPreLaunchVel = 1830;
-    double dblSortLaunchVel = 1850;
+    double dblTargetLaunchVel = 1840;
+    double dblPreLaunchVel = 1825;
+    double dblSortLaunchVel = 1840;
     ElapsedTime timer;
     Servo prism;
 
@@ -222,7 +222,7 @@ public class RedLargeLaunchZone12Artifacts extends OpMode {
         routeMiddleRow = new SequentialCommandGroup(
                 new FollowPath(follower, linesUpWithSecondRow),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(-1)),
-                new FollowPath(follower, intakesSecondRow).withTimeout(1200),
+                new FollowPath(follower, intakesSecondRow, true,0.8).withTimeout(1200),
                 new SetAllVelocityCommandGroup(robotBase, dblTargetLaunchVel),
                 new FollowPath(follower, backUpFromSecondRow, 1),
                 new InstantCommand(()->robotBase.intakeSubsystem.intake(1)),
