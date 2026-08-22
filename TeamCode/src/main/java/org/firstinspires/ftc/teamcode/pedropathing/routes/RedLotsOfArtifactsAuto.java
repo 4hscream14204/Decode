@@ -29,12 +29,12 @@ public class RedLotsOfArtifactsAuto extends OpMode {
     Follower follower;
     Pose startPose = new Pose(109.8, 134, Math.toRadians(180));
     Pose beginLaunch = new Pose(100, 110, Math.toRadians(49));
-    Pose launchPose = new Pose(87, 87, Math.toRadians(49));
+    Pose launchPose = new Pose(87, 91, Math.toRadians(49));
     //Pose launchAftPreloadPose = new Pose(85, 85, Math.toRadians(45));
-    Pose intakeMiddleLineUp = new Pose(94, 65, Math.toRadians(0));
-    Pose intakeMiddleRow = new Pose(135, 65, Math.toRadians(0));
-    Pose pushGate = new Pose(120, 66, Math.toRadians(0));
-    Pose intakeArtifactsFromGate = new Pose(127, 63, Math.toRadians(30));
+    Pose intakeMiddleLineUp = new Pose(94, 70, Math.toRadians(0));
+    Pose intakeMiddleRow = new Pose(135, 70, Math.toRadians(0));
+    Pose pushGate = new Pose(120, 72, Math.toRadians(0));
+    Pose intakeArtifactsFromGate = new Pose(127, 72, Math.toRadians(30));
     Pose launchAftIntakeFromGate = new Pose(89,76,Math.toRadians(50));
     Pose facingGoalPoint = new Pose(132, 136/*133.5, 139*/);
     Pose topRowLineUp = new Pose(96, 82, Math.toRadians(0));
