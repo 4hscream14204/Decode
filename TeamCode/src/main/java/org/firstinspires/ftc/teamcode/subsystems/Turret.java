@@ -23,7 +23,8 @@ public class Turret {
     Pose goalPose;
     double xSpeed;
     double ySpeed;
-    double timeOfFlight = 0;
+    double timeOfFlightMultiplier = /*0.048*/ 0.003;
+    double timeOfFlight/* = 0.048*/;
     public double botHeading;
     public double targetHeading;
     double turretOffset;
@@ -76,6 +77,7 @@ public class Turret {
         botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
+        timeOfFlight = follower.getPose().distanceFrom(goalPose) * timeOfFlightMultiplier;
         targetHeading = Math.toDegrees(Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight))));
         turretOffset = targetHeading - botHeading;
         //rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
@@ -90,10 +92,11 @@ public class Turret {
         botHeading = pinpoint.getHeading(AngleUnit.DEGREES);
         xSpeed = pinpoint.getVelX(DistanceUnit.INCH);
         ySpeed = pinpoint.getVelY(DistanceUnit.INCH);
+        timeOfFlight = follower.getPose().distanceFrom(goalPose) * timeOfFlightMultiplier;
         targetHeading = Math.toDegrees(Math.atan2((goalPose.getY() - follower.getPose().getY() - (ySpeed * timeOfFlight)), (goalPose.getX() - follower.getPose().getX() - (xSpeed * timeOfFlight))));
         turretOffset = targetHeading - botHeading;
-        rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
-        turretOffset += rotationLead;
+        //rotationLead = Math.toDegrees(follower.getAngularVelocity()) * timeOfFlight;
+        //turretOffset += rotationLead;
         //turretOffset = ((turretOffset + 180) % 360) -180;
         //turretOffset = Math.max(-maxDegrees, Math.min(maxDegrees, turretOffset));
         return turretOffset;
