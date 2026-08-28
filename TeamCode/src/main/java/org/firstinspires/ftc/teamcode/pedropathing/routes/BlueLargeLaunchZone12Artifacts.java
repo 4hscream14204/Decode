@@ -341,7 +341,7 @@ public class BlueLargeLaunchZone12Artifacts extends OpMode {
     }
     @Override
     public void stop(){
-        Pose endPose = new Pose(follower.getPose().getX()+7, follower.getPose().getY()-4, follower.getPose().getHeading());
+        Pose endPose = new Pose(follower.getPose().getX(), follower.getPose().getY(), follower.getPose().getHeading());
         robotBase.limelightSubsystem.limelight.stop();
         DataStorage.endPosition = endPose;
         DataStorage.alliance = DecodeEnums.Alliance.BLUE;
