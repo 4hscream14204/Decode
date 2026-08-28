@@ -10,6 +10,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ChangeHeadingLockCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.Launch3ArtifactsDynamicCG;
 import org.firstinspires.ftc.teamcode.commandgroups.general.LaunchPatternCommandGroup;
+import org.firstinspires.ftc.teamcode.commandgroups.general.ResetPositionCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.ToggleTiltCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferGreenBallCommandGroup;
 import org.firstinspires.ftc.teamcode.commandgroups.general.TransferPurpleBallCommandGroup;
@@ -27,7 +28,7 @@ public class MainControllerKeys {
                 ));
 
         mainController.getGamepadButton(GamepadKeys.Button.SHARE)
-                .whenPressed(() -> CommandScheduler.getInstance().schedule(new InstantCommand(() -> robotBase.chassisSubsystem.resetIMU())));
+                .whenPressed(() -> CommandScheduler.getInstance().schedule(new ResetPositionCommandGroup(follower)));
 
         mainController.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(() -> CommandScheduler.getInstance().schedule(
