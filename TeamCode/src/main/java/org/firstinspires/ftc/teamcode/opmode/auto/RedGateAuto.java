@@ -13,6 +13,7 @@ import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.base.DataStorage;
@@ -21,17 +22,19 @@ import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityAutoCommand;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
+import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlManualCommand;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
 
-@Autonomous(name = "Red Gate Auto Field One")
+@Autonomous(name = "Red Gate Auto")
 public class RedGateAuto extends OpMode {
 
     Follower follower;
     RobotBase robotBase;
     SequentialCommandGroup path;
     int artifactsInBotCount;
+    GamepadEx placeholder;
 
     Pose startPose = new Pose(125, 131, Math.toRadians(-135));
     Pose goalPose = new Pose(144, 138);
@@ -92,6 +95,7 @@ public class RedGateAuto extends OpMode {
         CommandScheduler.getInstance().reset();
         follower = Constants.createFollower(hardwareMap);
         robotBase = new RobotBase(hardwareMap);
+        placeholder = new GamepadEx(gamepad1);
 
         startLaunch = follower.pathBuilder()
                 .addPath(startToLaunch)
@@ -273,7 +277,7 @@ public class RedGateAuto extends OpMode {
     public void start() {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(path);
-        CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new TurretHeadingControlManualCommand(robotBase, follower, 0, placeholder));
         CommandScheduler.getInstance().schedule(new DynamicVelocityAutoCommand(robotBase, follower));
     }
 
