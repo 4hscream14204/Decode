@@ -15,6 +15,7 @@ import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.command.button.Trigger;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.base.DataStorage;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.base.DecodeEnums;
 import org.firstinspires.ftc.teamcode.base.RobotBase;
 import org.firstinspires.ftc.teamcode.commands.DynamicVelocityCommand;
 import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlCommandGroup;
+import org.firstinspires.ftc.teamcode.commands.TurretHeadingControlManualCommand;
 import org.firstinspires.ftc.teamcode.pedropathing.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.IntakePivot;
 import org.firstinspires.ftc.teamcode.subsystems.TransferBlocker;
@@ -34,6 +36,7 @@ public class BlueFarAuto extends OpMode {
     RobotBase robotBase;
     SequentialCommandGroup path;
     int artifactsInBotCount;
+    GamepadEx placeholder;
 
     Pose startPose = new Pose(90, 10, Math.toRadians(90)).mirror();
     Pose LaunchPose = new Pose(84, 18, Math.toRadians(0)).mirror();
@@ -79,6 +82,7 @@ public class BlueFarAuto extends OpMode {
         CommandScheduler.getInstance().reset();
         follower = Constants.createFollower(hardwareMap);
         robotBase = new RobotBase(hardwareMap);
+        placeholder = new GamepadEx(gamepad1);
 
         startLaunch = follower.pathBuilder()
                 .addPath(startToLaunch)
@@ -171,7 +175,7 @@ public class BlueFarAuto extends OpMode {
     public void start() {
         follower.setStartingPose(startPose);
         CommandScheduler.getInstance().schedule(path);
-        CommandScheduler.getInstance().schedule(new TurretHeadingControlCommandGroup(robotBase, follower));
+        CommandScheduler.getInstance().schedule(new TurretHeadingControlManualCommand(robotBase, follower, 0, placeholder));
         //CommandScheduler.getInstance().schedule(new DynamicVelocityCommand(robotBase, follower));
     }
 

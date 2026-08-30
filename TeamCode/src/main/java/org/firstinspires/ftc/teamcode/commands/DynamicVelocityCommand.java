@@ -30,7 +30,7 @@ public class DynamicVelocityCommand extends CommandBase {
             goalPose = new Pose(144, 138);
         }
         else{
-            goalPose = new Pose(144, 138).mirror();
+            goalPose = DataStorage.blueGoalPose;
         }
             xSpeed = robotBase.chassisSubsystem.pinpoint.getVelX(DistanceUnit.INCH);
             ySpeed = robotBase.chassisSubsystem.pinpoint.getVelY(DistanceUnit.INCH);
